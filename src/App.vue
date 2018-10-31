@@ -8,15 +8,16 @@
 <script>
   import Login from './components/login/login'
   import Index from './components/index/index'
-export default {
-    components:{
+
+  export default {
+    components: {
       Login,
       Index
     }
-}
+  }
 
 </script>
 
-<style>
+<style lang="stylus" ref="stylesheet/stylus">
 
 </style>
