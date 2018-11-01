@@ -11,3 +11,7 @@ export const repLoginUser = ({userName, pwd}) => ajax(BASE_URL + `/ajaxLogin`, {
 export const repIndex = () => ajax(BASE_URL + `/index/show`)
 
 
+//注销请求
+export const repLogout = () => ajax(BASE_URL + `/logout`)
+
+

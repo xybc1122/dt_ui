@@ -21,13 +21,21 @@
 
 <script>
   import {Message} from 'element-ui'
-  import {repLoginUser} from '../../api'
+  import {repLoginUser,repIndex} from '../../api'
 
   export default {
     data () {
       return {
         userName: '',
         passWord: ''
+      }
+    },
+    async  mounted(){
+      //进来先判断下是否已经登录 如果登陆了就直接跳转到index页面
+      const result = await repIndex();
+      console.log(result);
+      if (result.code === 200) {
+        this.$router.replace('/index')
       }
     },
     methods: {
