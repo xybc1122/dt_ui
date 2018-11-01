@@ -1,18 +1,13 @@
 <template>
   <div>
-    <Login/>
-    <Index/>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-  import Login from './components/login/login'
-  import Index from './components/index/index'
 
   export default {
     components: {
-      Login,
-      Index
     }
   }
 
