@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '../views/Index/index'
-import Login from '../views/Login/login'
+import Index from '../views/Index/Index'
+import Login from '../views/Login/Login'
 
 Vue.use(Router)
 
