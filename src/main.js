@@ -30,7 +30,7 @@ import {
   Option,
   OptionGroup,
   DatePicker,
-  Pagination
+  Pagination,
 } from 'element-ui'
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)

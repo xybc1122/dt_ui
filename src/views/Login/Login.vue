@@ -7,7 +7,8 @@
           <el-button type="info" size="mini" icon="el-icon-edit">注册账号</el-button>
         </div>
         <div class="login">
-          <el-input v-model="userName" placeholder="用户名" id="userName" maxlength="8" prefix-icon="el-icon-edit"></el-input>
+          <el-input v-model="userName" placeholder="用户名" id="userName" maxlength="8"
+                    prefix-icon="el-icon-edit"></el-input>
           <p></p>
           <el-input v-model="passWord" placeholder="密码" id="pwd" maxlength="15" prefix-icon="el-icon-more"></el-input>
           <div class="success">
@@ -22,23 +23,23 @@
 </template>
 
 <script>
-  import {Message} from 'element-ui'
-  import {repLoginUser,repIndex} from '../../api'
+  import {Message, Loading} from 'element-ui'
+  import {repLoginUser, repIndex} from '../../api'
 
   export default {
-    data () {
+    data() {
       return {
         userName: '',
         passWord: '',
-        isLogin:true
+        isLogin: true, // <!--登录-->
       }
     },
-    async  mounted(){
+    async mounted() {
       // 如果其他已经登陆的页面跳转过来 得到的参数是toHome===-1 说明已经登陆
-      if(this.$route.query.isLogin===-1){
-                 return
+      if (this.$route.query.isLogin === -1) {
+                    return
       }
-      this.isLogin=false
+      this.isLogin = false
       const result = await repIndex();
       console.log(result);
       //进来先判断下是否已经登录 如果登陆了就直接跳转到index页面
@@ -51,10 +52,11 @@
         this.$router.replace('/index')
       }
       //更新状态
-      this.isLogin=true
+      this.isLogin = true
     },
     methods: {
-      async Login () {
+      async Login() {
+        let loadingInstance = Loading.service(this.options);
         const userName = this.userName.trim();
         const pwd = this.passWord.trim();
         const users = {userName, pwd};
@@ -63,12 +65,15 @@
           console.log(result);
           if (result.code === 200) {
             const user = result.data;
-            this.setCookie('token',user.token,7);
+            this.setCookie('token', user.token, 7);
             // 同步记录用户信息
             this.$store.dispatch('recordUser', user);
+            //loading动画
+            this.fullscreenLoading = false;
             // 去个主界面
-            this.$router.replace('/index')
-          }else{
+            this.$router.replace('/index');
+            loadingInstance.close()
+          } else {
             Message({
               showClose: true,
               message: result.msg,
@@ -110,7 +115,8 @@
   .success .quest {
     margin-left: 55px;
   }
-  .save{
+
+  .save {
     margin-left: 250px;
   }
 </style>
