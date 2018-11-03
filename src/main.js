@@ -58,6 +58,13 @@ Vue.component(Option.name, Option)
 Vue.component(OptionGroup.name, OptionGroup)
 Vue.component(DatePicker.name, DatePicker)
 Vue.component(Pagination.name, Pagination)
+
+Vue.prototype.setCookie = function(c_name,value,expiredays) {
+  var exdate=new Date()
+  exdate.setDate(exdate.getDate()+expiredays)
+  document.cookie=c_name+ "=" +escape(value)+
+    ((expiredays==null) ? "" : ";expires="+exdate.toGMTString())
+};
 new Vue({
   el: '#app',
   router,

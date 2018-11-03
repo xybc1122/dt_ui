@@ -101,11 +101,12 @@
 </template>
 
 <script>
-  import {repIndex} from '../../api'
+  import {repIndex,repMenu} from '../../api'
   import {Message} from 'element-ui'
   import {mapState} from 'vuex'//读取用户信息
   import Header from '../../components/Header/Header'
   import Aside from '../../components/Aside/Aside'
+  import PubSub from 'pubsub-js'
   export default {
     data () {
       return {
@@ -173,7 +174,8 @@
         }],
         PermissionValue:'',
         dateValue: '',
-        currentPage4: 4
+        currentPage4: 4,
+        menu:{}
     }
     },
     components: {
@@ -194,7 +196,7 @@
           showClose: true,
           message: result.msg,
           type: 'error'
-        })
+        });
         this.$router.replace(
           {
             path: '/login',
@@ -202,9 +204,14 @@
               isLogin: -1
             }
           })
+      }else{
+        const result = await repMenu();
+        if(result.code===200){
+          PubSub.publish("menuList",result);
+        }
       }
       //更新状态 如果已经登陆了
-      this.isLogin = true
+      this.isLogin = true;
       this.msg = result.msg
     },
     methods: {

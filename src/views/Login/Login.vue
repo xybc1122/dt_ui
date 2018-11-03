@@ -55,16 +55,17 @@
     },
     methods: {
       async Login () {
-        const userName = this.userName.trim()
-        const pwd = this.passWord.trim()
-        const users = {userName, pwd}
+        const userName = this.userName.trim();
+        const pwd = this.passWord.trim();
+        const users = {userName, pwd};
         if (userName && pwd) {
-          const result = await repLoginUser(users)
-          console.log(result)
+          const result = await repLoginUser(users);
+          console.log(result);
           if (result.code === 200) {
-            const user = result.data
+            const user = result.data;
+            this.setCookie('token',user.token,7);
             // 同步记录用户信息
-            this.$store.dispatch('recordUser', user)
+            this.$store.dispatch('recordUser', user);
             // 去个主界面
             this.$router.replace('/index')
           }else{
@@ -74,7 +75,6 @@
               type: 'error'
             })
           }
-          // this.$store.dispatch('getUserInfo')
         }
         else {
           Message({
