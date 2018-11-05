@@ -1,5 +1,6 @@
 <template>
-  <el-header height="80px">
+
+  <div>
     <img src="../../common/img/user.png"/>
     <span>Admin</span>
     <a class="el-icon-message"></a>
@@ -26,7 +27,8 @@
       </el-dropdown-menu>
     </el-dropdown>
     <a>帮助</a>
-  </el-header>
+
+  </div>
 </template>
 
 <script>
