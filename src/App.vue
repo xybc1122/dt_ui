@@ -10,7 +10,7 @@
           <el-main>
             <router-view></router-view>
           </el-main>
-          <el-footer>Footer</el-footer>
+          <el-footer v-show="$route.meta.showLogin">Footer</el-footer>
         </el-container>
       </el-container>
     </el-container>
@@ -22,6 +22,11 @@
   import Aside from './components/Aside/Aside'
 
   export default {
+    data(){
+      return{
+
+      }
+    },
     components: {
       Header,
       Aside

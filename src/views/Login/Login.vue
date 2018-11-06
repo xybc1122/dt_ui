@@ -8,9 +8,9 @@
         </div>
         <div class="login">
           <el-input v-model="userName" placeholder="用户名" id="userName" maxlength="8"
-                    prefix-icon="el-icon-edit"></el-input>
+                    prefix-icon="iconfont icon_dt-xiaoren"></el-input>
           <p></p>
-          <el-input v-model="passWord" placeholder="密码" id="pwd" maxlength="15" prefix-icon="el-icon-more"></el-input>
+          <el-input v-model="passWord" placeholder="密码" id="pwd" maxlength="15" prefix-icon="iconfont icon_dt-suo"></el-input>
           <div class="success">
             <el-button type="primary" @click="Login" size="medium" icon="el-icon-success">登陆</el-button>
             <el-button class="quest" type="danger" size="mini" icon="el-icon-question">忘记密码</el-button>
@@ -24,7 +24,7 @@
 
 <script>
   import {Message, Loading} from 'element-ui'
-  import {repLoginUser, repIndex} from '../../api'
+  import {repLoginUser,repLogout} from '../../api'
 
   export default {
     data() {
@@ -35,24 +35,11 @@
       }
     },
     async mounted() {
-      // 如果其他已经登陆的页面跳转过来 得到的参数是toHome===-1 说明已经登陆
-      if (this.$route.query.isLogin === -1) {
-                    return
-      }
-      this.isLogin = false
-      const result = await repIndex();
-      console.log(result);
-      //进来先判断下是否已经登录 如果登陆了就直接跳转到index页面
+      //请求登陆页面时退出登陆
+      const result = await repLogout()
       if (result.code === 200) {
-        Message({
-          showClose: true,
-          message: '您已登陆，不能在跳转到登陆页面!',
-          type: 'error'
-        })
-        this.$router.replace('/index')
+        this.$router.replace('/login')
       }
-      //更新状态
-      this.isLogin = true
     },
     methods: {
       async Login() {
@@ -68,8 +55,6 @@
             this.setCookie('token', user.token, 7);
             // 同步记录用户信息
             this.$store.dispatch('recordUser', user);
-            //loading动画
-            this.fullscreenLoading = false;
             // 去个主界面
             this.$router.replace('/index');
             loadingInstance.close()
@@ -80,6 +65,7 @@
               type: 'error'
             })
           }
+          loadingInstance.close()
         }
         else {
           Message({
@@ -88,6 +74,7 @@
             type: 'error'
           })
         }
+        loadingInstance.close()
       }
     }
   }

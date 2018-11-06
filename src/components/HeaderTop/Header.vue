@@ -18,7 +18,7 @@
     </el-dropdown>
     <el-dropdown>
   <span class="el-dropdown-link">
-  <i class="el-icon-setting"></i>
+  <i class="iconfont icon_dt-shezhi"></i>
   </span>
       <el-dropdown-menu slot="dropdown">
         <el-button size="mini" icon="el-icon-success">设置</el-button>
