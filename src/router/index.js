@@ -14,21 +14,17 @@ export default new Router({
       component: Index,
       meta: {
         showLogin: true
-      }
-    },
-    {
-      path: '/about',
-      component:About,
-      meta: {
-        showLogin: true
-      }
-    },
-    {
-      path: '/message',
-      component:Message,
-      meta: {
-        showLogin: true
-      }
+      },
+      children: [
+        {
+          path: '/index/about/:id',
+          component: About
+        },
+        {
+          path: '/index/message/:id',
+          component: Message
+        }
+      ]
     },
     {
       path: '/login',

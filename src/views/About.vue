@@ -54,46 +54,18 @@
           </div>
         </div>
       </div>
-    <div id="table">
+    <div id="userTable">
       <el-table
-        ref="multipleTable"
         :data="tableData3"
-        tooltip-effect="dark"
         style="width: 100%"
-        @selection-change="handleSelectionChange">
-        <el-table-column
-          type="selection"
-          width="55">
+        height="500">
+        <el-table-column fixed prop="date" label="序号" width="100">
         </el-table-column>
-        <el-table-column
-          label="序号"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="账号"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="address"
-          label="地址"
-          show-overflow-tooltip>
+        <el-table-column fixed prop="date" label="序号" width="10000">
         </el-table-column>
       </el-table>
-      <div class="block" id="page">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage4"
-          :page-sizes="[100, 200, 300, 400]"
-          :page-size="100"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="400">
-        </el-pagination>
       </div>
     </div>
-    </div>
-
 </template>
 
 <script>
@@ -104,9 +76,54 @@
         isLogin: true,
         loading: false,
         tableData3: [{
+          date: '2016-05-03',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-02',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-08',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-06',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
           date: '2016-05-07',
           name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
         }],
         multipleSelection: [],
         userOptions: [{
@@ -161,5 +178,49 @@
 </script>
 
 <style>
+  /* 输入 下拉款*/
+  #printCheck {
+    width: 100%;
+    border: 1px solid #F00;
+    height: 160px;
+    position: relative;
+  }
 
+  #printCheck .check1 {
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+  }
+
+  #printCheck .check2 {
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+  }
+
+  #printCheck .check3 {
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+  }
+
+  #printCheck .check4 {
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+  }
+
+  #printCheck .check5 {
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+  }
+
+  /* 输入 下拉款*/
+
+  /*表格*/
+  #userTable {
+    border: 1px solid #F00;
+    margin-top: 50px;
+  }
 </style>

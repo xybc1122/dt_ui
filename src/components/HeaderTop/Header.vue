@@ -1,8 +1,8 @@
 <template>
 
   <div>
-    <img src="../../common/img/user.png"/>
-    <span>Admin</span>
+
+    <span>{{userInfo.user.name}}</span>
     <a class="el-icon-message"></a>
     <el-dropdown>
   <span class="el-dropdown-link">
@@ -33,6 +33,7 @@
 
 <script>
   import {repLogout} from '../../api'
+  import {mapState} from 'vuex'
   export default {
     methods: {
       async logout () {
@@ -41,6 +42,10 @@
           this.$router.replace('/login')
         }
       }
+    },
+    computed: {
+      //读取数据
+      ...mapState(['userInfo'])
     }
   }
 </script>
