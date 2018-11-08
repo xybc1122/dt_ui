@@ -1,23 +1,29 @@
 <template>
   <div>
     <el-button type="primary">一级菜单管理!!</el-button>
-    <el-table :data="menuList" border style="width: 100%">
-
+    <el-table :data="menuData" border style="width: 100%">
       <el-table-column
         type="selection"
         width="55">
       </el-table-column>
-      <el-table-column   v-if="index < 3 "  v-for="(menuI, index) in menuData" :key="index" :label="menuI.headName">
-        <!-- 数据的遍历  scope.row就代表数据的每一个对象-->
+      <el-table-column v-if="menuTitle[0]!==undefined" :label="menuTitle[0].headName" width="180">
         <template slot-scope="scope">
-          <span>{{scope.row.menuList[index].value}}</span>
+          <span> {{ scope.row.name}}</span>
         </template>
       </el-table-column>
-
-      <el-table-column   v-if="index > 2"  v-for="(menuI, index) in menuData" :key="index" :label="menuI.headName">
-       <!-- 最后遍历一个 图标管理-->
+      <el-table-column v-if="menuTitle[1]!==undefined" :label="menuTitle[1].headName" width="180">
         <template slot-scope="scope">
-          <span><i :class="scope.row.menuList[index].value"></i></span>
+          <span><i :class="scope.row.icon"></i></span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="menuTitle[2]!==undefined" :label="menuTitle[2].headName" width="180">
+        <template slot-scope="scope">
+          {{ scope.row.url}}
+        </template>
+      </el-table-column>
+      <el-table-column v-if="menuTitle[3]!==undefined" :label="menuTitle[3].headName" width="180">
+        <template slot-scope="scope">
+          {{ scope.row.order}}
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -43,20 +49,20 @@
   export default {
     data () {
       return {
-        menuList: [],
-        menuData: []
+        menuData: [],
+        menuTitle: []
       }
     },
     async mounted () {
       const resultHead = await repHead(this.$route.params.id)
       if (resultHead.code === 200) {
         console.log(resultHead.data)
-        this.menuData = resultHead.data
+        this.menuTitle = resultHead.data
       }
       const resultMenu = await repMenuList()
       if (resultMenu.code === 200) {
         // console.log(resultMenu.data)
-        this.menuList = resultMenu.data
+        this.menuData = resultMenu.data
       }
     },
     methods: {

@@ -80,25 +80,65 @@
         style="width: 100%"
         height="500"
         border
-        :span-method="arraySpanMethod"
-      >
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
-        循环到前三 fixed固定
-        <el-table-column v-if="index < 3" fixed v-for="(i,index) in tableTitle" :key="index" :label="i.headName"
-                         width="100" sortable>
+        :span-method="arraySpanMethod">
+        <el-table-column v-if="tableTitle[0]!==undefined" :label="tableTitle[0].headName" width="180" sortable
+                         fixed >
           <template slot-scope="scope">
-            <span>{{scope.row.name}}</span>
+
           </template>
         </el-table-column>
-        <el-table-column v-if="index > 3" v-for="(i,index) in tableTitle" :key="index" :label="i.headName" width="100">
+        <el-table-column v-if="tableTitle[1]!==undefined" :label="tableTitle[1].headName" width="180" sortable>
           <template slot-scope="scope">
-            <span>{{scope.row.name}}</span>
+
+          </template>
+        </el-table-column>
+        <el-table-column v-if="tableTitle[2]!==undefined" :label="tableTitle[2].headName" width="180" sortable>
+          <template slot-scope="scope">
+
+          </template>
+        </el-table-column>
+        <el-table-column v-if="tableTitle[3]!==undefined" :label="tableTitle[3].headName" width="180">
+          <template slot-scope="scope">
+
+          </template>
+        </el-table-column>
+        <el-table-column v-if="tableTitle[4]!==undefined" :label="tableTitle[4].headName" width="180">
+          <template slot-scope="scope">
+
+          </template>
+        </el-table-column>
+        <el-table-column v-if="tableTitle[5]!==undefined" :label="tableTitle[5].headName" width="180" sortable>
+          <template slot-scope="scope">
+
+          </template>
+        </el-table-column>
+        <el-table-column v-if="tableTitle[6]!==undefined" :label="tableTitle[6].headName" width="180">
+          <template slot-scope="scope">
+
+          </template>
+        </el-table-column>
+        <el-table-column v-if="tableTitle[7]!==undefined" :label="tableTitle[7].headName" width="180" sortable>
+          <template slot-scope="scope">
+
+          </template>
+        </el-table-column>
+        <el-table-column v-if="tableTitle[8]!==undefined" :label="tableTitle[8].headName" width="180">
+          <template slot-scope="scope">
+
           </template>
         </el-table-column>
       </el-table>
+      <div class="block">
+        <span class="demonstration">显示总数</span>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage1"
+          :page-size="100"
+          layout="total, prev, pager, next"
+          :total="1000">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -150,8 +190,8 @@
         currentPage4: 4,
         menu: {},
         userValue: '',
-        pcValue: ''
-
+        pcValue: '',
+        currentPage1: 5
       }
     },
     async mounted () {
@@ -164,10 +204,6 @@
     }
     ,
     methods: {
-      handleSelectionChange (val) {
-        this.multipleSelection = val
-      }
-      ,
       handleSizeChange (val) {
         console.log(`每页 ${val} 条`)
       }
