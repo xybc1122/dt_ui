@@ -78,7 +78,8 @@
               showClose: true,
               message: result.msg,
               type: 'error'
-            })
+            });
+            loadingInstance.close()
           }
         }
         else {
@@ -87,6 +88,7 @@
             message: '账号或密码不能为空~',
             type: 'error'
           })
+          loadingInstance.close()
         }
       }
     }
