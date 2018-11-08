@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '../views/Index/Index'
 import Login from '../views/Login/Login'
-import About from '../views/About'
-import Message from '../views/Message/Message'
+import AccountManagement from '../views/AccountManagement/AccountManagement'
+import Menu from '../views/Menu/Menu'
 
 Vue.use(Router)
 
@@ -17,12 +17,12 @@ export default new Router({
       },
       children: [
         {
-          path: '/index/about/:id',
-          component: About
+          path: '/index/accountManagement/:id',
+          component: AccountManagement
         },
         {
-          path: '/index/message/:id',
-          component: Message
+          path: '/index/menu/:id',
+          component: Menu
         }
       ]
     },

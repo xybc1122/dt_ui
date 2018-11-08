@@ -41,11 +41,6 @@
             path: '/login'
           })
       }
-      this.$store.dispatch('getMenuList')
-    },
-    computed: {
-      //读取数据
-      ...mapState(['menuList'])
     },
     components: {
       Header,

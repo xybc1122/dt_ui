@@ -10,13 +10,13 @@ export default {
   recordUser ({commit}, userInfo) {
     commit(RECEIVE_USER_INFO, {userInfo})
   },
-  //异步获取菜单页面
-  async getMenuList ({commit}) {
-    const result = await repMenu()
-    if (result.code === 200) {
-      const menuList = result.data
-      commit(RECEIVE_MENU_LIST, {menuList})
-    }
-  }
+  // //异步获取菜单页面
+  // async getMenuList ({commit}) {
+  //   const result = await repMenu()
+  //   if (result.code === 200) {
+  //     const menuList = result.data
+  //     commit(RECEIVE_MENU_LIST, {menuList})
+  //   }
+  // }
 }
 

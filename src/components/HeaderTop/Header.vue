@@ -2,7 +2,7 @@
 
   <div>
 
-    <span>{{userInfo.user.name}}</span>
+    <span>刷新后丢失数据</span>
     <a class="el-icon-message"></a>
     <el-dropdown>
   <span class="el-dropdown-link">
