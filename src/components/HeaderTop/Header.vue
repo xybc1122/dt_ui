@@ -1,7 +1,8 @@
 <template>
-  <el-header height="80px">
-    <img src="../../common/img/user.png"/>
-    <span>Admin</span>
+
+  <div>
+
+    <span>刷新后丢失数据</span>
     <a class="el-icon-message"></a>
     <el-dropdown>
   <span class="el-dropdown-link">
@@ -17,7 +18,7 @@
     </el-dropdown>
     <el-dropdown>
   <span class="el-dropdown-link">
-  <i class="el-icon-setting"></i>
+  <i class="iconfont icon_dt-shezhi"></i>
   </span>
       <el-dropdown-menu slot="dropdown">
         <el-button size="mini" icon="el-icon-success">设置</el-button>
@@ -26,11 +27,13 @@
       </el-dropdown-menu>
     </el-dropdown>
     <a>帮助</a>
-  </el-header>
+
+  </div>
 </template>
 
 <script>
   import {repLogout} from '../../api'
+  import {mapState} from 'vuex'
   export default {
     methods: {
       async logout () {
@@ -39,6 +42,10 @@
           this.$router.replace('/login')
         }
       }
+    },
+    computed: {
+      //读取数据
+      ...mapState(['userInfo'])
     }
   }
 </script>

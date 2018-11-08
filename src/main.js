@@ -31,6 +31,9 @@ import {
   OptionGroup,
   DatePicker,
   Pagination,
+  Cascader,
+  Tag,
+  Popover
 } from 'element-ui'
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)
@@ -58,17 +61,22 @@ Vue.component(Option.name, Option)
 Vue.component(OptionGroup.name, OptionGroup)
 Vue.component(DatePicker.name, DatePicker)
 Vue.component(Pagination.name, Pagination)
+Vue.component(Cascader.name, Cascader)
+Vue.component(Tag.name, Tag)
+Vue.component(Popover.name, Popover)
 
+// 设置Cookie
 Vue.prototype.setCookie = function(c_name,value,expiredays) {
   var exdate=new Date()
   exdate.setDate(exdate.getDate()+expiredays)
   document.cookie=c_name+ "=" +escape(value)+
     ((expiredays==null) ? "" : ";expires="+exdate.toGMTString())
 };
+
 new Vue({
   el: '#app',
   router,
   store,
-  components: {App},
+  render: h => h(App),
   template: '<App/>'
 })

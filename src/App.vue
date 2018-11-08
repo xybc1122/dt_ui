@@ -7,12 +7,15 @@
 <script>
 
   export default {
-    components: {
+    data () {
+      return {
+
+      }
     }
   }
 
 </script>
 
-<style lang="stylus" ref="stylesheet/stylus">
+<style>
 
 </style>
