@@ -1,142 +1,143 @@
 <template>
   <div>
     <div id="printCheck">
-      <div>
-        <div class="check1">
-          <el-select v-model="userValue" placeholder="账号/姓名/手机" value="">
-            <el-option
-              v-for="item in tableTitle"
-              :key="item.id"
-              :label="item.headName"
-              :value="item.id">
-            </el-option>
-          </el-select>
-          <div>
-            <el-input placeholder="请输入内容" prefix-icon="el-icon-search"></el-input>
-          </div>
+      <div class="check1">
+        <el-select v-model="userValue1" placeholder="用户信息选择" @change="currentSel1" value="">
+          <el-option
+            v-for="(item,index) in tableTitle"
+            :key="index"
+            :label="item.headName"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </div>
+      <div class="check2">
+        <el-input v-show="msgInput1===7" v-model="userName" placeholder="请输入账号"
+                  prefix-icon="el-icon-search"></el-input>
+        <el-input v-show="msgInput1===8" v-model="name" placeholder="请输入姓名"
+                  prefix-icon="el-icon-search"></el-input>
+        <div class="block" v-show="msgInput1===11">
+          <el-date-picker
+            v-model="createDate"
+            type="datetime"
+            placeholder="选择日期时间">
+          </el-date-picker>
         </div>
-        <div class="check2">
-          <el-select v-model="pcValue" placeholder="计算机名/IP地址" value="">
-            <el-option
-              v-for="item in tableTitle"
-              :key="item.id"
-              :label="item.headName"
-              :value="item.id">
-            </el-option>
-          </el-select>
-          <div>
-            <el-input placeholder="请输入内容" prefix-icon="el-icon-search"></el-input>
-          </div>
+      </div>
+      <div class="check3">
+        <el-select v-model="userValue2" placeholder="用户信息选择" @change="currentSel2" value="">
+          <el-option
+            v-for="(item,index) in tableTitle"
+            :key="index"
+            :label="item.headName"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </div>
+      <div class="check4">
+        <el-input v-show="msgInput2===7" v-model="userName" placeholder="请输入账号"
+                  prefix-icon="el-icon-search"></el-input>
+        <el-input v-show="msgInput2===8" v-model="name" placeholder="请输入姓名"
+                  prefix-icon="el-icon-search"></el-input>
+        <div class="block" v-show="msgInput2===11">
+          <el-date-picker
+            v-model="createDate"
+            type="datetime"
+            placeholder="选择日期时间">
+          </el-date-picker>
         </div>
-        <div class="check4">
-          <div class="block">
-            <span class="demonstration">注册时间:</span>
-            <el-date-picker
-              v-model="dateValue"
-              type="datetime"
-              placeholder="选择日期时间">
-            </el-date-picker>
-          </div>
+      </div>
+      <div class="check5">
+        <el-select v-model="userValue3" placeholder="用户信息选择" @change="currentSel3" value="">
+          <el-option
+            v-for="(item,index) in tableTitle"
+            :key="index"
+            :label="item.headName"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </div>
+      <div class="check6">
+        <el-input v-show="msgInput3===7" v-model="userName" placeholder="请输入账号"
+                  prefix-icon="el-icon-search"></el-input>
+        <el-input v-show="msgInput3===8" v-model="name" placeholder="请输入姓名"
+                  prefix-icon="el-icon-search"></el-input>
+        <div class="block" v-show="msgInput3===11">
+          <el-date-picker
+            v-model="createDate"
+            type="datetime"
+            placeholder="选择日期时间">
+          </el-date-picker>
         </div>
-        <div class="check5">
-          <el-button type="primary" icon="el-icon-search">查询</el-button>
-          <el-button type="primary">重置</el-button>
-        </div>
+      </div>
+      <div class="check7">
+        <el-button type="primary" icon="el-icon-search" @click="searchUser">查询</el-button>
+        <el-button type="primary" @click="reset">重置</el-button>
       </div>
     </div>
     <div id="userTable">
-      <!--<el-table-->
-      <!--:data="tableData"-->
-      <!--:span-method="arraySpanMethod"-->
-      <!--border-->
-      <!--style="width: 100%">-->
-      <!--<el-table-column-->
-      <!--prop="id"-->
-      <!--label="ID"-->
-      <!--width="180" fixed>-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-      <!--prop="name"-->
-      <!--label="姓名">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-      <!--prop="amount1"-->
-      <!--sortable-->
-      <!--label="数值 1">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-      <!--prop="amount2"-->
-      <!--sortable-->
-      <!--label="数值 2">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-      <!--prop="amount3"-->
-      <!--sortable-->
-      <!--label="数值 3">-->
-      <!--</el-table-column>-->
-      <!--</el-table>-->
       <el-table
         :data="tableData"
         style="width: 100%"
         height="500"
-        border
-        :span-method="arraySpanMethod">
-        <el-table-column v-if="tableTitle[0]!==undefined" :label="tableTitle[0].headName" width="180" sortable
-                         fixed >
-          <template slot-scope="scope">
+        :span-method="arraySpanMethod"
+        @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          type="index"
+          width="50"
+          fixed>
+        </el-table-column>
 
+        <el-table-column v-if="tableTitle[0]!==undefined" :label="tableTitle[0].headName" width="100" sortable fixed>
+          <template slot-scope="scope">
+            <span> {{ scope.row.userName}}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="tableTitle[1]!==undefined" :label="tableTitle[1].headName" width="180" sortable>
+        <el-table-column v-if="tableTitle[1]!==undefined" :label="tableTitle[1].headName" width="100" sortable>
           <template slot-scope="scope">
-
+            <span> {{ scope.row. name}}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="tableTitle[2]!==undefined" :label="tableTitle[2].headName" width="180" sortable>
+        <el-table-column v-if="tableTitle[2]!==undefined" :label="tableTitle[2].headName" width="150">
           <template slot-scope="scope">
 
           </template>
         </el-table-column>
         <el-table-column v-if="tableTitle[3]!==undefined" :label="tableTitle[3].headName" width="180">
           <template slot-scope="scope">
-
+            <span>{{ scope.row.rName}}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="tableTitle[4]!==undefined" :label="tableTitle[4].headName" width="180">
+        <el-table-column v-if="tableTitle[4]!==undefined" :label="tableTitle[4].headName" width="180" sortable>
           <template slot-scope="scope">
 
           </template>
         </el-table-column>
-        <el-table-column v-if="tableTitle[5]!==undefined" :label="tableTitle[5].headName" width="180" sortable>
+        <el-table-column v-if="tableTitle[5]!==undefined" :label="tableTitle[5].headName" width="180" :formatter="accountStatus"></el-table-column>
+
+        <el-table-column v-if="tableTitle[6]!==undefined" :label="tableTitle[6].headName" width="180" sortable>
           <template slot-scope="scope">
 
           </template>
         </el-table-column>
-        <el-table-column v-if="tableTitle[6]!==undefined" :label="tableTitle[6].headName" width="180">
-          <template slot-scope="scope">
-
-          </template>
-        </el-table-column>
-        <el-table-column v-if="tableTitle[7]!==undefined" :label="tableTitle[7].headName" width="180" sortable>
-          <template slot-scope="scope">
-
-          </template>
-        </el-table-column>
-        <el-table-column v-if="tableTitle[8]!==undefined" :label="tableTitle[8].headName" width="180">
+        <el-table-column v-if="tableTitle[7]!==undefined" :label="tableTitle[7].headName" width="120">
           <template slot-scope="scope">
 
           </template>
         </el-table-column>
       </el-table>
       <div class="block">
-        <span class="demonstration">显示总数</span>
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page.sync="currentPage1"
-          :page-size="100"
+          :current-page.sync="currentPage"
+          :page-size="page_size"
           layout="total, prev, pager, next"
-          :total="1000">
+          :total="total_size">
         </el-pagination>
       </div>
     </div>
@@ -144,79 +145,68 @@
 </template>
 
 <script>
-  import {repHead} from '../../api'
+  import {repHead, repUsers} from '../../api'
 
   export default {
     data () {
       return {
-        msg: '',
-        isLogin: true,
-        loading: false,
-        tableTitle: [],
-        tableData: [{
-          id: '12987122',
-          name: '王小虎',
-          amount1: '234',
-          amount2: '3.2',
-          amount3: 10
-        }, {
-          id: '12987123',
-          name: '王小虎',
-          amount1: '165',
-          amount2: '4.43',
-          amount3: 12
-        }, {
-          id: '12987124',
-          name: '王小虎',
-          amount1: '324',
-          amount2: '1.9',
-          amount3: 9
-        }, {
-          id: '12987125',
-          name: '王小虎',
-          amount1: '621',
-          amount2: '2.2',
-          amount3: 17
-        }, {
-          id: '12987126',
-          name: '王小虎',
-          amount1: '539',
-          amount2: '4.1',
-          amount3: 15
-        }],
-        multipleSelection: [],
-        PermissionValue: '',
-        dateValue: '',
-        currentPage4: 4,
-        menu: {},
-        userValue: '',
-        pcValue: '',
-        currentPage1: 5
+        msgInput1: '',//当选择后获得第一个下拉框的id
+        msgInput2: '',//第二个
+        msgInput3: '',//第三个
+        inputValue: '',//序号
+        userName: '',//账号名
+        name: '',//用户名
+        createDate: '',//创建时间
+        tableTitle: [],//表头信息
+        tableData: [],//表信息
+        userValue1: '', //第一个下拉框的model userValue1
+        userValue2: '',//第二
+        userValue3: '',//第三
+        currentPage: 1,//当前页
+        total_size: 0,//总的页
+        page_size: 50,//显示最大的页
+        multipleSelection: []
       }
     },
     async mounted () {
       const resultHead = await
         repHead(this.$route.params.id)
       if (resultHead.code === 200) {
-        console.log(resultHead.data)
+        // console.log(resultHead.data)
         this.tableTitle = resultHead.data
+      }
+      //获得input里的value
+      const {userName, name, createDate,currentPage,pageSize} = this
+      //转换成userinfo对象
+      const UserInfo = {userName, name, createDate,currentPage,pageSize}
+      //分页查询 传一个当前页,显示最大的页,一个userInfo对象
+      console.log(UserInfo)
+      const resultUsers = await repUsers(UserInfo)
+      if (resultUsers.code === 200) {
+        //赋值 然后显示
+        const dataUser = resultUsers.data
+        this.tableData = dataUser.users
+        this.currentPage = dataUser.current_page
+        this.total_size = dataUser.total_size
       }
     }
     ,
     methods: {
       handleSizeChange (val) {
         console.log(`每页 ${val} 条`)
-      }
-      ,
+      },
+      //转换显示
+      accountStatus: function (row) {
+        return row.accountStatus === 0 ? '正常' : row.accountStatus === 1 ? '冻结' : row.accountStatus === 2 ? '禁用' : ''
+      },
       handleCurrentChange (val) {
         console.log(`当前页: ${val}`)
-      }
-      ,
+      },
+      handleSelectionChange (val) {
+        this.multipleSelection = val
+      },
       arraySpanMethod ({row, column, rowIndex, columnIndex}) {
-        console.log(row)
-        console.log(column)
-        console.log(rowIndex)
-        console.log(columnIndex)
+        // console.log(row, column, rowIndex, columnIndex)
         if (rowIndex % 2 === 0) {
           if (columnIndex === 0) {
             return [1, 2]
@@ -224,7 +214,33 @@
             return [0, 0]
           }
         }
+      },
+      //获得第一个input框里选择好的id
+      currentSel1 (selVal) {
+        this.msgInput1 = selVal
+      },
+      //第二个
+      currentSel2 (selVal) {
+        this.msgInput2 = selVal
+      },
+      //第三个
+      currentSel3 (selVal) {
+        this.msgInput3 = selVal
+      },
+      //点击查询获得三个输入框的value
+      searchUser () {
+        const {userName, name, createDate} = this
+        const UserInfo = {userName, name, createDate}
+        console.log(UserInfo)
+      },
+      //重置
+      reset () {
+        this.userName = ''
+        this.name = ''
+        this.createDate = ''
+
       }
+
     }
   }
 </script>
@@ -233,8 +249,7 @@
   /* 输入 下拉款*/
   #printCheck {
     width: 100%;
-    border: 1px solid #F00;
-    height: 160px;
+    height: 30px;
     position: relative;
   }
 
@@ -268,11 +283,22 @@
     margin-left: 25px;
   }
 
+  #printCheck .check6 {
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+  }
+
+  #printCheck .check7 {
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+  }
+
   /* 输入 下拉款*/
 
   /*表格*/
   #userTable {
-    border: 1px solid #F00;
     margin-top: 50px;
   }
 </style>
