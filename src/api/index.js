@@ -8,7 +8,8 @@ const BASE_URL = '/api'
 export const repLoginUser = ({userName, pwd}) => ajax(BASE_URL + `/ajaxLogin`, {userName, pwd}, 'POST')
 
 //获取用户管理信息
-export const repUsers=({userInfo}) =>ajax(BASE_URL+`/user/show`,{userInfo},'POST')
+export const repUsers=({page,size,userName,name,createDate}) =>
+  ajax(BASE_URL+`/user/show`,{page,size,userName,name,createDate},'POST')
 
 //查询table头信息
 export const repHead = (menu_id) => ajax(BASE_URL +'/head',{menu_id})

@@ -117,7 +117,8 @@
 
           </template>
         </el-table-column>
-        <el-table-column v-if="tableTitle[5]!==undefined" :label="tableTitle[5].headName" width="180" :formatter="accountStatus"></el-table-column>
+        <el-table-column v-if="tableTitle[5]!==undefined" :label="tableTitle[5].headName" width="180"
+                         :formatter="accountStatus"></el-table-column>
 
         <el-table-column v-if="tableTitle[6]!==undefined" :label="tableTitle[6].headName" width="180" sortable>
           <template slot-scope="scope">
@@ -148,7 +149,7 @@
   import {repHead, repUsers} from '../../api'
 
   export default {
-    data () {
+    data() {
       return {
         msgInput1: '',//当选择后获得第一个下拉框的id
         msgInput2: '',//第二个
@@ -168,7 +169,7 @@
         multipleSelection: []
       }
     },
-    async mounted () {
+    async mounted() {
       const resultHead = await
         repHead(this.$route.params.id)
       if (resultHead.code === 200) {
@@ -176,12 +177,13 @@
         this.tableTitle = resultHead.data
       }
       //获得input里的value
-      const {userName, name, createDate,currentPage,pageSize} = this
+      const {currentPage, page_size} = this
+      const page = currentPage;
+      const size = page_size;
       //转换成userinfo对象
-      const UserInfo = {userName, name, createDate,currentPage,pageSize}
+      const userPage = {page, size}
       //分页查询 传一个当前页,显示最大的页,一个userInfo对象
-      console.log(UserInfo)
-      const resultUsers = await repUsers(UserInfo)
+      const resultUsers = await repUsers(userPage)
       if (resultUsers.code === 200) {
         //赋值 然后显示
         const dataUser = resultUsers.data
@@ -192,20 +194,20 @@
     }
     ,
     methods: {
-      handleSizeChange (val) {
+      handleSizeChange(val) {
         console.log(`每页 ${val} 条`)
       },
       //转换显示
       accountStatus: function (row) {
         return row.accountStatus === 0 ? '正常' : row.accountStatus === 1 ? '冻结' : row.accountStatus === 2 ? '禁用' : ''
       },
-      handleCurrentChange (val) {
+      handleCurrentChange(val) {
         console.log(`当前页: ${val}`)
       },
-      handleSelectionChange (val) {
+      handleSelectionChange(val) {
         this.multipleSelection = val
       },
-      arraySpanMethod ({row, column, rowIndex, columnIndex}) {
+      arraySpanMethod({row, column, rowIndex, columnIndex}) {
         // console.log(row, column, rowIndex, columnIndex)
         if (rowIndex % 2 === 0) {
           if (columnIndex === 0) {
@@ -216,25 +218,44 @@
         }
       },
       //获得第一个input框里选择好的id
-      currentSel1 (selVal) {
+      currentSel1(selVal) {
         this.msgInput1 = selVal
+        this.userName = ''
+        this.name = ''
+        this.createDate = ''
       },
       //第二个
-      currentSel2 (selVal) {
+      currentSel2(selVal) {
         this.msgInput2 = selVal
+        this.userName = ''
+        this.name = ''
+        this.createDate = ''
       },
       //第三个
-      currentSel3 (selVal) {
+      currentSel3(selVal) {
         this.msgInput3 = selVal
+        this.userName = ''
+        this.name = ''
+        this.createDate = ''
       },
       //点击查询获得三个输入框的value
-      searchUser () {
-        const {userName, name, createDate} = this
-        const UserInfo = {userName, name, createDate}
-        console.log(UserInfo)
+      async searchUser() {
+        const {userName, name, createDate,currentPage,page_size} = this
+        const page = currentPage;
+        const size = page_size;
+        const userInfo = {userName, name, createDate,page,size}
+        const resultUsers = await repUsers(userInfo)
+        if (resultUsers.code === 200) {
+          //赋值 然后显示
+          const dataUser = resultUsers.data
+          console.log(dataUser)
+          this.tableData = dataUser.users
+          this.currentPage = dataUser.current_page
+          this.total_size = dataUser.total_size
+        }
       },
       //重置
-      reset () {
+      reset() {
         this.userName = ''
         this.name = ''
         this.createDate = ''
