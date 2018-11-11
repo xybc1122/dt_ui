@@ -2,7 +2,7 @@
   <div>
     <div id="printCheck">
       <div class="check1">
-        <el-select v-model="userValue1" placeholder="用户信息选择" @change="currentSel1" value="">
+        <el-select v-model="userValue"  clearable placeholder="用户信息选择" @change="getValue" value="">
           <el-option
             v-for="(item,index) in tableTitle"
             :key="index"
@@ -12,57 +12,11 @@
         </el-select>
       </div>
       <div class="check2">
-        <el-input v-show="msgInput1===7" v-model="userName" placeholder="请输入账号"
+        <el-input v-show="msgInput===7" v-model="userName" placeholder="请输入账号"
                   prefix-icon="el-icon-search"></el-input>
-        <el-input v-show="msgInput1===8" v-model="name" placeholder="请输入姓名"
+        <el-input v-show="msgInput===8" v-model="name" placeholder="请输入姓名"
                   prefix-icon="el-icon-search"></el-input>
-        <div class="block" v-show="msgInput1===11">
-          <el-date-picker
-            v-model="createDate"
-            type="datetime"
-            placeholder="选择日期时间">
-          </el-date-picker>
-        </div>
-      </div>
-      <div class="check3">
-        <el-select v-model="userValue2" placeholder="用户信息选择" @change="currentSel2" value="">
-          <el-option
-            v-for="(item,index) in tableTitle"
-            :key="index"
-            :label="item.headName"
-            :value="item.id">
-          </el-option>
-        </el-select>
-      </div>
-      <div class="check4">
-        <el-input v-show="msgInput2===7" v-model="userName" placeholder="请输入账号"
-                  prefix-icon="el-icon-search"></el-input>
-        <el-input v-show="msgInput2===8" v-model="name" placeholder="请输入姓名"
-                  prefix-icon="el-icon-search"></el-input>
-        <div class="block" v-show="msgInput2===11">
-          <el-date-picker
-            v-model="createDate"
-            type="datetime"
-            placeholder="选择日期时间">
-          </el-date-picker>
-        </div>
-      </div>
-      <div class="check5">
-        <el-select v-model="userValue3" placeholder="用户信息选择" @change="currentSel3" value="">
-          <el-option
-            v-for="(item,index) in tableTitle"
-            :key="index"
-            :label="item.headName"
-            :value="item.id">
-          </el-option>
-        </el-select>
-      </div>
-      <div class="check6">
-        <el-input v-show="msgInput3===7" v-model="userName" placeholder="请输入账号"
-                  prefix-icon="el-icon-search"></el-input>
-        <el-input v-show="msgInput3===8" v-model="name" placeholder="请输入姓名"
-                  prefix-icon="el-icon-search"></el-input>
-        <div class="block" v-show="msgInput3===11">
+        <div class="block" v-show="msgInput===11">
           <el-date-picker
             v-model="createDate"
             type="datetime"
@@ -73,6 +27,11 @@
       <div class="check7">
         <el-button type="primary" icon="el-icon-search" @click="searchUser">查询</el-button>
         <el-button type="primary" @click="reset">重置</el-button>
+      </div>
+      <div>
+        <span v-show="userName!==''">账号:{{userName}}</span>
+        <span v-show="name!==''">姓名:{{name}}</span>
+        <span v-show="createDate!==''">时间:{{createDate}}</span>
       </div>
     </div>
     <div id="userTable">
@@ -151,21 +110,17 @@
   export default {
     data() {
       return {
-        msgInput1: '',//当选择后获得第一个下拉框的id
-        msgInput2: '',//第二个
-        msgInput3: '',//第三个
+        msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
         userName: '',//账号名
         name: '',//用户名
         createDate: '',//创建时间
         tableTitle: [],//表头信息
         tableData: [],//表信息
-        userValue1: '', //第一个下拉框的model userValue1
-        userValue2: '',//第二
-        userValue3: '',//第三
+        userValue: '', //下拉框的model userValue1
         currentPage: 1,//当前页
         total_size: 0,//总的页
-        page_size: 50,//显示最大的页
+        page_size: 3,//显示最大的页
         multipleSelection: []
       }
     },
@@ -218,25 +173,8 @@
         }
       },
       //获得第一个input框里选择好的id
-      currentSel1(selVal) {
-        this.msgInput1 = selVal
-        this.userName = ''
-        this.name = ''
-        this.createDate = ''
-      },
-      //第二个
-      currentSel2(selVal) {
-        this.msgInput2 = selVal
-        this.userName = ''
-        this.name = ''
-        this.createDate = ''
-      },
-      //第三个
-      currentSel3(selVal) {
-        this.msgInput3 = selVal
-        this.userName = ''
-        this.name = ''
-        this.createDate = ''
+      getValue(selVal) {
+        this.msgInput = selVal
       },
       //点击查询获得三个输入框的value
       async searchUser() {
@@ -285,31 +223,6 @@
     margin-top: 25px;
     margin-left: 25px;
   }
-
-  #printCheck .check3 {
-    float: left;
-    margin-top: 25px;
-    margin-left: 25px;
-  }
-
-  #printCheck .check4 {
-    float: left;
-    margin-top: 25px;
-    margin-left: 25px;
-  }
-
-  #printCheck .check5 {
-    float: left;
-    margin-top: 25px;
-    margin-left: 25px;
-  }
-
-  #printCheck .check6 {
-    float: left;
-    margin-top: 25px;
-    margin-left: 25px;
-  }
-
   #printCheck .check7 {
     float: left;
     margin-top: 25px;
