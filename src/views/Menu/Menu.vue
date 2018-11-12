@@ -1,30 +1,22 @@
 <template>
   <div>
     <el-button type="primary">一级菜单管理!!</el-button>
-    <el-table :data="menuData" border style="width: 100%">
+    <el-table
+      :data="menuData" border style="width: 100%">
       <el-table-column
         type="selection"
         width="55">
       </el-table-column>
-      <el-table-column v-if="menuTitle[0]!==undefined" :label="menuTitle[0].headName" width="180">
-        <template slot-scope="scope">
-          <span> {{ scope.row.name}}</span>
-        </template>
+      <el-table-column v-if="menuTitle[0]!==undefined" :label="menuTitle[0].headName" prop="name" width="180">
       </el-table-column>
       <el-table-column v-if="menuTitle[1]!==undefined" :label="menuTitle[1].headName" width="180">
         <template slot-scope="scope">
           <span><i :class="scope.row.icon"></i></span>
         </template>
       </el-table-column>
-      <el-table-column v-if="menuTitle[2]!==undefined" :label="menuTitle[2].headName" width="180">
-        <template slot-scope="scope">
-          {{ scope.row.url}}
-        </template>
+      <el-table-column v-if="menuTitle[2]!==undefined" :label="menuTitle[2].headName" prop="url" width="180">
       </el-table-column>
-      <el-table-column v-if="menuTitle[3]!==undefined" :label="menuTitle[3].headName" width="180">
-        <template slot-scope="scope">
-          {{ scope.row.order}}
-        </template>
+      <el-table-column v-if="menuTitle[3]!==undefined" :label="menuTitle[3].headName" prop="order" width="180">
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -50,19 +42,20 @@
     data () {
       return {
         menuData: [],
-        menuTitle: []
+        menuTitle: [],
+        maenLoading:false
       }
     },
     async mounted () {
       const resultHead = await repHead(this.$route.params.id)
       if (resultHead.code === 200) {
-        console.log(resultHead.data)
+        // console.log(resultHead.data)
         this.menuTitle = resultHead.data
       }
       const resultMenu = await repMenuList()
       if (resultMenu.code === 200) {
-        // console.log(resultMenu.data)
-        this.menuData = resultMenu.data
+        console.log(resultMenu.data)
+        this.menuData = resultMenu.data.users
       }
     },
     methods: {

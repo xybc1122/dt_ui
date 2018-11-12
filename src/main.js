@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import './fiters' //加载过滤器
 import {
   Button,
   Input,
@@ -33,7 +34,14 @@ import {
   Pagination,
   Cascader,
   Tag,
-  Popover
+  Popover,
+  Form,
+  FormItem,
+  Switch,
+  TimePicker,
+  Radio,
+  RadioGroup,
+  Dialog
 } from 'element-ui'
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)
@@ -64,7 +72,13 @@ Vue.component(Pagination.name, Pagination)
 Vue.component(Cascader.name, Cascader)
 Vue.component(Tag.name, Tag)
 Vue.component(Popover.name, Popover)
-
+Vue.component(Form.name, Form)
+Vue.component(FormItem.name, FormItem)
+Vue.component(Switch.name, Switch)
+Vue.component(TimePicker.name, TimePicker)
+Vue.component(Radio.name, Radio)
+Vue.component(RadioGroup.name, RadioGroup)
+Vue.component(Dialog.name, Dialog)
 // 设置Cookie
 Vue.prototype.setCookie = function(c_name,value,expiredays) {
   var exdate=new Date()
