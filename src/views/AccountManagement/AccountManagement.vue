@@ -13,13 +13,13 @@
         </el-select>
       </div>
       <div class="check2">
-        <el-input v-show="msgInput===7" v-model="userName" placeholder="请输入账号"
+        <el-input v-show="msgInput===7" v-model="user.userName" placeholder="请输入账号"
                   prefix-icon="el-icon-search"></el-input>
-        <el-input v-show="msgInput===8" v-model="name" placeholder="请输入姓名"
+        <el-input v-show="msgInput===8" v-model="user.name" placeholder="请输入姓名"
                   prefix-icon="el-icon-search"></el-input>
         <div class="block" v-show="msgInput===11">
           <el-date-picker
-            v-model="createDate"
+            v-model="user.createDate"
             type="datetime"
             placeholder="选择日期时间">
           </el-date-picker>
@@ -30,9 +30,9 @@
         <el-button type="primary" @click="reset">重置</el-button>
       </div>
       <div>
-        <span v-show="userName!==''">账号:{{userName}}</span>
-        <span v-show="name!==''">姓名:{{name}}</span>
-        <span v-show="createDate!==''">时间:{{createDate}}</span>
+        <span v-show="user.userName!==''">账号:{{user.userName}}</span>
+        <span v-show="user.name!==''">姓名:{{user.name}}</span>
+        <span v-show="user.createDate!==''">时间:{{user.createDate}}</span>
       </div>
     </div>
     <!--table表格显示-->
@@ -56,7 +56,8 @@
                          sortable fixed></el-table-column>
         <el-table-column v-if="tableTitle[1]!==undefined" :label="tableTitle[1].headName" prop="name" width="100"
                          sortable></el-table-column>
-        <el-table-column v-if="tableTitle[2]!==undefined" :label="tableTitle[2].headName" width="150"></el-table-column>
+        <el-table-column v-if="tableTitle[2]!==undefined" :label="tableTitle[2].headName" prop="mobilePhone"
+                         width="150"></el-table-column>
         <el-table-column v-if="tableTitle[3]!==undefined" :label="tableTitle[3].headName" prop="rName" width="180">
         </el-table-column>
         <el-table-column v-if="tableTitle[4]!==undefined" :label="tableTitle[4].headName" width="180">
@@ -77,79 +78,107 @@
         </el-table-column>
       </el-table>
       <el-button type="text" icon="el-icon-edit" size="mini" @click="upUserInfo">修改</el-button>
-      <el-button type="primary" icon="el-icon-edit" size="mini">新增</el-button>
+      <el-button type="text" icon="el-icon-delete" size="mini" @click="delUserInfo">删除</el-button>
       <div class="block">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
-          :page-size="pageSize"
+          :current-page.sync="user.currentPage"
+          :page-size="user.pageSize"
           layout="total, prev, pager, next"
-          :total="total_size">
+          :total="user.total_size">
         </el-pagination>
       </div>
     </div>
     <!--隐藏from表单-->
     <el-dialog title="用户信息修改" :visible.sync="dialogFormVisible">
-      <el-form ref="form" label-width="80px" v-for="(userInfo,index) in multipleSelection" :key="index">
+      <el-form :model="userForm" ref="userForm" :rules="rules" label-width="80px">
         <el-form-item v-if="tableTitle[0]!==undefined" :label="tableTitle[0].headName">
-          <el-input :value="userInfo.userName"></el-input>
+          <el-input :placeholder="userForm.uName" clearable :disabled="true"></el-input>
         </el-form-item>
         <el-form-item v-if="tableTitle[1]!==undefined" :label="tableTitle[1].headName">
-          <el-input :value="userInfo.name"></el-input>
+          <el-input v-model="userForm.name" clearable></el-input>
         </el-form-item>
         <el-form-item v-if="tableTitle[2]!==undefined" :label="tableTitle[2].headName">
-          <el-input></el-input>
+          <el-input v-model="userForm.uMobilePhone" clearable></el-input>
         </el-form-item>
         <el-form-item v-if="tableTitle[3]!==undefined" :label="tableTitle[3].headName">
-          <el-input :value="userInfo.rName"></el-input>
+          <el-input v-model="userForm.rName" clearable></el-input>
         </el-form-item>
         <el-form-item v-if="tableTitle[4]!==undefined" :label="tableTitle[4].headName">
-          <el-date-picker
-            type="datetime"
-            :placeholder="userInfo.createDate | date-format">
-          </el-date-picker>
+          <div class="block">
+            <el-date-picker
+              v-model="userForm.uCreateDate"
+              type="datetime">
+            </el-date-picker>
+          </div>
         </el-form-item>
 
-        <el-form-item v-if="tableTitle[5]!==undefined" :label="tableTitle[5].headName">
-          <el-input :value="userInfo.accountStatus"></el-input>
+        <el-form-item v-if="tableTitle[5]!==undefined" :label="tableTitle[5].headName" prop="uAccountStatus">
+          <el-input v-model.number="userForm.uAccountStatus" clearable maxlength="1"></el-input>
         </el-form-item>
         <el-form-item v-if="tableTitle[6]!==undefined" :label="tableTitle[6].headName">
-          <el-date-picker
-            type="datetime"
-            :placeholder="userInfo.landingTime | date-format">
-          </el-date-picker>
+          <div class="block">
+            <el-date-picker
+              v-model="userForm.uLandingTime"
+              type="datetime">
+            </el-date-picker>
+          </div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <el-button @click="resetForm('userForm')">重置</el-button>
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="saveUserInfo('userForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
-
 <script>
   import {repHead, repUsers} from '../../api'
   import {Message} from 'element-ui'
 
   export default {
     data () {
+      var userAccountStatus = (rule, value, callback) => {
+        if (!Number.isInteger(value)) {
+          callback(new Error('请输入数字'))
+        } else {
+          callback()
+        }
+      }
       return {
         msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
-        userName: '',//账号名
-        name: '',//用户名
-        createDate: '',//创建时间
         tableTitle: [],//表头信息
         tableData: [],//表信息
         userValue: '', //下拉框的model
-        currentPage: 1,//当前页
-        total_size: 0,//总的页
-        pageSize: 10,//显示最大的页
         multipleSelection: [],
         dialogFormVisible: false,
-        formLabelWidth: false
+        user: {
+          userName: '',//账号名
+          name: '',//用户名
+          landingTime: '',//登陆时间
+          createDate: '',//创建时间
+          accountStatus: '',
+          currentPage: 1,//当前页
+          total_size: 0,//总的页
+          pageSize: 10//显示最大的页
+        },
+        userForm: {
+          uName: '',//账号
+          name: '',//用户名
+          uLandingTime: '',//登陆时间
+          uCreateDate: '',//创建时间
+          uAccountStatus: '',//账号状态
+          uMobilePhone: '',//手机
+          rName: ''//角色
+        },
+        rules: {
+          uAccountStatus: [
+            {validator: userAccountStatus, trigger: 'blur'}
+          ],
+        },
       }
     },
     async mounted () {
@@ -161,17 +190,16 @@
         this.tableTitle = resultHead.data
       }
       //获得input里的value
-      const {currentPage, pageSize} = this
-      //转换成userinfo对象
+      const currentPage = this.user.currentPage
+      const pageSize = this.user.pageSize
       const userPage = {currentPage, pageSize}
-      //分页查询 传一个当前页,显示最大的页,一个userInfo对象
       const resultUsers = await repUsers(userPage)
       if (resultUsers.code === 200) {
         //赋值 然后显示
         const dataUser = resultUsers.data
         this.tableData = dataUser.users
-        this.currentPage = dataUser.current_page
-        this.total_size = dataUser.total_size
+        this.user.currentPage = dataUser.current_page
+        this.user.total_size = dataUser.total_size
       }
     }
     ,
@@ -183,7 +211,8 @@
       //val=当前页 分页
       async handleCurrentChange (val) {
         //获得input里的value
-        const {currentPage, pageSize} = this
+        const currentPage = this.user.currentPage
+        const pageSize = this.user.pageSize
         const userPage = {currentPage, pageSize}
         //分页查询 传一个当前页,显示最大的页,一个userInfo对象
         const resultUsers = await repUsers(userPage)
@@ -191,8 +220,8 @@
           //赋值 然后显示
           const dataUser = resultUsers.data
           this.tableData = dataUser.users
-          this.currentPage = dataUser.current_page
-          this.total_size = dataUser.total_size
+          this.user.currentPage = dataUser.current_page
+          this.user.total_size = dataUser.total_size
         }
       },
       //table 账号状态 转换显示
@@ -205,16 +234,16 @@
       },
       //点击修改的时候 获得 Checkbox中 的属性
       upUserInfo () {
-        const userInfoSelection = this.multipleSelection
-        console.log(userInfoSelection)
-        if (userInfoSelection.length <= 0) {
+        const userSaveSelection = this.multipleSelection
+        console.log(userSaveSelection)
+        if (userSaveSelection.length <= 0) {
           Message({
             showClose: true,
             message: '必须选中一条修改',
             type: 'error'
           })
           return
-        } else if (userInfoSelection.length >= 2) {
+        } else if (userSaveSelection.length >= 2) {
           Message({
             showClose: true,
             message: '修改只能选中一条',
@@ -222,8 +251,50 @@
           })
           return
         }
+        //将数组转换成对象
+        userSaveSelection.forEach(item => {
+          this.userForm['uName'] = item.userName
+          this.userForm['name'] = item.name
+          this.userForm['rName'] = item.rName
+          this.userForm['uAccountStatus'] = item.accountStatus
+          this.userForm['uCreateDate'] = item.createDate
+          this.userForm['uLandingTime'] = item.landingTime
+          this.userForm['uMobilePhone'] = item.mobilePhone
+        })
         this.dialogFormVisible = true
       },
+      //确认后更新用户信息操作
+      saveUserInfo (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!')
+            this.dialogFormVisible = false
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+        console.log(this.userForm)
+      },
+      //from表单重置
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+      //批量删除
+      delUserInfo () {
+        const userDelSelection = this.multipleSelection
+        if(userDelSelection.length===0){
+          Message({
+            showClose: true,
+            message: '必须选择一个或多个!',
+            type: 'error'
+          })
+          return
+        }
+        var ids = userDelSelection.map(item => item.uid).join()//获取所有选中行的id组成的字符串，以逗号分
+        console.log(ids)
+      },
+
       //tabale表头上下箭头 排序
       arraySpanMethod ({row, column, rowIndex, columnIndex}) {
         if (rowIndex % 2 === 0) {
@@ -240,29 +311,26 @@
       },
       //点击查询获得输入框的value
       async searchUser () {
-        const {userName, name, createDate, currentPage, pageSize} = this
-        const userInfo = {userName, name, createDate, currentPage, pageSize}
-        const resultUsers = await repUsers(userInfo)
+        const resultUsers = await repUsers(this.user)
         if (resultUsers.code === 200) {
           //赋值 然后显示
           const dataUser = resultUsers.data
-          console.log(dataUser)
           this.tableData = dataUser.users
-          this.currentPage = dataUser.current_page
-          this.total_size = dataUser.total_size
+          this.user.currentPage = dataUser.current_page
+          this.user.total_size = dataUser.total_size
         }
       },
       //重置
       reset () {
-        this.userName = ''
-        this.name = ''
-        this.createDate = ''
+        this.user.userName = ''
+        this.user.name = ''
+        this.user.createDate = ''
 
       }
-
     }
   }
 </script>
+
 
 <style>
   /* 输入 下拉款*/

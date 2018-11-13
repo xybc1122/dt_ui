@@ -12,10 +12,24 @@
           <p></p>
           <el-input v-model="passWord" placeholder="密码" id="pwd" maxlength="15" prefix-icon="iconfont icon_dt-suo"></el-input>
           <div class="success">
-            <el-button type="primary" @click="Login" size="medium" icon="el-icon-success" @keyup.enter="Login">登陆</el-button>
+            <el-button type="primary" @click="Login" size="medium" icon="el-icon-success" @keyup.enter.native="Login">登陆</el-button>
             <el-button class="quest" type="danger" size="mini" icon="el-icon-question">忘记密码</el-button>
           </div>
         </div>
+
+        <!--<el-form label-width="80px">-->
+        <!--<el-form-item>-->
+          <!--<el-input v-model="userName" placeholder="用户名" id="userName" maxlength="8"-->
+                    <!--prefix-icon="iconfont icon_dt-xiaoren"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item>-->
+          <!--<el-input v-model="passWord" placeholder="密码" id="pwd" maxlength="15" prefix-icon="iconfont icon_dt-suo"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item>-->
+          <!--<el-button type="primary" @click="Login" size="medium" icon="el-icon-success" @keyup.enter.native="Login">登陆</el-button>-->
+          <!--<el-button class="quest" type="danger" size="mini" icon="el-icon-question">忘记密码</el-button>-->
+        <!--</el-form-item>-->
+      <!--</el-form>-->
       </div>
     </div>
 
