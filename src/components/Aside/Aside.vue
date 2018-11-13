@@ -24,7 +24,7 @@
                 <span><i :class="cMenu.icon"></i>
                 </span> {{cMenu.name}}
               </template>
-              <el-menu-item :index="sMenu.url"
+              <el-menu-item :index="sMenu.url+'/'+sMenu.menuId"
                             v-for="(sMenu,indexSun) in cMenu.childMenus" :key="indexSun">
                 {{sMenu.name}}
               </el-menu-item>

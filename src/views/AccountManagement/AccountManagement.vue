@@ -77,8 +77,8 @@
         <el-table-column v-if="tableTitle[7]!==undefined" :label="tableTitle[7].headName" width="120">
         </el-table-column>
       </el-table>
-      <el-button type="text" icon="el-icon-edit" size="mini" @click="upUserInfo">修改</el-button>
-      <el-button type="text" icon="el-icon-delete" size="mini" @click="delUserInfo">删除</el-button>
+      <el-button type="text" icon="el-icon-edit" size="mini" @click="upUserInfo" v-show="userInfo.user.status===1">修改</el-button>
+      <el-button type="text" icon="el-icon-delete" size="mini" @click="delUserInfo" v-show="userInfo.user.status===1">删除</el-button>
       <div class="block">
         <el-pagination
           @size-change="handleSizeChange"
@@ -135,9 +135,9 @@
   </div>
 </template>
 <script>
-  import {repHead, repUsers} from '../../api'
-  import {Message} from 'element-ui'
-
+  import {repHead, repUsers,repUpUserInfo} from '../../api'
+  import {Message,MessageBox} from 'element-ui'
+  import {mapState} from 'vuex'
   export default {
     data () {
       var userAccountStatus = (rule, value, callback) => {
@@ -180,6 +180,10 @@
           ],
         },
       }
+    },
+    computed: {
+      //读取数据
+      ...mapState(['userInfo'])
     },
     async mounted () {
       //查询获得table表的 头信息
@@ -233,7 +237,7 @@
         this.multipleSelection = val
       },
       //点击修改的时候 获得 Checkbox中 的属性
-      upUserInfo () {
+      async upUserInfo () {
         const userSaveSelection = this.multipleSelection
         console.log(userSaveSelection)
         if (userSaveSelection.length <= 0) {
@@ -264,8 +268,17 @@
         this.dialogFormVisible = true
       },
       //确认后更新用户信息操作
-      saveUserInfo (formName) {
-        this.$refs[formName].validate((valid) => {
+     async saveUserInfo (formName) {
+       const result= await repUpUserInfo("name","ceshi");
+       if(result.code===-1){
+         Message({
+           showClose: true,
+           message: '你没有权限修改数据',
+           type: 'error'
+         })
+         return
+       }
+      this.$refs[formName].validate((valid) => {
           if (valid) {
             alert('submit!')
             this.dialogFormVisible = false
@@ -277,13 +290,13 @@
         console.log(this.userForm)
       },
       //from表单重置
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
+      resetForm (formName) {
+        this.$refs[formName].resetFields()
       },
       //批量删除
       delUserInfo () {
         const userDelSelection = this.multipleSelection
-        if(userDelSelection.length===0){
+        if (userDelSelection.length === 0) {
           Message({
             showClose: true,
             message: '必须选择一个或多个!',
@@ -293,41 +306,57 @@
         }
         var ids = userDelSelection.map(item => item.uid).join()//获取所有选中行的id组成的字符串，以逗号分
         console.log(ids)
-      },
-
-      //tabale表头上下箭头 排序
-      arraySpanMethod ({row, column, rowIndex, columnIndex}) {
-        if (rowIndex % 2 === 0) {
-          if (columnIndex === 0) {
-            return [1, 2]
-          } else if (columnIndex === 1) {
-            return [0, 0]
-          }
+        // this.$confirm('此操作将删除用户信息, 是否继续?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
+        //   var ids = userDelSelection.map(item => item.uid).join()//获取所有选中行的id组成的字符串，以逗号分
+        //   console.log(ids)
+        //   this.$message({
+        //     type: 'success',
+        //     message: '删除成功!'
+        //   })
+        // }).catch(() => {
+        //   this.$message({
+        //     type: 'info',
+        //     message: '已取消删除'
+        //   })
+        // })
+    },
+    //tabale表头上下箭头 排序
+    arraySpanMethod ({row, column, rowIndex, columnIndex}) {
+      if (rowIndex % 2 === 0) {
+        if (columnIndex === 0) {
+          return [1, 2]
+        } else if (columnIndex === 1) {
+          return [0, 0]
         }
-      },
-      //获得第一个input框里的id 通过id去判断显示哪个输入框
-      getValue (selVal) {
-        this.msgInput = selVal
-      },
-      //点击查询获得输入框的value
-      async searchUser () {
-        const resultUsers = await repUsers(this.user)
-        if (resultUsers.code === 200) {
-          //赋值 然后显示
-          const dataUser = resultUsers.data
-          this.tableData = dataUser.users
-          this.user.currentPage = dataUser.current_page
-          this.user.total_size = dataUser.total_size
-        }
-      },
-      //重置
-      reset () {
-        this.user.userName = ''
-        this.user.name = ''
-        this.user.createDate = ''
-
       }
+    },
+    //获得第一个input框里的id 通过id去判断显示哪个输入框
+    getValue (selVal) {
+      this.msgInput = selVal
+    },
+    //点击查询获得输入框的value
+    async searchUser () {
+      const resultUsers = await repUsers(this.user)
+      if (resultUsers.code === 200) {
+        //赋值 然后显示
+        const dataUser = resultUsers.data
+        this.tableData = dataUser.users
+        this.user.currentPage = dataUser.current_page
+        this.user.total_size = dataUser.total_size
+      }
+    },
+    //重置
+    reset () {
+      this.user.userName = ''
+      this.user.name = ''
+      this.user.createDate = ''
+
     }
+  }
   }
 </script>
 

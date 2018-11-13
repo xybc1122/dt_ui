@@ -26,6 +26,10 @@ export const repMenu = () => ajax(BASE_URL + `/menu/show`)
 //查询菜单信息
 export const repMenuList = () => ajax(BASE_URL + `/menu/findMenuList`)
 
+//删除用户信息
+
+export const repUpUserInfo = ({user,name}) => ajax(BASE_URL+`/user/upUserInfo`,{user,name},'POST')
+
 
 
 

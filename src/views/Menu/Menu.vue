@@ -16,7 +16,7 @@
       </el-table-column>
       <el-table-column v-if="menuTitle[2]!==undefined" :label="menuTitle[2].headName" prop="url" width="180">
       </el-table-column>
-      <el-table-column v-if="menuTitle[3]!==undefined" :label="menuTitle[3].headName" prop="order" width="180">
+      <el-table-column v-if="menuTitle[3]!==undefined" :label="menuTitle[3].headName" prop="menuOrder" width="180">
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">

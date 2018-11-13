@@ -4,7 +4,6 @@ import {
   RECEIVE_USER_INFO,
   RECEIVE_MENU_LIST
 } from './mutation-types'
-
 export default {
   [RECEIVE_USER_INFO] (state, {userInfo}) {
     state.userInfo = userInfo
@@ -12,4 +11,5 @@ export default {
   [RECEIVE_MENU_LIST] (state, {menuList}) {
     state.menuList = menuList
   }
+
 }
