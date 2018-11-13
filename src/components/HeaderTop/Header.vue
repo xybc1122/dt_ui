@@ -34,6 +34,7 @@
 <script>
   import {repLogout} from '../../api'
   import {mapState} from 'vuex'
+  import storageUtils from '../../utils/storageUtils'
   export default {
     methods: {
       async logout () {
@@ -46,6 +47,13 @@
     computed: {
       //读取数据
       ...mapState(['userInfo'])
+    },
+    //监视属性
+    watch: {
+      userInfo: {
+        deep: true,  //深度监视
+        handler: storageUtils.saveUser //设置缓存
+      }
     }
   }
 </script>

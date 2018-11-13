@@ -77,8 +77,11 @@
         <el-table-column v-if="tableTitle[7]!==undefined" :label="tableTitle[7].headName" width="120">
         </el-table-column>
       </el-table>
-      <el-button type="text" icon="el-icon-edit" size="mini" @click="upUserInfo" v-show="userInfo.user.status===1">修改</el-button>
-      <el-button type="text" icon="el-icon-delete" size="mini" @click="delUserInfo" v-show="userInfo.user.status===1">删除</el-button>
+      <el-button type="text" icon="el-icon-edit" size="mini" @click="upUserInfo" v-show="userInfo.user.status===1">修改
+      </el-button>
+      <el-button type="text" icon="el-icon-delete" size="mini" @click="delUserInfo" v-show="userInfo.user.status===1">
+        删除
+      </el-button>
       <div class="block">
         <el-pagination
           @size-change="handleSizeChange"
@@ -135,11 +138,13 @@
   </div>
 </template>
 <script>
-  import {repHead, repUsers,repUpUserInfo} from '../../api'
-  import {Message,MessageBox} from 'element-ui'
+  import {repHead, repUsers, repUpUserInfo} from '../../api'
+  import {Message, MessageBox} from 'element-ui'
   import {mapState} from 'vuex'
+  import storageUtils from '../../utils/storageUtils'
+
   export default {
-    data () {
+    data() {
       var userAccountStatus = (rule, value, callback) => {
         if (!Number.isInteger(value)) {
           callback(new Error('请输入数字'))
@@ -185,7 +190,14 @@
       //读取数据
       ...mapState(['userInfo'])
     },
-    async mounted () {
+    //监视属性
+    watch: {
+      userInfo: {
+        deep: true,  //深度监视
+        handler: storageUtils.saveUser //设置缓存
+      }
+    },
+    async mounted() {
       //查询获得table表的 头信息
       const resultHead = await
         repHead(this.$route.params.id)
@@ -209,11 +221,11 @@
     ,
     methods: {
       //分页
-      handleSizeChange (val) {
+      handleSizeChange(val) {
         console.log(`每页 ${val} 条`)
       },
       //val=当前页 分页
-      async handleCurrentChange (val) {
+      async handleCurrentChange(val) {
         //获得input里的value
         const currentPage = this.user.currentPage
         const pageSize = this.user.pageSize
@@ -233,11 +245,11 @@
         return row.accountStatus === 0 ? '正常' : row.accountStatus === 1 ? '冻结' : row.accountStatus === 2 ? '禁用' : ''
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
-      handleSelectionChange (val) {
+      handleSelectionChange(val) {
         this.multipleSelection = val
       },
       //点击修改的时候 获得 Checkbox中 的属性
-      async upUserInfo () {
+      async upUserInfo() {
         const userSaveSelection = this.multipleSelection
         console.log(userSaveSelection)
         if (userSaveSelection.length <= 0) {
@@ -268,17 +280,17 @@
         this.dialogFormVisible = true
       },
       //确认后更新用户信息操作
-     async saveUserInfo (formName) {
-       const result= await repUpUserInfo("name","ceshi");
-       if(result.code===-1){
-         Message({
-           showClose: true,
-           message: '你没有权限修改数据',
-           type: 'error'
-         })
-         return
-       }
-      this.$refs[formName].validate((valid) => {
+      async saveUserInfo(formName) {
+        const result = await repUpUserInfo("name", "ceshi");
+        if (result.code === -1) {
+          Message({
+            showClose: true,
+            message: '你没有权限修改数据',
+            type: 'error'
+          })
+          return
+        }
+        this.$refs[formName].validate((valid) => {
           if (valid) {
             alert('submit!')
             this.dialogFormVisible = false
@@ -290,11 +302,11 @@
         console.log(this.userForm)
       },
       //from表单重置
-      resetForm (formName) {
+      resetForm(formName) {
         this.$refs[formName].resetFields()
       },
       //批量删除
-      delUserInfo () {
+      delUserInfo() {
         const userDelSelection = this.multipleSelection
         if (userDelSelection.length === 0) {
           Message({
@@ -323,40 +335,40 @@
         //     message: '已取消删除'
         //   })
         // })
-    },
-    //tabale表头上下箭头 排序
-    arraySpanMethod ({row, column, rowIndex, columnIndex}) {
-      if (rowIndex % 2 === 0) {
-        if (columnIndex === 0) {
-          return [1, 2]
-        } else if (columnIndex === 1) {
-          return [0, 0]
+      },
+      //tabale表头上下箭头 排序
+      arraySpanMethod({row, column, rowIndex, columnIndex}) {
+        if (rowIndex % 2 === 0) {
+          if (columnIndex === 0) {
+            return [1, 2]
+          } else if (columnIndex === 1) {
+            return [0, 0]
+          }
         }
-      }
-    },
-    //获得第一个input框里的id 通过id去判断显示哪个输入框
-    getValue (selVal) {
-      this.msgInput = selVal
-    },
-    //点击查询获得输入框的value
-    async searchUser () {
-      const resultUsers = await repUsers(this.user)
-      if (resultUsers.code === 200) {
-        //赋值 然后显示
-        const dataUser = resultUsers.data
-        this.tableData = dataUser.users
-        this.user.currentPage = dataUser.current_page
-        this.user.total_size = dataUser.total_size
-      }
-    },
-    //重置
-    reset () {
-      this.user.userName = ''
-      this.user.name = ''
-      this.user.createDate = ''
+      },
+      //获得第一个input框里的id 通过id去判断显示哪个输入框
+      getValue(selVal) {
+        this.msgInput = selVal
+      },
+      //点击查询获得输入框的value
+      async searchUser() {
+        const resultUsers = await repUsers(this.user)
+        if (resultUsers.code === 200) {
+          //赋值 然后显示
+          const dataUser = resultUsers.data
+          this.tableData = dataUser.users
+          this.user.currentPage = dataUser.current_page
+          this.user.total_size = dataUser.total_size
+        }
+      },
+      //重置
+      reset() {
+        this.user.userName = ''
+        this.user.name = ''
+        this.user.createDate = ''
 
+      }
     }
-  }
   }
 </script>
 

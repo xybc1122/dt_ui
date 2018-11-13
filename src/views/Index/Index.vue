@@ -6,7 +6,12 @@
     <el-container>
       <Aside/>
       <el-container>
-        <el-main><router-view></router-view></el-main>
+        <el-main>
+          <!--缓存路由组件-->
+          <keep-alive>
+            <router-view></router-view>
+          </keep-alive>
+          </el-main>
         <el-footer>Footer</el-footer>
       </el-container>
     </el-container>
@@ -50,10 +55,5 @@
 </script>
 
 <style>
-  .el-aside {
-    background-color: #D3DCE6;
-    color: #333;
-    text-align: center;
-    line-height: 200px;
-  }
+
 </style>
