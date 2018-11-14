@@ -185,6 +185,7 @@
       }
     },
     async mounted() {
+      //获得用户信息
       //查询获得table表的 头信息
       const resultHead = await
         repHead(this.$route.params.id)

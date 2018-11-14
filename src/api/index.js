@@ -30,6 +30,9 @@ export const repMenuList = () => ajax(BASE_URL + `/menu/findMenuList`)
 
 export const repUpUserInfo = ({user,name}) => ajax(BASE_URL+`/user/upUserInfo`,{user,name},'POST')
 
+//获取单个用户基本信息
+
+export const  repSingleUser=() => ajax(BASE_URL+`/user/singleUser`);
 
 
 
