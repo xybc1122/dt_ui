@@ -16,7 +16,7 @@
             <el-button type="submit" @click="Login" size="medium" icon="el-icon-success" @keyup.enter.native="Login">
               登陆
             </el-button>
-            <el-checkbox v-model="checked">记住我</el-checkbox>
+            <!--<el-checkbox v-model="checked">记住我</el-checkbox>-->
             <!--<el-button class="quest" type="danger" size="mini" icon="el-icon-question">忘记密码</el-button>-->
           </div>
         </div>
@@ -39,13 +39,15 @@
         checked: true
       }
     },
+    async mounted(){
+
+    },
     methods: {
       async Login () {
         let loadingInstance = Loading.service(this.options)
-        const userName = this.userName.trim()
-        const pwd = this.passWord.trim()
-        const checked = this.checked
-        const users = {userName, pwd, checked}
+        const userName = this.userName
+        const pwd = this.passWord
+        const users = {userName, pwd}
         if (userName && pwd) {
           const result = await repLoginUser(users)
           console.log(result)

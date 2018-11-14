@@ -32,7 +32,7 @@ export const repUpUserInfo = ({user,name}) => ajax(BASE_URL+`/user/upUserInfo`,{
 
 //获取单个用户基本信息
 
-export const  repSingleUser=() => ajax(BASE_URL+`/user/singleUser`);
+export const  repSingleUser=() => ajax(BASE_URL+`/user/getUser`);
 
 
 

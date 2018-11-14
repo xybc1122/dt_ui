@@ -77,9 +77,9 @@
         <el-table-column v-if="tableTitle[7]!==undefined" :label="tableTitle[7].headName" width="120">
         </el-table-column>
       </el-table>
-      <el-button type="text" icon="el-icon-edit" size="mini" @click="upUserInfo" >修改
+      <el-button type="text" icon="el-icon-edit" size="mini" @click="upUserInfo" v-if="singleUser.status===1">修改
       </el-button>
-      <el-button type="text" icon="el-icon-delete" size="mini" @click="delUserInfo">
+      <el-button type="text" icon="el-icon-delete" size="mini" @click="delUserInfo" v-if="singleUser.status===1">
         删除
       </el-button>
       <div class="block">
@@ -138,7 +138,7 @@
   </div>
 </template>
 <script>
-  import {repHead, repUsers, repUpUserInfo} from '../../api'
+  import {repHead, repUsers, repUpUserInfo, repSingleUser} from '../../api'
   import {Message, MessageBox} from 'element-ui'
 
   export default {
@@ -158,6 +158,7 @@
         userValue: '', //下拉框的model
         multipleSelection: [],
         dialogFormVisible: false,
+        singleUser: {},
         user: {
           userName: '',//账号名
           name: '',//用户名
@@ -186,6 +187,10 @@
     },
     async mounted() {
       //获得用户信息
+      const resultSingleUser = await repSingleUser();
+      if (resultSingleUser.code === 200) {
+        this.singleUser = resultSingleUser.data;
+      }
       //查询获得table表的 头信息
       const resultHead = await
         repHead(this.$route.params.id)
