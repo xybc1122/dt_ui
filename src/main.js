@@ -43,6 +43,7 @@ import {
   RadioGroup,
   Dialog
 } from 'element-ui'
+
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)
 Vue.component(Container.name, Container)
@@ -80,12 +81,25 @@ Vue.component(Radio.name, Radio)
 Vue.component(RadioGroup.name, RadioGroup)
 Vue.component(Dialog.name, Dialog)
 // 设置Cookie
-Vue.prototype.setCookie = function(c_name,value,expiredays) {
-  var exdate=new Date()
-  exdate.setDate(exdate.getDate()+expiredays)
-  document.cookie=c_name+ "=" +escape(value)+
-    ((expiredays==null) ? "" : ";expires="+exdate.toGMTString())
-};
+Vue.prototype.setCookie = function (c_name, value, expiredays) {
+  var exdate = new Date()
+  exdate.setDate(exdate.getDate() + expiredays)
+  document.cookie = c_name + '=' + encodeURI(value) +
+    ((expiredays == null) ? '' : ';expires=' + exdate.toGMTString())
+}
+//获取cookie
+Vue.prototype.getCookie = function (c_name) {
+  if (document.cookie.length > 0) {
+    var c_start = document.cookie.indexOf(c_name + '=')
+    if (c_start !== -1) {
+      c_start = c_start + c_name.length + 1
+      var c_end = document.cookie.indexOf(';', c_start)
+      if (c_end === -1) c_end = document.cookie.length
+      return decodeURI(document.cookie.substring(c_start, c_end))
+    }
+  }
+  return ''
+}
 
 new Vue({
   el: '#app',

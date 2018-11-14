@@ -2,7 +2,7 @@
 
   <div>
 
-    <span>刷新后丢失数据</span>
+    <span>{{userName}}</span>
     <a class="el-icon-message"></a>
     <el-dropdown>
   <span class="el-dropdown-link">
@@ -12,8 +12,8 @@
         <el-dropdown-item>1</el-dropdown-item>
         <el-dropdown-item>2</el-dropdown-item>
         <el-dropdown-item>3</el-dropdown-item>
-        <el-dropdown-item >4</el-dropdown-item>
-        <el-dropdown-item >5</el-dropdown-item>
+        <el-dropdown-item>4</el-dropdown-item>
+        <el-dropdown-item>5</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
     <el-dropdown>
@@ -33,9 +33,13 @@
 
 <script>
   import {repLogout} from '../../api'
-  import {mapState} from 'vuex'
-  import storageUtils from '../../utils/storageUtils'
+
   export default {
+    data () {
+      return {
+        userName: ''
+      }
+    },
     methods: {
       async logout () {
         const result = await repLogout()
@@ -44,16 +48,8 @@
         }
       }
     },
-    computed: {
-      //读取数据
-      ...mapState(['userInfo'])
-    },
-    //监视属性
-    watch: {
-      userInfo: {
-        deep: true,  //深度监视
-        handler: storageUtils.saveUser //设置缓存
-      }
+    mounted () {
+      this.userName = this.getCookie('userName')
     }
   }
 </script>

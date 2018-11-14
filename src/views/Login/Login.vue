@@ -4,80 +4,67 @@
     <div class="login-box" v-show="isLogin">
       <div class="panel panel-default">
         <div class="save">
-          <el-button type="info" size="mini" icon="el-icon-edit">注册账号</el-button>
+          <el-button type="text" size="mini" icon="el-icon-edit">注册账号</el-button>
         </div>
         <div class="login">
           <el-input v-model="userName" placeholder="用户名" id="userName" maxlength="8"
                     prefix-icon="iconfont icon_dt-xiaoren"></el-input>
           <p></p>
-          <el-input v-model="passWord" placeholder="密码" id="pwd" maxlength="15" prefix-icon="iconfont icon_dt-suo"></el-input>
+          <el-input v-model="passWord" placeholder="密码" id="pwd" maxlength="15"
+                    prefix-icon="iconfont icon_dt-suo"></el-input>
           <div class="success">
-            <el-button type="primary" @click="Login" size="medium" icon="el-icon-success" @keyup.enter.native="Login">登陆</el-button>
-            <el-button class="quest" type="danger" size="mini" icon="el-icon-question">忘记密码</el-button>
+            <el-button type="submit" @click="Login" size="medium" icon="el-icon-success" @keyup.enter.native="Login">
+              登陆
+            </el-button>
+            <el-checkbox v-model="checked">记住我</el-checkbox>
+            <!--<el-button class="quest" type="danger" size="mini" icon="el-icon-question">忘记密码</el-button>-->
           </div>
         </div>
-
-        <!--<el-form label-width="80px">-->
-        <!--<el-form-item>-->
-          <!--<el-input v-model="userName" placeholder="用户名" id="userName" maxlength="8"-->
-                    <!--prefix-icon="iconfont icon_dt-xiaoren"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item>-->
-          <!--<el-input v-model="passWord" placeholder="密码" id="pwd" maxlength="15" prefix-icon="iconfont icon_dt-suo"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item>-->
-          <!--<el-button type="primary" @click="Login" size="medium" icon="el-icon-success" @keyup.enter.native="Login">登陆</el-button>-->
-          <!--<el-button class="quest" type="danger" size="mini" icon="el-icon-question">忘记密码</el-button>-->
-        <!--</el-form-item>-->
-      <!--</el-form>-->
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
   import {Message, Loading} from 'element-ui'
-  import {repLoginUser,repLogout} from '../../api'
+  import {repLoginUser, repLogout} from '../../api'
+  import storageUtils from '../../utils/storageUtils'
 
   export default {
-    data() {
+    data () {
       return {
         userName: '',
         passWord: '',
         isLogin: true, // <!--登录-->
-      }
-    },
-    async mounted() {
-      //请求登陆页面时退出登陆
-      const result = await repLogout()
-      if (result.code === 200) {
-        this.$router.replace('/login')
+        checked: true
       }
     },
     methods: {
-      async Login() {
-        let loadingInstance = Loading.service(this.options);
-        const userName = this.userName.trim();
-        const pwd = this.passWord.trim();
-        const users = {userName, pwd};
+      async Login () {
+        let loadingInstance = Loading.service(this.options)
+        const userName = this.userName.trim()
+        const pwd = this.passWord.trim()
+        const checked = this.checked
+        const users = {userName, pwd, checked}
         if (userName && pwd) {
-          const result = await repLoginUser(users);
-          console.log(result);
+          const result = await repLoginUser(users)
+          console.log(result)
           if (result.code === 200) {
-            const user = result.data;
-            this.setCookie('token', user.token, 7);
+            const user = result.data
+            this.setCookie('token', user.token, 7)
+            this.setCookie('name', user.user.name, 7)
+            this.setCookie('userName', user.user.userName, 7)
             // 同步记录用户信息
-            this.$store.dispatch('recordUser', user);
+            this.$store.dispatch('recordUser', user)
             // 去个主界面
-            this.$router.replace('/index');
+            this.$router.replace('/index')
             loadingInstance.close()
           } else {
             Message({
               showClose: true,
               message: result.msg,
               type: 'error'
-            });
+            })
             loadingInstance.close()
           }
           loadingInstance.close()

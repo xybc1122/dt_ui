@@ -5,7 +5,7 @@ import ajax from './ajax'
 
 const BASE_URL = '/api'
 // 获取用户登陆信息
-export const repLoginUser = ({userName, pwd}) => ajax(BASE_URL + `/ajaxLogin`, {userName, pwd}, 'POST')
+export const repLoginUser = ({userName, pwd,checked}) => ajax(BASE_URL + `/ajaxLogin`, {userName, pwd,checked}, 'POST')
 
 //获取用户管理信息
 export const repUsers=({currentPage,pageSize,userName,name,createDate}) =>

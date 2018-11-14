@@ -5,6 +5,7 @@ import {
 } from './mutation-types'
 import {repMenu} from '../api'
 import storageUtils from '../utils/storageUtils'
+
 export default {
   // 同步记录用户信息
   recordUser ({commit}, userInfo) {

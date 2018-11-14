@@ -77,9 +77,9 @@
         <el-table-column v-if="tableTitle[7]!==undefined" :label="tableTitle[7].headName" width="120">
         </el-table-column>
       </el-table>
-      <el-button type="text" icon="el-icon-edit" size="mini" @click="upUserInfo" v-show="userInfo.user.status===1">修改
+      <el-button type="text" icon="el-icon-edit" size="mini" @click="upUserInfo" >修改
       </el-button>
-      <el-button type="text" icon="el-icon-delete" size="mini" @click="delUserInfo" v-show="userInfo.user.status===1">
+      <el-button type="text" icon="el-icon-delete" size="mini" @click="delUserInfo">
         删除
       </el-button>
       <div class="block">
@@ -140,8 +140,6 @@
 <script>
   import {repHead, repUsers, repUpUserInfo} from '../../api'
   import {Message, MessageBox} from 'element-ui'
-  import {mapState} from 'vuex'
-  import storageUtils from '../../utils/storageUtils'
 
   export default {
     data() {
@@ -184,17 +182,6 @@
             {validator: userAccountStatus, trigger: 'blur'}
           ],
         },
-      }
-    },
-    computed: {
-      //读取数据
-      ...mapState(['userInfo'])
-    },
-    //监视属性
-    watch: {
-      userInfo: {
-        deep: true,  //深度监视
-        handler: storageUtils.saveUser //设置缓存
       }
     },
     async mounted() {
