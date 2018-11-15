@@ -26,9 +26,9 @@
 </template>
 
 <script>
-  import {Message, Loading} from 'element-ui'
-  import {repLoginUser, repLogout} from '../../api'
-  import storageUtils from '../../utils/storageUtils'
+  import {Loading} from 'element-ui'
+  import {repLoginUser} from '../../api'
+  import message from '../../utils/Message'
 
   export default {
     data () {
@@ -62,21 +62,13 @@
             this.$router.replace('/index')
             loadingInstance.close()
           } else {
-            Message({
-              showClose: true,
-              message: result.msg,
-              type: 'error'
-            })
+            message.errorMessage(result.msg);
             loadingInstance.close()
           }
           loadingInstance.close()
         }
         else {
-          Message({
-            showClose: true,
-            message: '账号或密码不能为空~',
-            type: 'error'
-          })
+          message.errorMessage('账号或密码不能为空~');
           loadingInstance.close()
         }
         loadingInstance.close()

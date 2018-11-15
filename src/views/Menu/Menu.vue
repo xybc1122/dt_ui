@@ -18,20 +18,14 @@
       </el-table-column>
       <el-table-column v-if="menuTitle[3]!==undefined" :label="menuTitle[3].headName" prop="menuOrder" width="180">
       </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除
-          </el-button>
-        </template>
-      </el-table-column>
     </el-table>
+    <el-button type="text" icon="el-icon-edit" size="mini">修改
+    </el-button>
+    <el-button type="text" icon="el-icon-delete" size="mini">
+      删除
+    </el-button>
+
+
   </div>
 </template>
 

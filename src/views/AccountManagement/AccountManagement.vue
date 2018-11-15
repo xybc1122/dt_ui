@@ -82,6 +82,9 @@
       <el-button type="text" icon="el-icon-delete" size="mini" @click="delUserInfo" v-if="singleUser.status===1">
         删除
       </el-button>
+      <el-button type="text" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUser">
+        新增
+      </el-button>
       <div class="block">
         <el-pagination
           @size-change="handleSizeChange"
@@ -93,8 +96,8 @@
         </el-pagination>
       </div>
     </div>
-    <!--隐藏from表单-->
-    <el-dialog title="用户信息修改" :visible.sync="dialogFormVisible">
+    <!--隐藏修改from表单-->
+    <el-dialog title="用户信息修改" :visible.sync="upFormValue">
       <el-form :model="userForm" ref="userForm" :rules="rules" label-width="80px">
         <el-form-item v-if="tableTitle[0]!==undefined" :label="tableTitle[0].headName">
           <el-input :placeholder="userForm.uName" clearable :disabled="true"></el-input>
@@ -131,18 +134,29 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="resetForm('userForm')">重置</el-button>
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button @click="upFormValue = false">取 消</el-button>
         <el-button type="primary" @click="saveUserInfo('userForm')">确 定</el-button>
+      </div>
+    </el-dialog>
+
+
+    <!--隐藏新增from表单-->
+    <el-dialog title="用户信息修改" :visible.sync="saveFormValue">
+      <div slot="footer" class="dialog-footer">
+        <el-button>重置</el-button>
+        <el-button @click="saveFormValue = false">取 消</el-button>
+        <el-button type="primary">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
   import {repHead, repUsers, repUpUserInfo, repSingleUser} from '../../api'
-  import {Message, MessageBox} from 'element-ui'
+  import message from '../../utils/Message'
+  import utils from '../../utils/Utils'
 
   export default {
-    data() {
+    data () {
       var userAccountStatus = (rule, value, callback) => {
         if (!Number.isInteger(value)) {
           callback(new Error('请输入数字'))
@@ -157,7 +171,8 @@
         tableData: [],//表信息
         userValue: '', //下拉框的model
         multipleSelection: [],
-        dialogFormVisible: false,
+        upFormValue: false,
+        saveFormValue: false,
         singleUser: {},
         user: {
           userName: '',//账号名
@@ -170,6 +185,7 @@
           pageSize: 10//显示最大的页
         },
         userForm: {
+          uid: '',//用户id
           uName: '',//账号
           name: '',//用户名
           uLandingTime: '',//登陆时间
@@ -185,11 +201,11 @@
         },
       }
     },
-    async mounted() {
+    async mounted () {
       //获得用户信息
-      const resultSingleUser = await repSingleUser();
+      const resultSingleUser = await repSingleUser()
       if (resultSingleUser.code === 200) {
-        this.singleUser = resultSingleUser.data;
+        this.singleUser = resultSingleUser.data
       }
       //查询获得table表的 头信息
       const resultHead = await
@@ -198,10 +214,7 @@
         // console.log(resultHead.data)
         this.tableTitle = resultHead.data
       }
-      //获得input里的value
-      const currentPage = this.user.currentPage
-      const pageSize = this.user.pageSize
-      const userPage = {currentPage, pageSize}
+      var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
       const resultUsers = await repUsers(userPage)
       if (resultUsers.code === 200) {
         //赋值 然后显示
@@ -214,15 +227,12 @@
     ,
     methods: {
       //分页
-      handleSizeChange(val) {
+      handleSizeChange (val) {
         console.log(`每页 ${val} 条`)
       },
       //val=当前页 分页
-      async handleCurrentChange(val) {
-        //获得input里的value
-        const currentPage = this.user.currentPage
-        const pageSize = this.user.pageSize
-        const userPage = {currentPage, pageSize}
+      async handleCurrentChange (val) {
+        var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
         //分页查询 传一个当前页,显示最大的页,一个userInfo对象
         const resultUsers = await repUsers(userPage)
         if (resultUsers.code === 200) {
@@ -238,26 +248,18 @@
         return row.accountStatus === 0 ? '正常' : row.accountStatus === 1 ? '冻结' : row.accountStatus === 2 ? '禁用' : ''
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
-      handleSelectionChange(val) {
+      handleSelectionChange (val) {
         this.multipleSelection = val
       },
       //点击修改的时候 获得 Checkbox中 的属性
-      async upUserInfo() {
+      async upUserInfo () {
         const userSaveSelection = this.multipleSelection
         console.log(userSaveSelection)
         if (userSaveSelection.length <= 0) {
-          Message({
-            showClose: true,
-            message: '必须选中一条修改',
-            type: 'error'
-          })
+          message.errorMessage('必须选中一条修改')
           return
         } else if (userSaveSelection.length >= 2) {
-          Message({
-            showClose: true,
-            message: '修改只能选中一条',
-            type: 'error'
-          })
+          message.errorMessage('修改只能选中一条')
           return
         }
         //将数组转换成对象
@@ -269,68 +271,59 @@
           this.userForm['uCreateDate'] = item.createDate
           this.userForm['uLandingTime'] = item.landingTime
           this.userForm['uMobilePhone'] = item.mobilePhone
+          this.userForm['uid'] = item.uid
         })
-        this.dialogFormVisible = true
+        this.upFormValue = true
       },
       //确认后更新用户信息操作
-      async saveUserInfo(formName) {
-        const result = await repUpUserInfo("name", "ceshi");
-        if (result.code === -1) {
-          Message({
-            showClose: true,
-            message: '你没有权限修改数据',
-            type: 'error'
-          })
-          return
-        }
+      async saveUserInfo (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!')
-            this.dialogFormVisible = false
+            console.log(formName)
           } else {
             console.log('error submit!!')
             return false
           }
         })
         console.log(this.userForm)
+        const result = await repUpUserInfo(this.userForm)
+        console.log(result.code)
+        if (result.code === -1) {
+          message.errorMessage('你没有权限修改数据')
+        } else {
+          message.successMessage('更新成功~')
+          this.upFormValue = false
+          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+          const resultUsers = await repUsers(userPage)
+          if (resultUsers.code === 200) {
+            //赋值 然后显示
+            const dataUser = resultUsers.data
+            this.tableData = dataUser.users
+            this.user.currentPage = dataUser.current_page
+            this.user.total_size = dataUser.total_size
+          }
+        }
       },
       //from表单重置
-      resetForm(formName) {
+      resetForm (formName) {
         this.$refs[formName].resetFields()
       },
+      //新增用户信息
+      saveUser () {
+        this.saveFormValue = true
+      },
       //批量删除
-      delUserInfo() {
+      delUserInfo () {
         const userDelSelection = this.multipleSelection
         if (userDelSelection.length === 0) {
-          Message({
-            showClose: true,
-            message: '必须选择一个或多个!',
-            type: 'error'
-          })
+          message.errorMessage('必须选择一个或多个!')
           return
         }
         var ids = userDelSelection.map(item => item.uid).join()//获取所有选中行的id组成的字符串，以逗号分
         console.log(ids)
-        // this.$confirm('此操作将删除用户信息, 是否继续?', '提示', {
-        //   confirmButtonText: '确定',
-        //   cancelButtonText: '取消',
-        //   type: 'warning'
-        // }).then(() => {
-        //   var ids = userDelSelection.map(item => item.uid).join()//获取所有选中行的id组成的字符串，以逗号分
-        //   console.log(ids)
-        //   this.$message({
-        //     type: 'success',
-        //     message: '删除成功!'
-        //   })
-        // }).catch(() => {
-        //   this.$message({
-        //     type: 'info',
-        //     message: '已取消删除'
-        //   })
-        // })
       },
       //tabale表头上下箭头 排序
-      arraySpanMethod({row, column, rowIndex, columnIndex}) {
+      arraySpanMethod ({row, column, rowIndex, columnIndex}) {
         if (rowIndex % 2 === 0) {
           if (columnIndex === 0) {
             return [1, 2]
@@ -340,11 +333,11 @@
         }
       },
       //获得第一个input框里的id 通过id去判断显示哪个输入框
-      getValue(selVal) {
+      getValue (selVal) {
         this.msgInput = selVal
       },
       //点击查询获得输入框的value
-      async searchUser() {
+      async searchUser () {
         const resultUsers = await repUsers(this.user)
         if (resultUsers.code === 200) {
           //赋值 然后显示
@@ -355,7 +348,7 @@
         }
       },
       //重置
-      reset() {
+      reset () {
         this.user.userName = ''
         this.user.name = ''
         this.user.createDate = ''

@@ -28,7 +28,8 @@ export const repMenuList = () => ajax(BASE_URL + `/menu/findMenuList`)
 
 //删除用户信息
 
-export const repUpUserInfo = ({user,name}) => ajax(BASE_URL+`/user/upUserInfo`,{user,name},'POST')
+export const repUpUserInfo = ({uName,name,uLandingTime,uCreateDate,uAccountStatus,uMobilePhone,rName,uid}) => ajax(BASE_URL+`/user/upUserInfo`,
+  {uName,name,uLandingTime,uCreateDate,uAccountStatus,uMobilePhone,rName,uid},'POST')
 
 //获取单个用户基本信息
 
