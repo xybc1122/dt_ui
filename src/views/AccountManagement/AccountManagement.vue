@@ -222,6 +222,7 @@
         this.tableData = dataUser.users
         this.user.currentPage = dataUser.current_page
         this.user.total_size = dataUser.total_size
+        console.log(dataUser)
       }
     }
     ,
