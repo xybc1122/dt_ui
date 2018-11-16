@@ -52,30 +52,29 @@
           width="50"
           fixed>
         </el-table-column>
-        <el-table-column v-if="tableTitle[0]!==undefined" :label="tableTitle[0].headName" prop="userName" width="100"
-                         sortable fixed></el-table-column>
-        <el-table-column v-if="tableTitle[1]!==undefined" :label="tableTitle[1].headName" prop="name" width="100"
-                         sortable></el-table-column>
-        <el-table-column v-if="tableTitle[2]!==undefined" :label="tableTitle[2].headName" prop="mobilePhone"
-                         width="150"></el-table-column>
-        <el-table-column v-if="tableTitle[3]!==undefined" :label="tableTitle[3].headName" prop="rName" width="180">
-        </el-table-column>
-        <el-table-column v-if="tableTitle[4]!==undefined" :label="tableTitle[4].headName" width="180">
+        <template v-for="(title ,index) in tableTitle">
+          <el-table-column width="150" v-if="title.topType==='uName'" sortable fixed :label="title.headName" prop="userName"></el-table-column>
+          <el-table-column width="150" v-if="title.topType==='name'" sortable fixed :label="title.headName" prop="name"></el-table-column>
+          <el-table-column width="150" v-if="title.topType==='phone'" :label="title.headName" prop="mobilePhone"></el-table-column>
+          <el-table-column v-if="title.topType==='rName'" :label="title.headName" prop="rName" width="150" :show-overflow-tooltip="true">
+          </el-table-column>
+          <el-table-column v-if="title.topType==='create_date'" :label="title.headName" width="180">
           <template slot-scope="scope">
-            <i class="el-icon-time"></i>
-            <span>{{ scope.row.createDate | date-format}}</span>
+          <i class="el-icon-time"></i>
+          <span>{{ scope.row.createDate | date-format}}</span>
           </template>
-        </el-table-column>
-        <el-table-column v-if="tableTitle[5]!==undefined" :label="tableTitle[5].headName" width="180"
-                         :formatter="accountStatus"></el-table-column>
-        <el-table-column v-if="tableTitle[6]!==undefined" :label="tableTitle[6].headName" width="180">
+          </el-table-column>
+          <el-table-column v-if="title.topType==='account_status'" :label="title.headName" width="180"
+          :formatter="accountStatus"></el-table-column>
+          <el-table-column v-if="title.topType==='landing_time'" :label="title.headName" width="180">
           <template slot-scope="scope">
-            <i class="el-icon-time"></i>
-            <span>{{ scope.row.landingTime | date-format}}</span>
+          <i class="el-icon-time"></i>
+          <span>{{ scope.row.landingTime | date-format}}</span>
           </template>
-        </el-table-column>
-        <el-table-column v-if="tableTitle[7]!==undefined" :label="tableTitle[7].headName" width="120">
-        </el-table-column>
+          </el-table-column>
+          <el-table-column v-if="title.topType==='pc'" :label="title.headName" width="120">
+          </el-table-column>
+        </template>
       </el-table>
       <el-button type="text" icon="el-icon-edit" size="mini" @click="upUserInfo" v-if="singleUser.status===1">修改
       </el-button>
@@ -108,9 +107,9 @@
         <el-form-item v-if="tableTitle[2]!==undefined" :label="tableTitle[2].headName">
           <el-input v-model="userForm.uMobilePhone" clearable></el-input>
         </el-form-item>
-        <el-form-item v-if="tableTitle[3]!==undefined" :label="tableTitle[3].headName">
-          <el-input v-model="userForm.rName" clearable></el-input>
-        </el-form-item>
+        <!--<el-form-item v-if="tableTitle[3]!==undefined" :label="tableTitle[3].headName">-->
+        <!--<el-input v-model="userForm.rName" clearable></el-input>-->
+        <!--</el-form-item>-->
         <el-form-item v-if="tableTitle[4]!==undefined" :label="tableTitle[4].headName">
           <div class="block">
             <el-date-picker
@@ -182,7 +181,7 @@
           accountStatus: '',
           currentPage: 1,//当前页
           total_size: 0,//总的页
-          pageSize: 10//显示最大的页
+          pageSize: 10,//显示最大的页
         },
         userForm: {
           uid: '',//用户id
@@ -206,13 +205,15 @@
       const resultSingleUser = await repSingleUser()
       if (resultSingleUser.code === 200) {
         this.singleUser = resultSingleUser.data
+        const roles = resultSingleUser.data.roles
+        // console.log(roles)
       }
       //查询获得table表的 头信息
       const resultHead = await
         repHead(this.$route.params.id)
       if (resultHead.code === 200) {
-        // console.log(resultHead.data)
         this.tableTitle = resultHead.data
+        console.log(resultHead.data)
       }
       var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
       const resultUsers = await repUsers(userPage)
@@ -391,5 +392,9 @@
   /*表格*/
   #userTable {
     margin-top: 50px;
+  }
+  .el-tooltip__popper {
+    max-width: 500px;
+    line-height: 180%;
   }
 </style>

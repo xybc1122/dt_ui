@@ -36,19 +36,23 @@
           width="50"
           fixed>
         </el-table-column>
-        <el-table-column  v-if="tableTitle[0]!==undefined" :label="tableTitle[0].headName" prop="rName" width="150"
-                         sortable fixed></el-table-column>
-        <el-table-column :show-overflow-tooltip="true" v-if="tableTitle[1]!==undefined" :label="tableTitle[1].headName" prop="userName" width="300"
-                         sortable></el-table-column>
-        <el-table-column :show-overflow-tooltip="true"  v-if="tableTitle[2]!==undefined" :label="tableTitle[2].headName" prop="menuName"
-                         width="200"></el-table-column>
+        <template v-for="(title ,index) in tableTitle">
+          <el-table-column  v-if="title.topType==='rName'" :label="title.headName" prop="rName" width="150"
+                           sortable fixed></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='role_holder'"  :label="title.headName"
+                           prop="userName" width="150"
+                           sortable></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='owned_menu'"  :label="title.headName"
+                           prop="menuName"
+                           width="150"></el-table-column>
+        </template>
       </el-table>
       <el-button type="text" icon="el-icon-edit" size="mini">修改
       </el-button>
       <el-button type="text" icon="el-icon-delete" size="mini">
         删除
       </el-button>
-      <el-button type="text" icon=" el-icon-circle-plus-outline" size="mini" >
+      <el-button type="text" icon=" el-icon-circle-plus-outline" size="mini">
         新增
       </el-button>
       <div class="block">
@@ -65,7 +69,7 @@
   </div>
 </template>
 <script>
-  import {repHead,repGetRoles} from '../../api'
+  import {repHead, repGetRoles} from '../../api'
   import utils from '../../utils/Utils'
 
   export default {
@@ -110,8 +114,7 @@
         this.role.currentPage = dataRole.current_page
         this.role.total_size = dataRole.total_size
       }
-    }
-    ,
+    },
     methods: {
       //分页
       handleSizeChange (val) {
@@ -177,6 +180,7 @@
   #roleTable {
     margin-top: 50px;
   }
+
   .el-tooltip__popper {
     max-width: 500px;
     line-height: 180%;
