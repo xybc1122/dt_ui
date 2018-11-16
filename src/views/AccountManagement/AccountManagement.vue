@@ -141,7 +141,7 @@
 
 
     <!--隐藏新增from表单-->
-    <el-dialog title="用户信息修改" :visible.sync="saveFormValue">
+    <el-dialog title="新增用户" :visible.sync="saveFormValue">
       <div slot="footer" class="dialog-footer">
         <el-button>重置</el-button>
         <el-button @click="saveFormValue = false">取 消</el-button>

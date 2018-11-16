@@ -5,14 +5,18 @@ import ajax from './ajax'
 
 const BASE_URL = '/api'
 // 获取用户登陆信息
-export const repLoginUser = ({userName, pwd,checked}) => ajax(BASE_URL + `/ajaxLogin`, {userName, pwd,checked}, 'POST')
+export const repLoginUser = ({userName, pwd, checked}) => ajax(BASE_URL + `/ajaxLogin`, {
+  userName,
+  pwd,
+  checked
+}, 'POST')
 
 //获取用户管理信息
-export const repUsers=({currentPage,pageSize,userName,name,createDate}) =>
-  ajax(BASE_URL+`/user/show`,{currentPage,pageSize,userName,name,createDate},'POST')
+export const repUsers = ({currentPage, pageSize, userName, name, createDate}) =>
+  ajax(BASE_URL + `/user/show`, {currentPage, pageSize, userName, name, createDate}, 'POST')
 
 //查询table头信息
-export const repHead = (menu_id) => ajax(BASE_URL +'/head',{menu_id})
+export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
 
 //访问index页面
 export const repIndex = () => ajax(BASE_URL + `/menu/index`)
@@ -28,12 +32,15 @@ export const repMenuList = () => ajax(BASE_URL + `/menu/findMenuList`)
 
 //删除用户信息
 
-export const repUpUserInfo = ({uName,name,uLandingTime,uCreateDate,uAccountStatus,uMobilePhone,rName,uid}) => ajax(BASE_URL+`/user/upUserInfo`,
-  {uName,name,uLandingTime,uCreateDate,uAccountStatus,uMobilePhone,rName,uid},'POST')
+export const repUpUserInfo = ({uName, name, uLandingTime, uCreateDate, uAccountStatus, uMobilePhone, rName, uid}) => ajax(BASE_URL + `/user/upUserInfo`,
+  {uName, name, uLandingTime, uCreateDate, uAccountStatus, uMobilePhone, rName, uid}, 'POST')
 
 //获取单个用户基本信息
 
-export const  repSingleUser=() => ajax(BASE_URL+`/user/getUser`);
+export const repSingleUser = () => ajax(BASE_URL + `/user/getUser`)
+
+// 查询一个角色下的所有用户跟 菜单
+export const repGetRoles = ({currentPage,pageSize}) => ajax(BASE_URL + `/user/getRoles`,{currentPage,pageSize}, 'POST')
 
 
 

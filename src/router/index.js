@@ -4,6 +4,7 @@ import Index from '../views/Index/Index'
 import Login from '../views/Login/Login'
 import AccountManagement from '../views/AccountManagement/AccountManagement'
 import Menu from '../views/Menu/Menu'
+import RoleManagement from '../views/RoleManagement/RoleManagement'
 
 Vue.use(Router)
 
@@ -19,6 +20,10 @@ export default new Router({
         {
           path: '/index/accountManagement/:id',
           component: AccountManagement
+        },
+        {
+          path: '/index/roleManagement/:id',
+          component: RoleManagement
         },
         {
           path: '/index/menu/:id',
