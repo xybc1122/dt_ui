@@ -42,6 +42,7 @@
     },
     async mounted () {
       const resultHead = await repHead(this.$route.params.id)
+      console.log(resultHead.data)
       if (resultHead.code === 200) {
         // console.log(resultHead.data)
         this.menuTitle = resultHead.data

@@ -1,23 +1,23 @@
 <template>
-  <div>
+  <div id="body">
+    <img src="./img/ReportServer.png" width="100%" height="979">
     <!--登录-->
     <div class="login-box" v-show="isLogin">
-      <div class="panel panel-default">
-        <div class="save">
-          <el-button type="text" size="mini" icon="el-icon-edit">注册账号</el-button>
-        </div>
-        <div class="login">
-          <el-input v-model="userName" placeholder="用户名" id="userName" maxlength="8"
-                    prefix-icon="iconfont icon_dt-xiaoren"></el-input>
-          <p></p>
-          <el-input v-model="passWord" placeholder="密码" id="pwd" maxlength="15"
-                    prefix-icon="iconfont icon_dt-suo"></el-input>
-          <div class="success">
-            <el-button type="submit" @click="Login" size="medium" icon="el-icon-success" @keyup.enter.native="Login">
-              登陆
-            </el-button>
-            <!--<el-checkbox v-model="checked">记住我</el-checkbox>-->
-            <!--<el-button class="quest" type="danger" size="mini" icon="el-icon-question">忘记密码</el-button>-->
+      <div>
+          <div class="login">
+            <img src="../../components/HeaderTop/img/logo.png"/>
+            <p></p>
+            <el-input v-model="userName" placeholder="用户名" id="userName" maxlength="8"
+                      prefix-icon="iconfont icon_dt-xiaoren"></el-input>
+            <p></p>
+            <el-input v-model="passWord" placeholder="密码" id="pwd" maxlength="15"
+                      prefix-icon="iconfont icon_dt-suo"></el-input>
+            <div class="success">
+              <el-button type="primary" @click="Login" size="medium" @keyup.enter.native="Login">
+                登陆
+              </el-button>
+              <!--<el-checkbox v-model="checked">记住我</el-checkbox>-->
+              <!--<el-button class="quest" type="danger" size="mini" icon="el-icon-question">忘记密码</el-button>-->
           </div>
         </div>
       </div>
@@ -78,29 +78,23 @@
 </script>
 
 <style>
+  #body{
+    position: relative;
+  }
   .login-box {
-    width: 350px;
-    height: 500px;
-    margin: 0 auto;
-    margin-top: 230px;
-    margin-right: 250px;
+    width: 300px;
+    height: 400px;
+    position: absolute;
+    top:25%;
+    left: 70%;
   }
 
   .login {
-    padding-top: 50px;
-    width: 300px;
-    padding-left: 55px;
+    padding-top: 35px;
+    margin: 25px;
   }
 
   .success {
     padding-top: 45px;
-  }
-
-  .success .quest {
-    margin-left: 55px;
-  }
-
-  .save {
-    margin-left: 250px;
   }
 </style>

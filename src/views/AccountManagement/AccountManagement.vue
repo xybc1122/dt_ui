@@ -53,90 +53,99 @@
           fixed>
         </el-table-column>
         <template v-for="(title ,index) in tableTitle">
-          <el-table-column width="150" v-if="title.topType==='uName'" sortable fixed :label="title.headName" prop="userName"></el-table-column>
-          <el-table-column width="150" v-if="title.topType==='name'" sortable fixed :label="title.headName" prop="name"></el-table-column>
-          <el-table-column width="150" v-if="title.topType==='phone'" :label="title.headName" prop="mobilePhone"></el-table-column>
-          <el-table-column v-if="title.topType==='rName'" :label="title.headName" prop="rName" width="150" :show-overflow-tooltip="true">
+          <el-table-column width="150" v-if="title.topType==='uName'" sortable fixed :label="title.headName"
+                           prop="userName"></el-table-column>
+          <el-table-column width="150" v-if="title.topType==='name'" sortable fixed :label="title.headName"
+                           prop="name"></el-table-column>
+          <el-table-column width="150" v-if="title.topType==='phone'" :label="title.headName"
+                           prop="mobilePhone"></el-table-column>
+          <el-table-column v-if="title.topType==='rName'" :label="title.headName" prop="rName" width="150"
+                           :show-overflow-tooltip="true">
           </el-table-column>
-          <el-table-column v-if="title.topType==='create_date'" :label="title.headName" width="180">
-          <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{ scope.row.createDate | date-format}}</span>
-          </template>
+          <el-table-column v-if="title.topType==='create_date'" :label="title.headName"  width="180">
+            <template slot-scope="scope">
+              <i class="el-icon-time"></i>
+              <span>{{ scope.row.createDate | date-format}}</span>
+            </template>
           </el-table-column>
           <el-table-column v-if="title.topType==='account_status'" :label="title.headName" width="180"
-          :formatter="accountStatus"></el-table-column>
+                           :formatter="accountStatus"></el-table-column>
           <el-table-column v-if="title.topType==='landing_time'" :label="title.headName" width="180">
-          <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{ scope.row.landingTime | date-format}}</span>
-          </template>
+            <template slot-scope="scope">
+              <i class="el-icon-time"></i>
+              <span>{{ scope.row.landingTime | date-format}}</span>
+            </template>
           </el-table-column>
           <el-table-column v-if="title.topType==='pc'" :label="title.headName" width="120">
           </el-table-column>
         </template>
       </el-table>
-      <el-button type="text" icon="el-icon-edit" size="mini" @click="upUserInfo" v-if="singleUser.status===1">修改
+
+      <!--隐藏修改from表单-->
+      <el-dialog title="用户信息修改" :visible.sync="upFormValue">
+        <el-form :model="userForm" ref="userForm" :rules="rules" label-width="80px">
+          <template v-for="(title ,index) in tableTitle">
+            <el-form-item v-if="title.topType==='uName'" :label="title.headName">
+              <el-input :placeholder="userForm.uName" clearable :disabled="true"></el-input>
+            </el-form-item>
+            <el-form-item v-if="title.topType==='name'" :label="title.headName">
+              <el-input v-model="userForm.name" clearable></el-input>
+            </el-form-item>
+            <el-form-item v-if="title.topType==='phone'" :label="title.headName">
+              <el-input v-model="userForm.uMobilePhone" clearable></el-input>
+            </el-form-item>
+            <el-form-item v-if="title.topType==='rName'" :label="title.headName">
+              <el-input v-model="userForm.rName" clearable :disabled="true"></el-input>
+            </el-form-item>
+            <el-form-item v-if="title.topType==='create_date'" :label="title.headName">
+              <div class="block">
+                <el-date-picker
+                  v-model="userForm.uCreateDate"
+                  type="datetime">
+                </el-date-picker>
+              </div>
+            </el-form-item>
+            <el-form-item v-if="title.topType==='account_status'" :label="title.headName" prop="uAccountStatus">
+              <el-select v-model="userForm.uAccountStatus" clearable value="">
+                <el-option v-for="(item,index) in accountStatusOptions" :key="index" :label="item.name" :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-if="title.topType==='landing_time'" :label="title.headName">
+              <div class="block">
+                <el-date-picker
+                  v-model="userForm.uLandingTime"
+                  type="datetime">
+                </el-date-picker>
+              </div>
+            </el-form-item>
+          </template>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="resetForm('userForm')">重置</el-button>
+          <el-button @click="upFormValue = false">取 消</el-button>
+          <el-button type="primary" @click="saveUserInfo('userForm')">确 定</el-button>
+        </div>
+      </el-dialog>
+      <el-button type="primary" icon="el-icon-edit" size="mini" @click="upUserInfo" v-if="singleUser.status===1">修改
       </el-button>
-      <el-button type="text" icon="el-icon-delete" size="mini" @click="delUserInfo" v-if="singleUser.status===1">
+      <el-button type="primary" icon="el-icon-delete" size="mini" @click="delUserInfo" v-if="singleUser.status===1">
         删除
       </el-button>
-      <el-button type="text" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUser">
+      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUser">
         新增
       </el-button>
-      <div class="block">
+       <div class="block" style="display: inline-block">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page.sync="user.currentPage"
+          :page-sizes="[2,5,10,15, 20, 30, 40]"
           :page-size="user.pageSize"
-          layout="total, prev, pager, next"
+          layout="total, sizes, prev, pager, next, jumper"
           :total="user.total_size">
         </el-pagination>
       </div>
     </div>
-    <!--隐藏修改from表单-->
-    <el-dialog title="用户信息修改" :visible.sync="upFormValue">
-      <el-form :model="userForm" ref="userForm" :rules="rules" label-width="80px">
-        <el-form-item v-if="tableTitle[0]!==undefined" :label="tableTitle[0].headName">
-          <el-input :placeholder="userForm.uName" clearable :disabled="true"></el-input>
-        </el-form-item>
-        <el-form-item v-if="tableTitle[1]!==undefined" :label="tableTitle[1].headName">
-          <el-input v-model="userForm.name" clearable></el-input>
-        </el-form-item>
-        <el-form-item v-if="tableTitle[2]!==undefined" :label="tableTitle[2].headName">
-          <el-input v-model="userForm.uMobilePhone" clearable></el-input>
-        </el-form-item>
-        <!--<el-form-item v-if="tableTitle[3]!==undefined" :label="tableTitle[3].headName">-->
-        <!--<el-input v-model="userForm.rName" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <el-form-item v-if="tableTitle[4]!==undefined" :label="tableTitle[4].headName">
-          <div class="block">
-            <el-date-picker
-              v-model="userForm.uCreateDate"
-              type="datetime">
-            </el-date-picker>
-          </div>
-        </el-form-item>
-
-        <el-form-item v-if="tableTitle[5]!==undefined" :label="tableTitle[5].headName" prop="uAccountStatus">
-          <el-input v-model.number="userForm.uAccountStatus" clearable maxlength="1"></el-input>
-        </el-form-item>
-        <el-form-item v-if="tableTitle[6]!==undefined" :label="tableTitle[6].headName">
-          <div class="block">
-            <el-date-picker
-              v-model="userForm.uLandingTime"
-              type="datetime">
-            </el-date-picker>
-          </div>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="resetForm('userForm')">重置</el-button>
-        <el-button @click="upFormValue = false">取 消</el-button>
-        <el-button type="primary" @click="saveUserInfo('userForm')">确 定</el-button>
-      </div>
-    </el-dialog>
 
 
     <!--隐藏新增from表单-->
@@ -154,16 +163,16 @@
   import message from '../../utils/Message'
   import utils from '../../utils/Utils'
 
+  var flgSave = true
   export default {
     data () {
       var userAccountStatus = (rule, value, callback) => {
-        if (!Number.isInteger(value)) {
-          callback(new Error('请输入数字'))
-        } else {
-          callback()
-        }
+        // if (!value) {
+        //   return callback(new Error('不能为空~'));
+        // }
       }
       return {
+        value:'',
         msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
         tableTitle: [],//表头信息
@@ -181,7 +190,7 @@
           accountStatus: '',
           currentPage: 1,//当前页
           total_size: 0,//总的页
-          pageSize: 10,//显示最大的页
+          pageSize: 2,//显示最大的页
         },
         userForm: {
           uid: '',//用户id
@@ -193,6 +202,16 @@
           uMobilePhone: '',//手机
           rName: ''//角色
         },
+        accountStatusOptions: [{
+          id: 0,
+          name: '正常'
+        }, {
+          id: 1,
+          name: '冻结'
+        }, {
+          id: 2,
+          name: '禁用'
+        }],
         rules: {
           uAccountStatus: [
             {validator: userAccountStatus, trigger: 'blur'}
@@ -229,8 +248,18 @@
     ,
     methods: {
       //分页
-      handleSizeChange (val) {
-        console.log(`每页 ${val} 条`)
+      async handleSizeChange (val) {
+        this.user.pageSize=val
+        var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+        const resultUsers = await repUsers(userPage)
+        if (resultUsers.code === 200) {
+          //赋值 然后显示
+          const dataUser = resultUsers.data
+          this.tableData = dataUser.users
+          this.user.currentPage = dataUser.current_page
+          this.user.total_size = dataUser.total_size
+          console.log(dataUser)
+        }
       },
       //val=当前页 分页
       async handleCurrentChange (val) {
@@ -275,34 +304,38 @@
           this.userForm['uMobilePhone'] = item.mobilePhone
           this.userForm['uid'] = item.uid
         })
+        console.log(this.userForm)
         this.upFormValue = true
       },
       //确认后更新用户信息操作
       async saveUserInfo (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log(formName)
+            console.log('submit')
+            flgSave = true
           } else {
             console.log('error submit!!')
-            return false
+            flgSave = false
+            return flgSave
           }
         })
-        console.log(this.userForm)
-        const result = await repUpUserInfo(this.userForm)
-        console.log(result.code)
-        if (result.code === -1) {
-          message.errorMessage('你没有权限修改数据')
-        } else {
-          message.successMessage('更新成功~')
-          this.upFormValue = false
-          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-          const resultUsers = await repUsers(userPage)
-          if (resultUsers.code === 200) {
-            //赋值 然后显示
-            const dataUser = resultUsers.data
-            this.tableData = dataUser.users
-            this.user.currentPage = dataUser.current_page
-            this.user.total_size = dataUser.total_size
+        console.log(flgSave)
+        if (flgSave) {
+          const result = await repUpUserInfo(this.userForm)
+          if (result.code === -1) {
+            message.errorMessage('你没有权限修改数据')
+          } else {
+            message.successMessage('更新成功~')
+            this.upFormValue = false
+            var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+            const resultUsers = await repUsers(userPage)
+            if (resultUsers.code === 200) {
+              //赋值 然后显示
+              const dataUser = resultUsers.data
+              this.tableData = dataUser.users
+              this.user.currentPage = dataUser.current_page
+              this.user.total_size = dataUser.total_size
+            }
           }
         }
       },
@@ -393,6 +426,7 @@
   #userTable {
     margin-top: 50px;
   }
+
   .el-tooltip__popper {
     max-width: 500px;
     line-height: 180%;

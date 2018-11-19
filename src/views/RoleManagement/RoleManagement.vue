@@ -47,12 +47,12 @@
                            width="150"></el-table-column>
         </template>
       </el-table>
-      <el-button type="text" icon="el-icon-edit" size="mini">修改
+      <el-button type="primary" icon="el-icon-edit" size="mini">修改
       </el-button>
-      <el-button type="text" icon="el-icon-delete" size="mini">
+      <el-button type="primary" icon="el-icon-delete" size="mini">
         删除
       </el-button>
-      <el-button type="text" icon=" el-icon-circle-plus-outline" size="mini">
+      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini">
         新增
       </el-button>
       <div class="block">

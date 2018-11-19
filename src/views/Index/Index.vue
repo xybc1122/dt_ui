@@ -1,9 +1,11 @@
 <template>
   <el-container>
-    <el-header>
-      <Header/>
-    </el-header>
-    <el-container>
+    <div class="navbar navbar-fixed-top">
+      <el-header>
+        <Header/>
+      </el-header>
+    </div>
+    <el-container style="margin-top: 55px">
       <Aside/>
       <el-container>
         <el-main>
@@ -55,5 +57,10 @@
 </script>
 
 <style>
-
+  .el-footer {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+  }
 </style>

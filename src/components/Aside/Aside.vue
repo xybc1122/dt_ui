@@ -2,7 +2,6 @@
   <el-row class="tac">
     <el-col :span="12">
       <el-aside width="200px">
-        <h5>管理菜单</h5>
         <el-menu :default-active="$router.path" router class="el-menu-vertical-demo">
           <!--判断父菜单没有url的-->
           <el-submenu v-if="!menu.url" :index="index.toString()" v-show="isRole" v-for="(menu,index) in menuList"
