@@ -41,6 +41,7 @@
         :data="tableData"
         style="width: 100%"
         height="500"
+        stripe
         :span-method="arraySpanMethod"
         @selection-change="upSelectionChange">
         <el-table-column
@@ -128,16 +129,16 @@
           <el-button type="primary" @click="saveUserInfo('userForm')">确 定</el-button>
         </div>
       </el-dialog>
-      <el-button type="primary" icon="el-icon-edit" size="mini" @click="upUserInfo" v-if="singleUser.status===1">修改
+      <el-button type="success" icon="el-icon-edit" size="mini" @click="upUserInfo" v-if="singleUser.status===1">修改
       </el-button>
-      <el-button type="primary" icon="el-icon-delete" size="mini" @click="delUserInfo"
+      <el-button type="info" icon="el-icon-delete" size="mini" @click="delUserInfo"
                  v-if="singleUser.status===1 ">
         删除
       </el-button>
       <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUserForm">
         新增
       </el-button>
-      <el-button type="primary" icon=" el-icon-delete" size="mini" @click="delUserForm">
+      <el-button type="warning"  size="mini" @click="delUserForm">
         删除记录
       </el-button>
       <div class="block" style="display: inline-block">
@@ -303,7 +304,7 @@
     }
     ,
     methods: {
-
+      //删除历史记录查看分页
       delSizeChange (val) {
         console.log(`每页 ${val} 条`)
       },
