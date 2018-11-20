@@ -42,7 +42,7 @@
         style="width: 100%"
         height="500"
         :span-method="arraySpanMethod"
-        @selection-change="handleSelectionChange">
+        @selection-change="upSelectionChange">
         <el-table-column
           type="selection"
           width="55">
@@ -62,7 +62,7 @@
           <el-table-column v-if="title.topType==='rName'" :label="title.headName" prop="rName" width="150"
                            :show-overflow-tooltip="true">
           </el-table-column>
-          <el-table-column v-if="title.topType==='create_date'" :label="title.headName"  width="180">
+          <el-table-column v-if="title.topType==='create_date'" :label="title.headName" width="180">
             <template slot-scope="scope">
               <i class="el-icon-time"></i>
               <span>{{ scope.row.createDate | date-format}}</span>
@@ -81,8 +81,9 @@
         </template>
       </el-table>
 
+
       <!--隐藏修改from表单-->
-      <el-dialog title="用户信息修改" :visible.sync="upFormValue">
+      <el-dialog title="用户信息修改" :visible.sync="upFormValue" width="400px">
         <el-form :model="userForm" ref="userForm" :rules="rules" label-width="80px">
           <template v-for="(title ,index) in tableTitle">
             <el-form-item v-if="title.topType==='uName'" :label="title.headName">
@@ -107,7 +108,8 @@
             </el-form-item>
             <el-form-item v-if="title.topType==='account_status'" :label="title.headName" prop="uAccountStatus">
               <el-select v-model="userForm.uAccountStatus" clearable value="">
-                <el-option v-for="(item,index) in accountStatusOptions" :key="index" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="(item,index) in accountStatusOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-if="title.topType==='landing_time'" :label="title.headName">
@@ -128,18 +130,22 @@
       </el-dialog>
       <el-button type="primary" icon="el-icon-edit" size="mini" @click="upUserInfo" v-if="singleUser.status===1">修改
       </el-button>
-      <el-button type="primary" icon="el-icon-delete" size="mini" @click="delUserInfo" v-if="singleUser.status===1">
+      <el-button type="primary" icon="el-icon-delete" size="mini" @click="delUserInfo"
+                 v-if="singleUser.status===1 ">
         删除
       </el-button>
-      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUser">
+      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUserForm">
         新增
       </el-button>
-       <div class="block" style="display: inline-block">
+      <el-button type="primary" icon=" el-icon-delete" size="mini" @click="delUserForm">
+        删除记录
+      </el-button>
+      <div class="block" style="display: inline-block">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page.sync="user.currentPage"
-          :page-sizes="[2,5,10,15, 20, 30, 40]"
+          :page-sizes="user.page_sizes"
           :page-size="user.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="user.total_size">
@@ -149,19 +155,67 @@
 
 
     <!--隐藏新增from表单-->
-    <el-dialog title="新增用户" :visible.sync="saveFormValue">
+    <el-dialog title="新增用户" :visible.sync="saveFormValue" width="650px">
       <div slot="footer" class="dialog-footer">
         <el-button>重置</el-button>
         <el-button @click="saveFormValue = false">取 消</el-button>
         <el-button type="primary">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!--隐藏删除历史记录from表单-->
+    <el-dialog title="历史删除记录" :visible.sync="delFormValue" width="650px">
+        <el-table :data="delUserData"
+                  @selection-change="delSelectionChange">
+          <el-table-column
+            type="selection"
+            width="55">
+          </el-table-column>
+          <el-table-column property="userName" label="账号" width="150"></el-table-column>
+          <el-table-column property="name" width="150" label="用户名称"></el-table-column>
+          <el-table-column width="200" label="删除时间">
+            <template slot-scope="scope">
+              <i class="el-icon-time"></i>
+              <span>{{ scope.row.delDate | date-format}}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="block">
+          <el-pagination
+            @size-change="delSizeChange"
+            @current-change="delCurrentChange"
+            :current-page.sync="delCurrentPage"
+            :page-size="delPageSize"
+            layout="total, prev, pager, next"
+            :total="delTotal_size">
+          </el-pagination>
+        <el-button type="primary" icon="el-icon-delete" size="mini"
+                   v-if="delSelection.length ===1">
+          永久删除
+        </el-button>
+        <el-button type="primary" icon="el-icon-delete" size="mini"
+                   v-if="delSelection.length >1">
+          批量永久删除
+        </el-button>
+          <el-button type="primary" icon="el-icon-delete" size="mini"
+                     v-if="delSelection.length ===1">
+            恢复
+          </el-button>
+          <el-button type="primary" icon="el-icon-delete" size="mini"
+                     v-if="delSelection.length >1">
+            批量恢复
+          </el-button>
+        <el-button @click="delFormValue = false">取 消</el-button>
+        <el-button type="primary">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 <script>
-  import {repHead, repUsers, repUpUserInfo, repSingleUser} from '../../api'
+  import {repHead, repUsers, repUpUserInfo, repSingleUser, repDelUserInfo, repDelHistoryUserInfo} from '../../api'
   import message from '../../utils/Message'
-  import utils from '../../utils/Utils'
+  import utils from '../../utils/PageUtils'
 
   var flgSave = true
   export default {
@@ -172,16 +226,21 @@
         // }
       }
       return {
-        value:'',
+        delUserData: [],//删除的用户数据
         msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
         tableTitle: [],//表头信息
         tableData: [],//表信息
         userValue: '', //下拉框的model
-        multipleSelection: [],
-        upFormValue: false,
-        saveFormValue: false,
-        singleUser: {},
+        upSelection: [], //更新按钮数组收集
+        delSelection: [],//删除按钮数组收集
+        upFormValue: false,//更新隐藏form
+        saveFormValue: false,//新增隐藏form
+        delFormValue: false,//删除历史记录 隐藏form
+        singleUser: {},//查询一个单用户信息
+        delCurrentPage: 1,//当前页
+        delTotal_size: 0,//总的页
+        delPageSize: 5,//显示最大的页
         user: {
           userName: '',//账号名
           name: '',//用户名
@@ -190,7 +249,8 @@
           accountStatus: '',
           currentPage: 1,//当前页
           total_size: 0,//总的页
-          pageSize: 2,//显示最大的页
+          pageSize: 5,//显示最大的页
+          page_sizes:[5,10,15,20,25],
         },
         userForm: {
           uid: '',//用户id
@@ -238,27 +298,26 @@
       const resultUsers = await repUsers(userPage)
       if (resultUsers.code === 200) {
         //赋值 然后显示
-        const dataUser = resultUsers.data
-        this.tableData = dataUser.users
-        this.user.currentPage = dataUser.current_page
-        this.user.total_size = dataUser.total_size
-        console.log(dataUser)
+        this.pageUser(resultUsers)
       }
     }
     ,
     methods: {
+
+      delSizeChange (val) {
+        console.log(`每页 ${val} 条`)
+      },
+      delCurrentChange (val) {
+        console.log(`当前页: ${val}`)
+      },
       //分页
       async handleSizeChange (val) {
-        this.user.pageSize=val
+        this.user.pageSize = val
         var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
         const resultUsers = await repUsers(userPage)
         if (resultUsers.code === 200) {
           //赋值 然后显示
-          const dataUser = resultUsers.data
-          this.tableData = dataUser.users
-          this.user.currentPage = dataUser.current_page
-          this.user.total_size = dataUser.total_size
-          console.log(dataUser)
+          this.pageUser(resultUsers)
         }
       },
       //val=当前页 分页
@@ -268,23 +327,24 @@
         const resultUsers = await repUsers(userPage)
         if (resultUsers.code === 200) {
           //赋值 然后显示
-          const dataUser = resultUsers.data
-          this.tableData = dataUser.users
-          this.user.currentPage = dataUser.current_page
-          this.user.total_size = dataUser.total_size
+          this.pageUser(resultUsers)
         }
       },
       //table 账号状态 转换显示
       accountStatus: function (row) {
         return row.accountStatus === 0 ? '正常' : row.accountStatus === 1 ? '冻结' : row.accountStatus === 2 ? '禁用' : ''
       },
-      //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
-      handleSelectionChange (val) {
-        this.multipleSelection = val
+      //点击选项 Checkbox 按钮 获得val赋值给 upSelection
+      upSelectionChange (val) {
+        this.upSelection = val
+      },
+      delSelectionChange (val) {
+        console.log(val)
+        this.delSelection = val
       },
       //点击修改的时候 获得 Checkbox中 的属性
       async upUserInfo () {
-        const userSaveSelection = this.multipleSelection
+        const userSaveSelection = this.upSelection
         console.log(userSaveSelection)
         if (userSaveSelection.length <= 0) {
           message.errorMessage('必须选中一条修改')
@@ -312,14 +372,12 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log('submit')
-            flgSave = true
           } else {
             console.log('error submit!!')
             flgSave = false
             return flgSave
           }
         })
-        console.log(flgSave)
         if (flgSave) {
           const result = await repUpUserInfo(this.userForm)
           if (result.code === -1) {
@@ -331,10 +389,7 @@
             const resultUsers = await repUsers(userPage)
             if (resultUsers.code === 200) {
               //赋值 然后显示
-              const dataUser = resultUsers.data
-              this.tableData = dataUser.users
-              this.user.currentPage = dataUser.current_page
-              this.user.total_size = dataUser.total_size
+              this.pageUser(resultUsers)
             }
           }
         }
@@ -344,18 +399,46 @@
         this.$refs[formName].resetFields()
       },
       //新增用户信息
-      saveUser () {
+      saveUserForm () {
         this.saveFormValue = true
       },
-      //批量删除
-      delUserInfo () {
-        const userDelSelection = this.multipleSelection
+      //删除历史记录查看
+      async delUserForm () {
+        this.delFormValue = true
+        var userPage = utils.getUserPage(this.delCurrentPage, this.delPageSize)
+        const result = await repDelHistoryUserInfo(userPage)
+        console.log(result)
+        const delData = result.data
+        this.delUserData = delData.users
+        this.delCurrentPage = delData.current_page
+        this.delTotal_size = delData.total_size
+      },
+      //删除or 批量删除
+      async delUserInfo () {
+        const userDelSelection = this.upSelection
         if (userDelSelection.length === 0) {
           message.errorMessage('必须选择一个或多个!')
           return
         }
-        var ids = userDelSelection.map(item => item.uid).join()//获取所有选中行的id组成的字符串，以逗号分
-        console.log(ids)
+        if (confirm('确定要删除吗？')) {
+          var ids = userDelSelection.map(item => item.uid).join()
+          const resultDel = await repDelUserInfo(ids)
+          if (resultDel.code === 200 && resultDel.data >= 1) {
+            message.successMessage('删除成功!')
+            var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+            const resultUsers = await repUsers(userPage)
+            if (resultUsers.code === 200) {
+              //赋值 然后显示
+              this.pageUser(resultUsers)
+            }
+          }
+          else {
+            message.errorMessage('删除失败!')
+          }
+        } else {
+
+        }
+
       },
       //tabale表头上下箭头 排序
       arraySpanMethod ({row, column, rowIndex, columnIndex}) {
@@ -371,15 +454,13 @@
       getValue (selVal) {
         this.msgInput = selVal
       },
+
       //点击查询获得输入框的value
       async searchUser () {
         const resultUsers = await repUsers(this.user)
         if (resultUsers.code === 200) {
           //赋值 然后显示
-          const dataUser = resultUsers.data
-          this.tableData = dataUser.users
-          this.user.currentPage = dataUser.current_page
-          this.user.total_size = dataUser.total_size
+          this.pageUser(resultUsers)
         }
       },
       //重置
@@ -388,6 +469,13 @@
         this.user.name = ''
         this.user.createDate = ''
 
+      },
+      //通用分页节省代码
+      pageUser (resultUsers) {
+        const dataUser = resultUsers.data
+        this.tableData = dataUser.users
+        this.user.currentPage = dataUser.current_page
+        this.user.total_size = dataUser.total_size
       }
     }
   }

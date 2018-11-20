@@ -40,7 +40,19 @@ export const repUpUserInfo = ({uName, name, uLandingTime, uCreateDate, uAccountS
 export const repSingleUser = () => ajax(BASE_URL + `/user/getUser`)
 
 // 查询一个角色下的所有用户跟 菜单
-export const repGetRoles = ({currentPage,pageSize}) => ajax(BASE_URL + `/user/getRoles`,{currentPage,pageSize}, 'POST')
+export const repGetRoles = ({currentPage, pageSize}) => ajax(BASE_URL + `/user/getRoles`, {
+  currentPage,
+  pageSize
+}, 'POST')
+
+//删除一个用户或者多个用户
+export const repDelUserInfo = (uidIds) => ajax(BASE_URL + '/user/delUserInfo', {uidIds})
+
+//获得历史删除用户的信息
+export const repDelHistoryUserInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/user/getDelUser', {
+  currentPage,
+  pageSize
+},'POST')
 
 
 

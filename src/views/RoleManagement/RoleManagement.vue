@@ -70,7 +70,7 @@
 </template>
 <script>
   import {repHead, repGetRoles} from '../../api'
-  import utils from '../../utils/Utils'
+  import utils from '../../utils/PageUtils'
 
   export default {
     data () {
