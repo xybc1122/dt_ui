@@ -54,6 +54,18 @@ export const repDelHistoryUserInfo = ({currentPage, pageSize}) => ajax(BASE_URL 
   pageSize
 },'POST')
 
+//获取公司的所有信息
+export const repGetCompanyInfo=() => ajax(BASE_URL+`/company/findByListCompany`)
 
 
+//获取店铺的所有信息
+export const repGetShopInfo=() => ajax(BASE_URL+`/shop/findByListShop`)
 
+//获取区域的所有信息
+export const repGetRegionInfo=({currentPage, pageSize}) => ajax(BASE_URL+`/reg/findByListRegion`,{currentPage, pageSize},'POST')
+
+//获取站点的所有信息
+export const repGetSiteInfo=() => ajax(BASE_URL+`/site/findByListSite`)
+
+//获取币别的所有信息
+export const repGetCurrencyInfo=() => ajax(BASE_URL+`/currency/findByListCurrency`)

@@ -71,7 +71,7 @@
 <script>
   import {repHead, repGetRoles} from '../../api'
   import utils from '../../utils/PageUtils'
-
+//角色管理
   export default {
     data () {
       var userAccountStatus = (rule, value, callback) => {
@@ -110,7 +110,7 @@
       if (resultGetRoles.code === 200) {
         //赋值 然后显示
         const dataRole = resultGetRoles.data
-        this.tableData = dataRole.users
+        this.tableData = dataRole.dataList
         this.role.currentPage = dataRole.current_page
         this.role.total_size = dataRole.total_size
       }

@@ -41,7 +41,8 @@ import {
   TimePicker,
   Radio,
   RadioGroup,
-  Dialog
+  Dialog,
+  RadioButton
 } from 'element-ui'
 
 Vue.component(Button.name, Button)
@@ -80,6 +81,7 @@ Vue.component(TimePicker.name, TimePicker)
 Vue.component(Radio.name, Radio)
 Vue.component(RadioGroup.name, RadioGroup)
 Vue.component(Dialog.name, Dialog)
+Vue.component(RadioButton.name, RadioButton)
 // 设置Cookie
 Vue.prototype.setCookie = function (c_name, value, expiredays) {
   var exdate = new Date()

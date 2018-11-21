@@ -53,7 +53,7 @@
           width="50"
           fixed>
         </el-table-column>
-        <template v-for="(title ,index) in tableTitle">
+        <template v-for="title  in tableTitle">
           <el-table-column width="150" v-if="title.topType==='uName'" sortable fixed :label="title.headName"
                            prop="userName"></el-table-column>
           <el-table-column width="150" v-if="title.topType==='name'" sortable fixed :label="title.headName"
@@ -217,7 +217,7 @@
   import {repHead, repUsers, repUpUserInfo, repSingleUser, repDelUserInfo, repDelHistoryUserInfo} from '../../api'
   import message from '../../utils/Message'
   import utils from '../../utils/PageUtils'
-
+//用户管理
   var flgSave = true
   export default {
     data () {
@@ -474,7 +474,7 @@
       //通用分页节省代码
       pageUser (resultUsers) {
         const dataUser = resultUsers.data
-        this.tableData = dataUser.users
+        this.tableData = dataUser.dataList
         this.user.currentPage = dataUser.current_page
         this.user.total_size = dataUser.total_size
       }

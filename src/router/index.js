@@ -5,7 +5,11 @@ import Login from '../views/Login/Login'
 import AccountManagement from '../views/AccountManagement/AccountManagement'
 import Menu from '../views/Menu/Menu'
 import RoleManagement from '../views/RoleManagement/RoleManagement'
-
+import Company from '../views/Company/Company'
+import Shop from '../views/Shop/Shop'
+import Region from '../views/Region/Region'
+import Site from '../views/Site/Site'
+import Currency from '../views/Currency/Currency'
 Vue.use(Router)
 
 export default new Router({
@@ -28,6 +32,26 @@ export default new Router({
         {
           path: '/index/menu/:id',
           component: Menu
+        },
+        {
+          path: '/index/company/:id',
+          component: Company
+        },
+        {
+          path: '/index/shop/:id',
+          component: Shop
+        },
+        {
+          path: '/index/region/:id',
+          component: Region
+        },
+        {
+          path: '/index/site/:id',
+          component: Site
+        },
+        {
+          path: '/index/currency/:id',
+          component: Currency
         }
       ]
     },
