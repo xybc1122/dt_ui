@@ -69,3 +69,10 @@ export const repGetSiteInfo=() => ajax(BASE_URL+`/site/findByListSite`)
 
 //获取币别的所有信息
 export const repGetCurrencyInfo=() => ajax(BASE_URL+`/currency/findByListCurrency`)
+
+
+//获取所有角色信息
+export const repFindRoles =() => ajax(BASE_URL+`/role/findByListRoles`)
+
+//获取员工信息 还没被注册的
+export const repGetStaff =() => ajax(BASE_URL+`/staff/getStaff`)

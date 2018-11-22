@@ -138,7 +138,7 @@
       <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUserForm">
         新增
       </el-button>
-      <el-button type="warning"  size="mini" @click="delUserForm">
+      <el-button type="warning" size="mini" @click="delUserForm">
         删除记录
       </el-button>
       <div class="block" style="display: inline-block">
@@ -153,43 +153,34 @@
         </el-pagination>
       </div>
     </div>
-
-
-    <!--隐藏新增from表单-->
-    <el-dialog title="新增用户" :visible.sync="saveFormValue" width="650px">
-      <div slot="footer" class="dialog-footer">
-        <el-button>重置</el-button>
-        <el-button @click="saveFormValue = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
-      </div>
-    </el-dialog>
-
+    <!--隐藏新增用户记录from表单-->
+      <ItemAdd/>
     <!--隐藏删除历史记录from表单-->
     <el-dialog title="历史删除记录" :visible.sync="delFormValue" width="650px">
-        <el-table :data="delUserData"
-                  @selection-change="delSelectionChange">
-          <el-table-column
-            type="selection"
-            width="55">
-          </el-table-column>
-          <el-table-column property="userName" label="账号" width="150"></el-table-column>
-          <el-table-column property="name" width="150" label="用户名称"></el-table-column>
-          <el-table-column width="200" label="删除时间">
-            <template slot-scope="scope">
-              <i class="el-icon-time"></i>
-              <span>{{ scope.row.delDate | date-format}}</span>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="block">
-          <el-pagination
-            @size-change="delSizeChange"
-            @current-change="delCurrentChange"
-            :current-page.sync="delCurrentPage"
-            :page-size="delPageSize"
-            layout="total, prev, pager, next"
-            :total="delTotal_size">
-          </el-pagination>
+      <el-table :data="delUserData"
+                @selection-change="delSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column property="userName" label="账号" width="150"></el-table-column>
+        <el-table-column property="name" width="150" label="用户名称"></el-table-column>
+        <el-table-column width="200" label="删除时间">
+          <template slot-scope="scope">
+            <i class="el-icon-time"></i>
+            <span>{{ scope.row.delDate | date-format}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="block">
+        <el-pagination
+          @size-change="delSizeChange"
+          @current-change="delCurrentChange"
+          :current-page.sync="delCurrentPage"
+          :page-size="delPageSize"
+          layout="total, prev, pager, next"
+          :total="delTotal_size">
+        </el-pagination>
         <el-button type="primary" icon="el-icon-delete" size="mini"
                    v-if="delSelection.length ===1">
           永久删除
@@ -198,14 +189,14 @@
                    v-if="delSelection.length >1">
           批量永久删除
         </el-button>
-          <el-button type="primary" icon="el-icon-delete" size="mini"
-                     v-if="delSelection.length ===1">
-            恢复
-          </el-button>
-          <el-button type="primary" icon="el-icon-delete" size="mini"
-                     v-if="delSelection.length >1">
-            批量恢复
-          </el-button>
+        <el-button type="primary" icon="el-icon-delete" size="mini"
+                   v-if="delSelection.length ===1">
+          恢复
+        </el-button>
+        <el-button type="primary" icon="el-icon-delete" size="mini"
+                   v-if="delSelection.length >1">
+          批量恢复
+        </el-button>
         <el-button @click="delFormValue = false">取 消</el-button>
         <el-button type="primary">确 定</el-button>
       </div>
@@ -214,10 +205,19 @@
   </div>
 </template>
 <script>
-  import {repHead, repUsers, repUpUserInfo, repSingleUser, repDelUserInfo, repDelHistoryUserInfo} from '../../api'
+  import {
+    repHead,
+    repUsers,
+    repUpUserInfo,
+    repSingleUser,
+    repDelUserInfo,
+    repDelHistoryUserInfo,
+  } from '../../api'
   import message from '../../utils/Message'
   import utils from '../../utils/PageUtils'
-//用户管理
+  import ItemAdd from '../../components/Item/ItemAdd'
+  import PubSub from 'pubsub-js'
+  //用户管理
   var flgSave = true
   export default {
     data () {
@@ -251,7 +251,7 @@
           currentPage: 1,//当前页
           total_size: 0,//总的页
           pageSize: 5,//显示最大的页
-          page_sizes:[5,10,15,20,25],
+          page_sizes: [5, 10, 15, 20, 25],
         },
         userForm: {
           uid: '',//用户id
@@ -279,6 +279,9 @@
           ],
         },
       }
+    },
+    components:{
+      ItemAdd,
     },
     async mounted () {
       //获得用户信息
@@ -346,7 +349,6 @@
       //点击修改的时候 获得 Checkbox中 的属性
       async upUserInfo () {
         const userSaveSelection = this.upSelection
-        console.log(userSaveSelection)
         if (userSaveSelection.length <= 0) {
           message.errorMessage('必须选中一条修改')
           return
@@ -400,17 +402,20 @@
         this.$refs[formName].resetFields()
       },
       //新增用户信息
-      saveUserForm () {
+      async saveUserForm () {
         this.saveFormValue = true
+        if (this.saveFormValue) {
+          //发布搜索消息
+          PubSub.publish('saveFormValue', this.saveFormValue)
+        }
       },
       //删除历史记录查看
       async delUserForm () {
         this.delFormValue = true
         var userPage = utils.getUserPage(this.delCurrentPage, this.delPageSize)
         const result = await repDelHistoryUserInfo(userPage)
-        console.log(result)
         const delData = result.data
-        this.delUserData = delData.users
+        this.delUserData = delData.dataList
         this.delCurrentPage = delData.current_page
         this.delTotal_size = delData.total_size
       },

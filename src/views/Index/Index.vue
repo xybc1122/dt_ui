@@ -23,7 +23,6 @@
 <script>
   import {repIndex} from '../../api'
   import {Message} from 'element-ui'
-  import {mapState} from 'vuex'
   import Header from '../../components/HeaderTop/Header'
   import Aside from '../../components/Aside/Aside'
 
