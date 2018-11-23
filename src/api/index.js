@@ -76,3 +76,11 @@ export const repFindRoles =() => ajax(BASE_URL+`/role/findByListRoles`)
 
 //获取员工信息 还没被注册的
 export const repGetStaff =() => ajax(BASE_URL+`/staff/getStaff`)
+
+//获得用户名字是否存在
+export const repGetUserName=(userName) => ajax(BASE_URL+'/user/getUserName',{userName})
+
+//新增用户信息
+export const repSaveUserInfo=({userName,pwd,confirmPwd,checkedPwd,checkedUpPwd,
+                                checkedUserAlways,checkedPwdAlways,rolesId,staffValue,pwdAlwaysInput,pwdUserDate}) => ajax(BASE_URL+'/user/saveUserInfo',{userName,pwd,confirmPwd,checkedPwd,checkedUpPwd,
+  checkedUserAlways,checkedPwdAlways,rolesId,staffValue,pwdAlwaysInput,pwdUserDate},'POST')

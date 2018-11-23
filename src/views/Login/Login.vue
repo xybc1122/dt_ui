@@ -11,7 +11,7 @@
                       prefix-icon="iconfont icon_dt-xiaoren"></el-input>
             <p></p>
             <el-input v-model="passWord" placeholder="密码" id="pwd" maxlength="15"
-                      prefix-icon="iconfont icon_dt-suo"></el-input>
+                      prefix-icon="iconfont icon_dt-suo" type="password"></el-input>
             <div class="success">
               <el-button type="primary" @click="Login" size="medium" @keyup.enter.native="Login">
                 登陆
