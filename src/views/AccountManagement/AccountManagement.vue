@@ -81,54 +81,6 @@
           </el-table-column>
         </template>
       </el-table>
-
-
-      <!--隐藏修改from表单-->
-      <el-dialog title="用户信息修改" :visible.sync="upFormValue" width="400px">
-        <el-form :model="userForm" ref="userForm" :rules="rules" label-width="80px">
-          <template v-for="(title ,index) in tableTitle">
-            <el-form-item v-if="title.topType==='uName'" :label="title.headName">
-              <el-input :placeholder="userForm.uName" clearable :disabled="true"></el-input>
-            </el-form-item>
-            <el-form-item v-if="title.topType==='name'" :label="title.headName">
-              <el-input v-model="userForm.name" clearable></el-input>
-            </el-form-item>
-            <el-form-item v-if="title.topType==='phone'" :label="title.headName">
-              <el-input v-model="userForm.uMobilePhone" clearable></el-input>
-            </el-form-item>
-            <el-form-item v-if="title.topType==='rName'" :label="title.headName">
-              <el-input v-model="userForm.rName" clearable :disabled="true"></el-input>
-            </el-form-item>
-            <el-form-item v-if="title.topType==='create_date'" :label="title.headName">
-              <div class="block">
-                <el-date-picker
-                  v-model="userForm.uCreateDate"
-                  type="datetime">
-                </el-date-picker>
-              </div>
-            </el-form-item>
-            <el-form-item v-if="title.topType==='account_status'" :label="title.headName" prop="uAccountStatus">
-              <el-select v-model="userForm.uAccountStatus" clearable value="">
-                <el-option v-for="(item,index) in accountStatusOptions" :key="index" :label="item.name"
-                           :value="item.id"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-if="title.topType==='landing_time'" :label="title.headName">
-              <div class="block">
-                <el-date-picker
-                  v-model="userForm.uLandingTime"
-                  type="datetime">
-                </el-date-picker>
-              </div>
-            </el-form-item>
-          </template>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="resetForm('userForm')">重置</el-button>
-          <el-button @click="upFormValue = false">取 消</el-button>
-          <el-button type="primary" @click="saveUserInfo('userForm')">确 定</el-button>
-        </div>
-      </el-dialog>
       <el-button type="success" icon="el-icon-edit" size="mini" @click="upUserInfo" v-if="singleUser.status===1">修改
       </el-button>
       <el-button type="info" icon="el-icon-delete" size="mini" @click="delUserInfo"
@@ -154,8 +106,9 @@
       </div>
     </div>
     <!--隐藏新增用户记录from表单-->
-      <ItemAdd/>
-    <!--隐藏删除历史记录from表单-->
+    <UserItemAdd/>
+    <!--隐藏修改from表单-->
+    <UserItemUp/>
     <el-dialog title="历史删除记录" :visible.sync="delFormValue" width="650px">
       <el-table :data="delUserData"
                 @selection-change="delSelectionChange">
@@ -201,31 +154,23 @@
         <el-button type="primary">确 定</el-button>
       </div>
     </el-dialog>
-
   </div>
 </template>
 <script>
   import {
     repHead,
     repUsers,
-    repUpUserInfo,
     repSingleUser,
     repDelUserInfo,
     repDelHistoryUserInfo,
   } from '../../api'
   import message from '../../utils/Message'
   import utils from '../../utils/PageUtils'
-  import ItemAdd from '../../components/Item/ItemAdd'
+  import UserItemAdd from '../../components/Item/UserItemAdd'
+  import UserItemUp from '../../components/Item/UserItemUp'
   import PubSub from 'pubsub-js'
-  //用户管理
-  var flgSave = true
   export default {
     data () {
-      var userAccountStatus = (rule, value, callback) => {
-        // if (!value) {
-        //   return callback(new Error('不能为空~'));
-        // }
-      }
       return {
         delUserData: [],//删除的用户数据
         msgInput: '',//当选择后获得第一个下拉框的id
@@ -235,7 +180,6 @@
         userValue: '', //下拉框的model
         upSelection: [], //更新按钮数组收集
         delSelection: [],//删除按钮数组收集
-        upFormValue: false,//更新隐藏form
         saveFormValue: false,//新增隐藏form
         delFormValue: false,//删除历史记录 隐藏form
         singleUser: {},//查询一个单用户信息
@@ -252,36 +196,12 @@
           total_size: 0,//总的页
           pageSize: 5,//显示最大的页
           page_sizes: [5, 10, 15, 20, 25],
-        },
-        userForm: {
-          uid: '',//用户id
-          uName: '',//账号
-          name: '',//用户名
-          uLandingTime: '',//登陆时间
-          uCreateDate: '',//创建时间
-          uAccountStatus: '',//账号状态
-          uMobilePhone: '',//手机
-          rName: ''//角色
-        },
-        accountStatusOptions: [{
-          id: 0,
-          name: '正常'
-        }, {
-          id: 1,
-          name: '冻结'
-        }, {
-          id: 2,
-          name: '禁用'
-        }],
-        rules: {
-          uAccountStatus: [
-            {validator: userAccountStatus, trigger: 'blur'}
-          ],
-        },
+        }
       }
     },
-    components:{
-      ItemAdd,
+    components: {
+      UserItemAdd,
+      UserItemUp
     },
     async mounted () {
       //获得用户信息
@@ -304,6 +224,18 @@
         //赋值 然后显示
         this.pageUser(resultUsers)
       }
+      PubSub.subscribe('upFormValue', (msg, upFormValue) => {
+            if(!upFormValue){
+              var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+              const resultUsers =  repUsers(userPage)
+              resultUsers.then((result)=>{
+                if (result.code === 200) {
+                  //赋值 然后显示
+                  this.pageUser(resultUsers)
+                }
+              })
+            }
+      })
     }
     ,
     methods: {
@@ -338,71 +270,21 @@
       accountStatus: function (row) {
         return row.accountStatus === 0 ? '正常' : row.accountStatus === 1 ? '冻结' : row.accountStatus === 2 ? '禁用' : ''
       },
-      //点击选项 Checkbox 按钮 获得val赋值给 upSelection
-      upSelectionChange (val) {
-        this.upSelection = val
-      },
       delSelectionChange (val) {
         console.log(val)
         this.delSelection = val
       },
+      //点击选项 Checkbox 按钮 获得val赋值给 upSelection
+      upSelectionChange (val) {
+        this.upSelection = val
+      },
       //点击修改的时候 获得 Checkbox中 的属性
-      async upUserInfo () {
-        const userSaveSelection = this.upSelection
-        if (userSaveSelection.length <= 0) {
-          message.errorMessage('必须选中一条修改')
-          return
-        } else if (userSaveSelection.length >= 2) {
-          message.errorMessage('修改只能选中一条')
-          return
-        }
-        //将数组转换成对象
-        userSaveSelection.forEach(item => {
-          this.userForm['uName'] = item.userName
-          this.userForm['name'] = item.name
-          this.userForm['rName'] = item.rName
-          this.userForm['uAccountStatus'] = item.accountStatus
-          this.userForm['uCreateDate'] = item.createDate
-          this.userForm['uLandingTime'] = item.landingTime
-          this.userForm['uMobilePhone'] = item.mobilePhone
-          this.userForm['uid'] = item.uid
-        })
-        console.log(this.userForm)
-        this.upFormValue = true
-      },
-      //确认后更新用户信息操作
-      async saveUserInfo (formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log('submit')
-          } else {
-            console.log('error submit!!')
-            flgSave = false
-            return flgSave
-          }
-        })
-        if (flgSave) {
-          const result = await repUpUserInfo(this.userForm)
-          if (result.code === -1) {
-            message.errorMessage('你没有权限修改数据')
-          } else {
-            message.successMessage('更新成功~')
-            this.upFormValue = false
-            var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-            const resultUsers = await repUsers(userPage)
-            if (resultUsers.code === 200) {
-              //赋值 然后显示
-              this.pageUser(resultUsers)
-            }
-          }
-        }
-      },
-      //from表单重置
-      resetForm (formName) {
-        this.$refs[formName].resetFields()
+      upUserInfo () {
+        //发布订阅消息 修改
+        PubSub.publish('upSelection', this.upSelection)
       },
       //新增用户信息
-      async saveUserForm () {
+      saveUserForm () {
         this.saveFormValue = true
         if (this.saveFormValue) {
           //发布搜索消息
@@ -442,9 +324,7 @@
             message.errorMessage('删除失败!')
           }
         } else {
-
         }
-
       },
       //tabale表头上下箭头 排序
       arraySpanMethod ({row, column, rowIndex, columnIndex}) {
