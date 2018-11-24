@@ -109,51 +109,8 @@
     <UserItemAdd/>
     <!--隐藏修改from表单-->
     <UserItemUp/>
-    <el-dialog title="历史删除记录" :visible.sync="delFormValue" width="650px">
-      <el-table :data="delUserData"
-                @selection-change="delSelectionChange">
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
-        <el-table-column property="userName" label="账号" width="150"></el-table-column>
-        <el-table-column property="name" width="150" label="用户名称"></el-table-column>
-        <el-table-column width="200" label="删除时间">
-          <template slot-scope="scope">
-            <i class="el-icon-time"></i>
-            <span>{{ scope.row.delDate | date-format}}</span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="block">
-        <el-pagination
-          @size-change="delSizeChange"
-          @current-change="delCurrentChange"
-          :current-page.sync="delCurrentPage"
-          :page-size="delPageSize"
-          layout="total, prev, pager, next"
-          :total="delTotal_size">
-        </el-pagination>
-        <el-button type="primary" icon="el-icon-delete" size="mini"
-                   v-if="delSelection.length ===1">
-          永久删除
-        </el-button>
-        <el-button type="primary" icon="el-icon-delete" size="mini"
-                   v-if="delSelection.length >1">
-          批量永久删除
-        </el-button>
-        <el-button type="primary" icon="el-icon-delete" size="mini"
-                   v-if="delSelection.length ===1">
-          恢复
-        </el-button>
-        <el-button type="primary" icon="el-icon-delete" size="mini"
-                   v-if="delSelection.length >1">
-          批量恢复
-        </el-button>
-        <el-button @click="delFormValue = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
-      </div>
-    </el-dialog>
+    <!--隐藏删除from表单-->
+    <UserItemDel/>
   </div>
 </template>
 <script>
@@ -162,30 +119,25 @@
     repUsers,
     repSingleUser,
     repDelUserInfo,
-    repDelHistoryUserInfo,
   } from '../../api'
   import message from '../../utils/Message'
   import utils from '../../utils/PageUtils'
-  import UserItemAdd from '../../components/Item/UserItemAdd'
-  import UserItemUp from '../../components/Item/UserItemUp'
+  import UserItemAdd from '../../components/UserItem/UserItemAdd'
+  import UserItemUp from '../../components/UserItem/UserItemUp'
+  import UserItemDel from '../../components/UserItem/UserItemDel'
   import PubSub from 'pubsub-js'
   export default {
     data () {
       return {
-        delUserData: [],//删除的用户数据
         msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
         tableTitle: [],//表头信息
         tableData: [],//表信息
         userValue: '', //下拉框的model
         upSelection: [], //更新按钮数组收集
-        delSelection: [],//删除按钮数组收集
         saveFormValue: false,//新增隐藏form
         delFormValue: false,//删除历史记录 隐藏form
         singleUser: {},//查询一个单用户信息
-        delCurrentPage: 1,//当前页
-        delTotal_size: 0,//总的页
-        delPageSize: 5,//显示最大的页
         user: {
           userName: '',//账号名
           name: '',//用户名
@@ -201,7 +153,8 @@
     },
     components: {
       UserItemAdd,
-      UserItemUp
+      UserItemUp,
+      UserItemDel
     },
     async mounted () {
       //获得用户信息
@@ -231,7 +184,7 @@
               resultUsers.then((result)=>{
                 if (result.code === 200) {
                   //赋值 然后显示
-                  this.pageUser(resultUsers)
+                  this.pageUser(result)
                 }
               })
             }
@@ -239,13 +192,6 @@
     }
     ,
     methods: {
-      //删除历史记录查看分页
-      delSizeChange (val) {
-        console.log(`每页 ${val} 条`)
-      },
-      delCurrentChange (val) {
-        console.log(`当前页: ${val}`)
-      },
       //分页
       async handleSizeChange (val) {
         this.user.pageSize = val
@@ -270,10 +216,6 @@
       accountStatus: function (row) {
         return row.accountStatus === 0 ? '正常' : row.accountStatus === 1 ? '冻结' : row.accountStatus === 2 ? '禁用' : ''
       },
-      delSelectionChange (val) {
-        console.log(val)
-        this.delSelection = val
-      },
       //点击选项 Checkbox 按钮 获得val赋值给 upSelection
       upSelectionChange (val) {
         this.upSelection = val
@@ -286,20 +228,14 @@
       //新增用户信息
       saveUserForm () {
         this.saveFormValue = true
-        if (this.saveFormValue) {
           //发布搜索消息
-          PubSub.publish('saveFormValue', this.saveFormValue)
-        }
+        PubSub.publish('saveFormValue', this.saveFormValue)
       },
       //删除历史记录查看
       async delUserForm () {
+
         this.delFormValue = true
-        var userPage = utils.getUserPage(this.delCurrentPage, this.delPageSize)
-        const result = await repDelHistoryUserInfo(userPage)
-        const delData = result.data
-        this.delUserData = delData.dataList
-        this.delCurrentPage = delData.current_page
-        this.delTotal_size = delData.total_size
+        PubSub.publish('delFormValue', this.delFormValue)
       },
       //删除or 批量删除
       async delUserInfo () {
