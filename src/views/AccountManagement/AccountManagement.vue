@@ -69,6 +69,18 @@
               <span>{{ scope.row.createDate | date-format}}</span>
             </template>
           </el-table-column>
+          <el-table-column width="150" v-if="title.topType==='u_eff_date'" sortable fixed :label="title.headName">
+            <template slot-scope="scope">
+              <span v-if="scope.row.effectiveDate!==0">{{ scope.row.effectiveDate | date-format}}</span>
+              <span v-if="scope.row.effectiveDate===0">始终有效</span>
+            </template>
+          </el-table-column>
+          <el-table-column width="150" v-if="title.topType==='p_eff_date'" sortable fixed :label="title.headName">
+            <template slot-scope="scope">
+              <span v-if="scope.row.pwdStatus!==0">{{ scope.row.pwdStatus | date-format}}</span>
+              <span v-if="scope.row.pwdStatus===0">始终有效</span>
+            </template>
+          </el-table-column>
           <el-table-column v-if="title.topType==='account_status'" :label="title.headName" width="180"
                            :formatter="accountStatus"></el-table-column>
           <el-table-column v-if="title.topType==='landing_time'" :label="title.headName" width="180">
@@ -174,11 +186,13 @@
       var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
       const resultUsers = await repUsers(userPage)
       if (resultUsers.code === 200) {
+        console.log(resultUsers)
         //赋值 然后显示
         this.pageUser(resultUsers)
       }
-      PubSub.subscribe('upFormValue', (msg, upFormValue) => {
-            if(!upFormValue){
+      //新增成功后收到订阅消息
+      PubSub.subscribe('saveFormValue', (msg, saveFormValue) => {
+            if(!saveFormValue){
               var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
               const resultUsers =  repUsers(userPage)
               resultUsers.then((result)=>{
@@ -188,6 +202,32 @@
                 }
               })
             }
+      })
+      //删除角色成功后收到订阅消息
+      PubSub.subscribe('delRole', (msg, delRole) => {
+        if(delRole){
+          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+          const resultUsers =  repUsers(userPage)
+          resultUsers.then((result)=>{
+            if (result.code === 200) {
+              //赋值 然后显示
+              this.pageUser(result)
+            }
+          })
+        }
+      })
+      //新增角色成功后收到订阅消息
+      PubSub.subscribe('addRole', (msg, addRole) => {
+        if(!addRole){
+          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+          const resultUsers =  repUsers(userPage)
+          resultUsers.then((result)=>{
+            if (result.code === 200) {
+              //赋值 然后显示
+              this.pageUser(result)
+            }
+          })
+        }
       })
     }
     ,

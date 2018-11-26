@@ -37,7 +37,7 @@
         <el-checkbox @change="checkedAlways" v-model="addForm.checkedPwdAlways" :disabled="isCheFlgAlways">密码始终有效
         </el-checkbox>
       </el-form-item>
-      <el-form-item prop="valueData">
+      <el-form-item prop="rolesId">
         <div>
           <el-transfer
             filterable
@@ -64,9 +64,20 @@
 <script>
   import {repFindRoles, repGetStaff, repGetUserName, repSaveUserInfo} from '../../api'
   import PubSub from 'pubsub-js'
-
+  import message from '../../utils/Message'
   export default {
     data () {
+      const generateData = _ => {
+        const data = [];
+        for (let i = 1; i <= 15; i++) {
+          data.push({
+            key: i,
+            label: `备选项 ${ i }`,
+            disabled: i % 4 === 0
+          });
+        }
+        return data;
+      }
       var userName = (rule, value, callback) => {
         var reUserName = /^[a-zA-Z][0-9a-zA-Z_]{3,9}$/
         if (!value) {
@@ -259,6 +270,9 @@
               console.log(result)
               if (result.code === 200) {
                 this.saveFormValue = false;
+                message.successMessage(result.msg)
+                PubSub.publish('saveFormValue', this.saveFormValue)
+
               }
             })
           } else {
@@ -281,5 +295,8 @@
 
 
 <style>
-
+  .transfer-footer {
+    margin-left: 20px;
+    padding: 6px 5px;
+  }
 </style>

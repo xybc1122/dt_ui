@@ -84,3 +84,10 @@ export const repGetUserName=(userName) => ajax(BASE_URL+'/user/getUserName',{use
 export const repSaveUserInfo=({userName,pwd,confirmPwd,checkedPwd,checkedUpPwd,
                                 checkedUserAlways,checkedPwdAlways,rolesId,staffValue,pwdAlwaysInput,pwdUserDate}) => ajax(BASE_URL+'/user/saveUserInfo',{userName,pwd,confirmPwd,checkedPwd,checkedUpPwd,
   checkedUserAlways,checkedPwdAlways,rolesId,staffValue,pwdAlwaysInput,pwdUserDate},'POST')
+
+//移除角色信息
+export const repDelRole=({movedKeys,uid}) =>ajax(BASE_URL+'/ur/delRole',{movedKeys,uid},'POST')
+
+
+//新增角色
+export const repAdRole=({movedKeys,uid}) =>ajax(BASE_URL+'/ur/addRole',{movedKeys,uid},'POST')
