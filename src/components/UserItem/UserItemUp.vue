@@ -5,10 +5,13 @@
       <template v-for="(title ,index) in tableTitle">
         <el-form-item v-if="title.topType==='up_pwd'" :label="title.headName" style="width: 350px">
           <el-switch
+            @change="switchPwd"
             v-model="isPwd"
             active-color="#13ce66"
             inactive-color="#ff4949">
           </el-switch>
+          <el-checkbox v-model="userForm.checkedUpPwd">首次登陆修改密码</el-checkbox>
+          <el-checkbox v-model="userForm.checkedPwd">密码满足复杂度要求</el-checkbox>
         </el-form-item>
         <el-form-item v-if="title.topType==='pwd' && isPwd===true" :label="title.headName" prop="pwd">
           <el-input clearable style="width: 250px" v-model="userForm.pwd" type="password" maxlength="20"></el-input>
@@ -17,16 +20,16 @@
           <el-input clearable style="width: 250px" v-model="userForm.confirmPwd" type="password"></el-input>
         </el-form-item>
         <el-form-item v-if="title.topType==='uName'" :label="title.headName" style="width: 350px">
-          <el-input :placeholder="userForm.uName" clearable :disabled="true"></el-input>
+          <el-tag>{{userForm.uName}}</el-tag>
         </el-form-item>
-        <el-form-item v-if="title.topType==='name'" :label="title.headName">
-          <el-input v-model="userForm.name" clearable></el-input>
+        <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px">
+          <el-tag>{{userForm.name}}</el-tag>
         </el-form-item>
         <el-form-item v-if="title.topType==='phone'" :label="title.headName" style="width: 350px">
-          <el-input v-model="userForm.uMobilePhone" clearable></el-input>
+          <el-tag>{{userForm.uMobilePhone}}</el-tag>
         </el-form-item>
-        <el-form-item v-if="title.topType==='account_status'" :label="title.headName" prop="uAccountStatus">
-          <el-select v-model="userForm.uAccountStatus" clearable value="">
+        <el-form-item v-if="title.topType==='account_status'" :label="title.headName">
+          <el-select v-model="userForm.accountStatus" clearable value="">
             <el-option v-for="(item,index) in accountStatusOptions" :key="index" :label="item.name"
                        :value="item.id"></el-option>
           </el-select>
@@ -42,12 +45,16 @@
             </el-checkbox>
           </div>
         </el-form-item>
-        <el-form-item :label="title.headName" prop="pwdAlwaysInput" v-if="title.topType==='p_eff_date'">
-          <el-input clearable @blur="blurSearchForAlways" style="width: 250px" :disabled="isAlwaysFlg"
-                    v-model.number="userForm.pwdAlwaysInput" maxlength="4"></el-input>
-          <span>天</span>
-          <el-checkbox @change="checkedAlways" v-model="userForm.checkedPwdAlways" :disabled="isCheFlgAlways">密码始终有效
-          </el-checkbox>
+        <el-form-item :label="title.headName" prop="pwdStatus" v-if="title.topType==='p_eff_date'">
+          <div class="block">
+            <el-date-picker
+              type="datetime"
+              :disabled="isAlwaysFlg"
+              @change="blurSearchForAlways" v-model="userForm.pwdStatus">
+            </el-date-picker>
+            <el-checkbox @change="checkedAlways" v-model="userForm.checkedPwdAlways" :disabled="isCheFlgAlways">密码始终有效
+            </el-checkbox>
+          </div>
         </el-form-item>
       </template>
       <el-form-item prop="rolesId">
@@ -84,16 +91,57 @@
     repDelRole,
     repAdRole
   } from '../../api'
-  //用户管理
-  var flgSave = true
   //角色管理
   var user_role = true
   export default {
     data () {
-      var userAccountStatus = (rule, value, callback) => {
-        // if (!value) {
-        //   return callback(new Error('不能为空~'));
-        // }
+      var pwd = (rule, value, callback) => {
+        var pwd = /^[A-Za-z0-9]{6,20}$/
+        if (this.isPwd === true) {
+          if (value === '') {
+            callback(new Error('请输入密码'))
+          }
+          if (this.userForm.checkedPwd === true) {
+          if (!pwd.test(value)) {
+            callback(new Error('密码规则：6-20位字母或数字组合'))
+          } else {
+            callback()
+          }
+        } else {
+          callback()
+        }
+        }
+      }
+      var confirmPwd = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'))
+        } else if (value !== this.userForm.pwd) {
+          callback(new Error('两次输入密码不一致!'))
+        } else {
+          callback()
+        }
+      }
+      var effectiveDate = (rule, value, callback) => {
+        if (this.userForm.checkedUserAlways !== true) {
+          if (value === '' || value === null) {
+            callback(new Error('必须选择一个时间~'))
+          } else {
+            callback()
+          }
+        } else {
+          callback()
+        }
+      }
+      var pwdStatus = (rule, value, callback) => {
+        if (this.userForm.checkedPwdAlways !== true) {
+          if (value === '' || value === null) {
+            callback(new Error('必须选择一个时间~'))
+          } else {
+            callback()
+          }
+        } else {
+          callback()
+        }
       }
       return {
         tableTitle: [],//表头信息
@@ -111,19 +159,17 @@
           uid: '',//用户id
           uName: '',//账号
           name: '',//用户名
-          uLandingTime: '',//登陆时间
-          uCreateDate: '',//创建时间
-          uAccountStatus: '',//账号状态
+          accountStatus: '',//账号状态
           uMobilePhone: '',//手机
           rName: '',//角色
           rid: '',//角色id
           pwd: '',//密码
           confirmPwd: '',//确认密码
           checkedPwd: false, //密码满足复杂度要求  checked
-          checkedUpPwd: false, //首次登陆修改密码 修改  checked
+          checkedUpPwd: false, //首次登陆修改密码修改  checked
           checkedUserAlways: false, //用户始终有效  checked
           checkedPwdAlways: false, //密码始终有效 checked
-          pwdAlwaysInput: '', //密码有效期
+          pwdStatus: '', //密码有效期
           effectiveDate: '' //用户有效期
         },
         accountStatusOptions: [{
@@ -137,15 +183,38 @@
           name: '禁用'
         }],
         rules: {
-          uAccountStatus: [
-            {validator: userAccountStatus, trigger: 'blur'}
+          pwd: [
+            {validator: pwd, trigger: 'blur'}
+          ],
+          confirmPwd: [
+            {validator: confirmPwd, trigger: 'blur'}
+          ],
+          effectiveDate: [
+            {validator: effectiveDate, trigger: 'blur'}
+          ],
+          pwdStatus: [
+            {validator: pwdStatus, trigger: 'blur'}
           ],
         },
       }
     },
     async mounted () {
+      //查询获得table表的 头信息
+      const resultHead = await
+        repHead(this.$route.params.id)
+      if (resultHead.code === 200) {
+        this.tableTitle = resultHead.data
+        console.log(resultHead.data)
+      }
       //获得传来的标识 显示 隐藏form
       PubSub.subscribe('upSelection', (msg, upSelection) => {
+        //每次点击初始化
+        this.isCheFlgAlways = false//密码始终有效 判断标识
+        this.isCheFlgUser = false//用户始终有效 判断标识
+        this.isAlwaysFlg = false//密码有效期 判断标识
+        this.isUserFlg = false//用户有效期 判断标识
+        this.userForm.checkedUserAlways = false //用户始终有效  checked
+        this.userForm.checkedPwdAlways = false //密码始终有效 checked
         console.log(upSelection)
         const userSaveSelection = upSelection
         if (userSaveSelection.length <= 0) {
@@ -161,24 +230,30 @@
           this.userForm['uName'] = item.userName
           this.userForm['name'] = item.name
           this.userForm['rName'] = item.rName
-          this.userForm['uAccountStatus'] = item.accountStatus
-          this.userForm['uCreateDate'] = item.createDate
-          this.userForm['uLandingTime'] = item.landingTime
+          this.userForm['accountStatus'] = item.accountStatus
           this.userForm['uMobilePhone'] = item.mobilePhone
           this.userForm['uid'] = item.uid
           this.userForm['rid'] = item.rId
-          this.userForm['pwdAlwaysInput'] = item.pwdStatus
+          this.userForm['pwdStatus'] = item.pwdStatus
           this.userForm['effectiveDate'] = item.effectiveDate
         })
-        if (this.userForm.pwdAlwaysInput === 0) {
-          this.userForm.checkedUserAlways = true
-          this.isUserFlg = true
-          this.userForm.pwdAlwaysInput = ''
-        }
-        if (this.userForm.effectiveDate === 0) {
+        //密码有效期
+        if (this.userForm.pwdStatus === 0) {
           this.userForm.checkedPwdAlways = true
           this.isAlwaysFlg = true
+          this.userForm.pwdStatus = ''
+        } else {
+          this.userForm.checkedPwdAlways = false
+          this.isCheFlgAlways = true
+        }
+        //用户有效期
+        if (this.userForm.effectiveDate === 0) {
+          this.userForm.checkedUserAlways = true
+          this.isUserFlg = true
           this.userForm.effectiveDate = ''
+        } else {
+          this.userForm.checkedUserAlways = false
+          this.isCheFlgUser = true
         }
         const resultRoles = repFindRoles()
         resultRoles.then((result) => {
@@ -196,47 +271,53 @@
               return data
             }
             this.rolesData = generateData()
-            var roleStr = this.userForm.rid.split(',')
-            this.rolesId = roleStr.map(function (data) {
-              return +data
-            })
+            if (this.userForm.rid) {
+              var roleStr = this.userForm.rid.split(',')
+              this.rolesId = roleStr.map(function (data) {
+                return +data
+              })
+            }
           }
         })
       })
-      //查询获得table表的 头信息
-      const resultHead = await
-        repHead(this.$route.params.id)
-      if (resultHead.code === 200) {
-        this.tableTitle = resultHead.data
-        console.log(resultHead.data)
-      }
     },
     methods: {
+      switchPwd () {
+        if (!this.isPwd) {
+          this.userForm.pwd = ''//密码
+          this.userForm.confirmPwd = ''
+        }
+      },
       //确认后更新用户信息操作
       async saveUserInfo (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log('submit')
+            const resultUserInfo = repUpUserInfo(this.userForm)
+            resultUserInfo.then((result) => {
+              console.log(resultUserInfo)
+              if (result.code === -1) {
+                message.errorMessage('你没有权限修改数据')
+              } else if (result.code === 200) {
+                message.successMessage('更新成功~')
+                this.upFormValue = false
+                PubSub.publish('upFormValue', this.upFormValue)
+              } else {
+                message.infoMessage('系统错误~')
+              }
+            })
           } else {
             console.log('error submit!!')
-            flgSave = false
-            return flgSave
+            return false
           }
         })
-        if (flgSave) {
-          const result = await repUpUserInfo(this.userForm)
-          if (result.code === -1) {
-            message.errorMessage('你没有权限修改数据')
-          } else {
-            message.successMessage('更新成功~')
-            this.upFormValue = false
-            PubSub.publish('upFormValue', this.upFormValue)
-          }
-        }
       },
       //from表单重置
       resetForm (formName) {
-        this.$refs[formName].resetFields()
+        // this.$refs[formName].resetFields()
+        this.userForm.pwd = ''//密码
+        this.userForm.confirmPwd = ''
+        this.isPwd = false
       },
       //通过关键字搜索
       filterMethod (query, item) {
@@ -274,7 +355,7 @@
       },
       //blurSearchForAlways 失去焦点时 判断值是否为空 如果不为空 锁定按钮
       blurSearchForAlways () {
-        this.isCheFlgAlways = !!this.userForm.pwdAlwaysInput
+        this.isCheFlgAlways = !!this.userForm.pwdStatus
       },
       //blurSearchForUser 失去焦点时 判断值是否为空 如果不为空 锁定按钮
       changeSearchForUser () {

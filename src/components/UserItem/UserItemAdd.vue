@@ -19,12 +19,12 @@
                      :value="item"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户有效期:" prop="pwdUserDate">
+      <el-form-item label="用户有效期:" prop="effectiveDate">
         <div class="block">
           <el-date-picker
             type="datetime"
             :disabled="isUserFlg"
-            @change="changeSearchForUser" v-model="addForm.pwdUserDate">
+            @change="changeSearchForUser" v-model="addForm.effectiveDate">
           </el-date-picker>
           <el-checkbox @change="checkedUser" v-model="addForm.checkedUserAlways" :disabled="isCheFlgUser">用户始终有效
           </el-checkbox>
@@ -67,17 +67,6 @@
   import message from '../../utils/Message'
   export default {
     data () {
-      const generateData = _ => {
-        const data = [];
-        for (let i = 1; i <= 15; i++) {
-          data.push({
-            key: i,
-            label: `备选项 ${ i }`,
-            disabled: i % 4 === 0
-          });
-        }
-        return data;
-      }
       var userName = (rule, value, callback) => {
         var reUserName = /^[a-zA-Z][0-9a-zA-Z_]{3,9}$/
         if (!value) {
@@ -144,7 +133,7 @@
           callback()
         }
       }
-      var pwdUserDate = (rule, value, callback) => {
+      var effectiveDate = (rule, value, callback) => {
         if (this.addForm.checkedUserAlways !== true) {
           if (value === '' || value === null) {
             callback(new Error('必须选择一个时间~'))
@@ -181,7 +170,7 @@
           rolesId: [], //角色 ids
           staffValue: '', //员工对象
           pwdAlwaysInput: '', //密码有效期
-          pwdUserDate: '' //用户有效期
+          effectiveDate: '' //用户有效期
         },
         rules: {
           userName: [
@@ -199,8 +188,8 @@
           staffValue: [
             {validator: staffValue, trigger: 'blur'}
           ],
-          pwdUserDate: [
-            {validator: pwdUserDate, trigger: 'blur'}
+          effectiveDate: [
+            {validator: effectiveDate, trigger: 'blur'}
           ],
           rolesId: [
             {validator: rolesId, trigger: 'blur'}

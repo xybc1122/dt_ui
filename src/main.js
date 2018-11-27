@@ -84,6 +84,7 @@ Vue.component(RadioGroup.name, RadioGroup)
 Vue.component(Dialog.name, Dialog)
 Vue.component(RadioButton.name, RadioButton)
 Vue.component(Transfer.name, Transfer)
+
 // 设置Cookie
 Vue.prototype.setCookie = function (c_name, value, expiredays) {
   var exdate = new Date()

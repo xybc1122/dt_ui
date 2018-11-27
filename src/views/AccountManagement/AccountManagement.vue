@@ -60,7 +60,7 @@
                            prop="name"></el-table-column>
           <el-table-column width="150" v-if="title.topType==='phone'" :label="title.headName"
                            prop="mobilePhone"></el-table-column>
-          <el-table-column v-if="title.topType==='rName'" :label="title.headName" prop="rName" width="150"
+          <el-table-column v-if="title.topType==='rName'" :label="title.headName" fixed prop="rName" width="150"
                            :show-overflow-tooltip="true">
           </el-table-column>
           <el-table-column v-if="title.topType==='create_date'" :label="title.headName" width="180">
@@ -69,13 +69,13 @@
               <span>{{ scope.row.createDate | date-format}}</span>
             </template>
           </el-table-column>
-          <el-table-column width="150" v-if="title.topType==='u_eff_date'" sortable fixed :label="title.headName">
+          <el-table-column width="150" v-if="title.topType==='u_eff_date'" sortable :label="title.headName">
             <template slot-scope="scope">
               <span v-if="scope.row.effectiveDate!==0">{{ scope.row.effectiveDate | date-format}}</span>
               <span v-if="scope.row.effectiveDate===0">始终有效</span>
             </template>
           </el-table-column>
-          <el-table-column width="150" v-if="title.topType==='p_eff_date'" sortable fixed :label="title.headName">
+          <el-table-column width="150" v-if="title.topType==='p_eff_date'" sortable :label="title.headName">
             <template slot-scope="scope">
               <span v-if="scope.row.pwdStatus!==0">{{ scope.row.pwdStatus | date-format}}</span>
               <span v-if="scope.row.pwdStatus===0">始终有效</span>
@@ -138,6 +138,7 @@
   import UserItemUp from '../../components/UserItem/UserItemUp'
   import UserItemDel from '../../components/UserItem/UserItemDel'
   import PubSub from 'pubsub-js'
+
   export default {
     data () {
       return {
@@ -192,23 +193,23 @@
       }
       //新增成功后收到订阅消息
       PubSub.subscribe('saveFormValue', (msg, saveFormValue) => {
-            if(!saveFormValue){
-              var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-              const resultUsers =  repUsers(userPage)
-              resultUsers.then((result)=>{
-                if (result.code === 200) {
-                  //赋值 然后显示
-                  this.pageUser(result)
-                }
-              })
+        if (!saveFormValue) {
+          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+          const resultUsers = repUsers(userPage)
+          resultUsers.then((result) => {
+            if (result.code === 200) {
+              //赋值 然后显示
+              this.pageUser(result)
             }
+          })
+        }
       })
       //删除角色成功后收到订阅消息
       PubSub.subscribe('delRole', (msg, delRole) => {
-        if(delRole){
+        if (delRole) {
           var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-          const resultUsers =  repUsers(userPage)
-          resultUsers.then((result)=>{
+          const resultUsers = repUsers(userPage)
+          resultUsers.then((result) => {
             if (result.code === 200) {
               //赋值 然后显示
               this.pageUser(result)
@@ -218,10 +219,36 @@
       })
       //新增角色成功后收到订阅消息
       PubSub.subscribe('addRole', (msg, addRole) => {
-        if(!addRole){
+        if (!addRole) {
           var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-          const resultUsers =  repUsers(userPage)
-          resultUsers.then((result)=>{
+          const resultUsers = repUsers(userPage)
+          resultUsers.then((result) => {
+            if (result.code === 200) {
+              //赋值 然后显示
+              this.pageUser(result)
+            }
+          })
+        }
+      })
+      //更新用户信息功后收到订阅消息
+      PubSub.subscribe('upFormValue', (msg, upFormValue) => {
+        if (!upFormValue) {
+          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+          const resultUsers = repUsers(userPage)
+          resultUsers.then((result) => {
+            if (result.code === 200) {
+              //赋值 然后显示
+              this.pageUser(result)
+            }
+          })
+        }
+      })
+      //恢复用户信息后收到订阅消息
+      PubSub.subscribe('isReUser', (msg, isReUser) => {
+        if (isReUser) {
+          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+          const resultUsers = repUsers(userPage)
+          resultUsers.then((result) => {
             if (result.code === 200) {
               //赋值 然后显示
               this.pageUser(result)
@@ -268,7 +295,7 @@
       //新增用户信息
       saveUserForm () {
         this.saveFormValue = true
-          //发布搜索消息
+        //发布搜索消息
         PubSub.publish('saveFormValue', this.saveFormValue)
       },
       //删除历史记录查看
@@ -286,7 +313,8 @@
         }
         if (confirm('确定要删除吗？')) {
           var ids = userDelSelection.map(item => item.uid).join()
-          const resultDel = await repDelUserInfo(ids)
+          const uidIds = {ids}
+          const resultDel = await repDelUserInfo(uidIds)
           if (resultDel.code === 200 && resultDel.data >= 1) {
             message.successMessage('删除成功!')
             var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
@@ -299,7 +327,6 @@
           else {
             message.errorMessage('删除失败!')
           }
-        } else {
         }
       },
       //tabale表头上下箭头 排序

@@ -30,10 +30,9 @@ export const repMenu = () => ajax(BASE_URL + `/menu/show`)
 //查询菜单信息
 export const repMenuList = () => ajax(BASE_URL + `/menu/findMenuList`)
 
-//删除用户信息
-
-export const repUpUserInfo = ({uName, name, uLandingTime, uCreateDate, uAccountStatus, uMobilePhone, rName, uid}) => ajax(BASE_URL + `/user/upUserInfo`,
-  {uName, name, uLandingTime, uCreateDate, uAccountStatus, uMobilePhone, rName, uid}, 'POST')
+//更新用户信息
+export const repUpUserInfo = ({pwd, accountStatus, uid,pwdStatus,effectiveDate,uName,checkedUpPwd,checkedPwdAlways,checkedUserAlways}) => ajax(BASE_URL + `/user/upUserInfo`,
+  { pwd,accountStatus, uid,pwdStatus,effectiveDate,uName,checkedUpPwd,checkedPwdAlways,checkedUserAlways}, 'POST')
 
 //获取单个用户基本信息
 
@@ -46,8 +45,9 @@ export const repGetRoles = ({currentPage, pageSize}) => ajax(BASE_URL + `/user/g
 }, 'POST')
 
 //删除一个用户或者多个用户
-export const repDelUserInfo = (uidIds) => ajax(BASE_URL + '/user/delUserInfo', {uidIds})
-
+export const repDelUserInfo = ({ids}) => ajax(BASE_URL + `/user/delUserInfo`, {ids},'POST')
+//恢复一个用户或者多个用户
+export const repReUserInfo = ({ids}) => ajax(BASE_URL + `/user/reUserInfo`, {ids},'POST')
 //获得历史删除用户的信息
 export const repDelHistoryUserInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/user/getDelUser', {
   currentPage,
