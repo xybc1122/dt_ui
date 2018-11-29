@@ -37,41 +37,61 @@
           fixed>
         </el-table-column>
         <template v-for="(title ,index) in tableTitle">
-          <el-table-column  v-if="title.topType==='rName'" :label="title.headName" prop="rName" width="150"
+          <el-table-column v-if="title.topType==='rName'" :label="title.headName" prop="rName" width="150"
                            sortable fixed></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='role_holder'"  :label="title.headName"
-                           prop="userName" width="150"
+          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='role_holder'" :label="title.headName"
+                           prop="userName" width="100"
                            sortable></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='owned_menu'"  :label="title.headName"
-                           prop="menuName"
-                           width="150"></el-table-column>
         </template>
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="100">
+          <template slot-scope="scope">
+            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+          </template>
+        </el-table-column>
       </el-table>
-      <el-button type="primary" icon="el-icon-edit" size="mini">修改
-      </el-button>
-      <el-button type="primary" icon="el-icon-delete" size="mini">
-        删除
-      </el-button>
-      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini">
-        新增
-      </el-button>
-      <div class="block">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="role.currentPage"
-          :page-size="role.pageSize"
-          layout="total, prev, pager, next"
-          :total="role.total_size">
-        </el-pagination>
+      <div class="check3">
+        <el-tree
+          :data="menuList"
+          :props="defaultProps"
+          accordion
+          @node-click="handleNodeClick" style="width: 500px">
+        </el-tree>
+      </div>
+      <div class="check4" style="width: 500px">
+        <el-card class="box-card">
+
+        </el-card>
+      </div>
+      <div class="check5">
+        <el-button type="primary" icon="el-icon-edit" size="mini">修改
+        </el-button>
+        <el-button type="primary" icon="el-icon-delete" size="mini">
+          删除
+        </el-button>
+        <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini">
+          新增
+        </el-button>
+        <div class="block">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page.sync="role.currentPage"
+            :page-size="role.pageSize"
+            layout="total, prev, pager, next"
+            :total="role.total_size">
+          </el-pagination>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import {repHead, repGetRoles} from '../../api'
+  import {repHead, repGetRoles, repMenu, repMenuRole} from '../../api'
   import utils from '../../utils/PageUtils'
-//角色管理
+  //角色管理
   export default {
     data () {
       var userAccountStatus = (rule, value, callback) => {
@@ -82,6 +102,7 @@
         }
       }
       return {
+        test: '',
         msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
         tableTitle: [],//表头信息
@@ -92,6 +113,11 @@
           currentPage: 1,//当前页
           total_size: 0,//总的页
           pageSize: 10//显示最大的页
+        },
+        menuList: [],
+        defaultProps: {
+          children: 'childMenus',
+          label: 'name'
         }
       }
     },
@@ -142,6 +168,22 @@
       //获得第一个input框里的id 通过id去判断显示哪个输入框
       getValue (selVal) {
         this.msgInput = selVal
+      },
+      handleNodeClick (data) {
+        console.log(data)
+        if(!data){
+          this.test=''
+        }else{
+          this.test = data
+        }
+
+      },
+      async handleClick (row) {
+        const rid = row.rId
+        const resultRoleMenu = await repMenuRole(rid)
+        if (resultRoleMenu.code === 200) {
+          this.menuList = resultRoleMenu.data
+        }
       }
     }
   }
@@ -163,6 +205,24 @@
   }
 
   #printCheck .check2 {
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+  }
+
+  .check3 {
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+  }
+
+  .check4 {
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+  }
+
+  .check5 {
     float: left;
     margin-top: 25px;
     margin-left: 25px;

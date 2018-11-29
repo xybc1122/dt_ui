@@ -43,9 +43,10 @@ import {
   RadioGroup,
   Dialog,
   RadioButton,
-  Transfer
+  Transfer,
+  Tree,
+  Card
 } from 'element-ui'
-
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)
 Vue.component(Container.name, Container)
@@ -84,6 +85,8 @@ Vue.component(RadioGroup.name, RadioGroup)
 Vue.component(Dialog.name, Dialog)
 Vue.component(RadioButton.name, RadioButton)
 Vue.component(Transfer.name, Transfer)
+Vue.component(Tree.name, Tree)
+Vue.component(Card.name, Card)
 
 // 设置Cookie
 Vue.prototype.setCookie = function (c_name, value, expiredays) {

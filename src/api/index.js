@@ -25,69 +25,74 @@ export const repIndex = () => ajax(BASE_URL + `/menu/index`)
 export const repLogout = () => ajax(BASE_URL + `/logout`)
 
 //查询哪些用户有哪些菜单
-export const repMenu = () => ajax(BASE_URL + `/menu/show`)
-
+export const repMenu = () => ajax(BASE_URL + '/menu/show')
+//通过角色查询菜单
+export const repMenuRole = (rid) => ajax(BASE_URL + '/menu/role/menu', {rid})
 //查询菜单信息
 export const repMenuList = () => ajax(BASE_URL + `/menu/findMenuList`)
 
 //更新用户信息
-export const repUpUserInfo = ({pwd, accountStatus, uid,pwdStatus,effectiveDate,uName,checkedUpPwd,checkedPwdAlways,checkedUserAlways}) => ajax(BASE_URL + `/user/upUserInfo`,
-  { pwd,accountStatus, uid,pwdStatus,effectiveDate,uName,checkedUpPwd,checkedPwdAlways,checkedUserAlways}, 'POST')
+export const repUpUserInfo = ({pwd, accountStatus, uid, pwdStatus, effectiveDate, uName, checkedUpPwd, checkedPwdAlways, checkedUserAlways}) => ajax(BASE_URL + `/user/upUserInfo`,
+  {pwd, accountStatus, uid, pwdStatus, effectiveDate, uName, checkedUpPwd, checkedPwdAlways, checkedUserAlways}, 'POST')
 
 //获取单个用户基本信息
 
 export const repSingleUser = () => ajax(BASE_URL + `/user/getUser`)
 
 // 查询一个角色下的所有用户跟 菜单
-export const repGetRoles = ({currentPage, pageSize}) => ajax(BASE_URL + `/user/getRoles`, {
+export const repGetRoles = ({currentPage, pageSize}) => ajax(BASE_URL + `/role/getRoles`, {
   currentPage,
   pageSize
 }, 'POST')
 
 //删除一个用户或者多个用户
-export const repDelUserInfo = ({ids}) => ajax(BASE_URL + `/user/delUserInfo`, {ids},'POST')
+export const repDelUserInfo = ({ids}) => ajax(BASE_URL + `/user/delUserInfo`, {ids}, 'POST')
 //恢复一个用户或者多个用户
-export const repReUserInfo = ({ids}) => ajax(BASE_URL + `/user/reUserInfo`, {ids},'POST')
+export const repReUserInfo = ({ids}) => ajax(BASE_URL + `/user/reUserInfo`, {ids}, 'POST')
 //获得历史删除用户的信息
 export const repDelHistoryUserInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/user/getDelUser', {
   currentPage,
   pageSize
-},'POST')
+}, 'POST')
 
 //获取公司的所有信息
-export const repGetCompanyInfo=() => ajax(BASE_URL+`/company/findByListCompany`)
-
+export const repGetCompanyInfo = () => ajax(BASE_URL + `/company/findByListCompany`)
 
 //获取店铺的所有信息
-export const repGetShopInfo=() => ajax(BASE_URL+`/shop/findByListShop`)
+export const repGetShopInfo = () => ajax(BASE_URL + `/shop/findByListShop`)
 
 //获取区域的所有信息
-export const repGetRegionInfo=({currentPage, pageSize}) => ajax(BASE_URL+`/reg/findByListRegion`,{currentPage, pageSize},'POST')
+export const repGetRegionInfo = ({currentPage, pageSize}) => ajax(BASE_URL + `/reg/findByListRegion`, {
+  currentPage,
+  pageSize
+}, 'POST')
 
 //获取站点的所有信息
-export const repGetSiteInfo=() => ajax(BASE_URL+`/site/findByListSite`)
+export const repGetSiteInfo = () => ajax(BASE_URL + `/site/findByListSite`)
 
 //获取币别的所有信息
-export const repGetCurrencyInfo=() => ajax(BASE_URL+`/currency/findByListCurrency`)
-
+export const repGetCurrencyInfo = () => ajax(BASE_URL + `/currency/findByListCurrency`)
 
 //获取所有角色信息
-export const repFindRoles =() => ajax(BASE_URL+`/role/findByListRoles`)
+export const repFindRoles = () => ajax(BASE_URL + `/role/findByListRoles`)
 
 //获取员工信息 还没被注册的
-export const repGetStaff =() => ajax(BASE_URL+`/staff/getStaff`)
+export const repGetStaff = () => ajax(BASE_URL + `/staff/getStaff`)
 
 //获得用户名字是否存在
-export const repGetUserName=(userName) => ajax(BASE_URL+'/user/getUserName',{userName})
+export const repGetUserName = (userName) => ajax(BASE_URL + '/user/getUserName', {userName})
 
 //新增用户信息
-export const repSaveUserInfo=({userName,pwd,confirmPwd,checkedPwd,checkedUpPwd,
-                                checkedUserAlways,checkedPwdAlways,rolesId,staffValue,pwdAlwaysInput,pwdUserDate}) => ajax(BASE_URL+'/user/saveUserInfo',{userName,pwd,confirmPwd,checkedPwd,checkedUpPwd,
-  checkedUserAlways,checkedPwdAlways,rolesId,staffValue,pwdAlwaysInput,pwdUserDate},'POST')
+export const repSaveUserInfo = ({
+                                  userName, pwd, confirmPwd, checkedPwd, checkedUpPwd,
+                                  checkedUserAlways, checkedPwdAlways, rolesId, staffValue, pwdAlwaysInput, pwdUserDate
+                                }) => ajax(BASE_URL + '/user/saveUserInfo', {
+  userName, pwd, confirmPwd, checkedPwd, checkedUpPwd,
+  checkedUserAlways, checkedPwdAlways, rolesId, staffValue, pwdAlwaysInput, pwdUserDate
+}, 'POST')
 
 //移除角色信息
-export const repDelRole=({movedKeys,uid}) =>ajax(BASE_URL+'/ur/delRole',{movedKeys,uid},'POST')
-
+export const repDelRole = ({movedKeys, uid}) => ajax(BASE_URL + '/ur/delRole', {movedKeys, uid}, 'POST')
 
 //新增角色
-export const repAdRole=({movedKeys,uid}) =>ajax(BASE_URL+'/ur/addRole',{movedKeys,uid},'POST')
+export const repAdRole = ({movedKeys, uid}) => ajax(BASE_URL + '/ur/addRole', {movedKeys, uid}, 'POST')

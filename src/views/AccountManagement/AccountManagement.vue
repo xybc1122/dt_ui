@@ -175,7 +175,6 @@
       if (resultSingleUser.code === 200) {
         this.singleUser = resultSingleUser.data
         const roles = resultSingleUser.data.roles
-        // console.log(roles)
       }
       //查询获得table表的 头信息
       const resultHead = await
