@@ -53,6 +53,7 @@
         </el-table-column>
       </el-table>
       <div class="check3">
+        <span>{{rName}}</span>
         <el-tree
           :data="menuList"
           :props="defaultProps"
@@ -61,12 +62,11 @@
         </el-tree>
       </div>
       <div class="check4" style="width: 500px">
-        <el-card class="box-card">
-
-        </el-card>
+        <p>拥有头信息</p>
+        <span>{{menuTableTitle.headName}}</span>
       </div>
       <div class="check5">
-        <el-button type="primary" icon="el-icon-edit" size="mini">修改
+        <el-button type="primary" icon="el-icon-edit" size="mini" @click="roleUp">修改
         </el-button>
         <el-button type="primary" icon="el-icon-delete" size="mini">
           删除
@@ -86,29 +86,26 @@
         </div>
       </div>
     </div>
+    <!--修改隐藏页面-->
+    <RoleItemUp/>
   </div>
 </template>
 <script>
-  import {repHead, repGetRoles, repMenu, repMenuRole} from '../../api'
+  import {repHead, repGetRoles, repGetHead, repMenuRole} from '../../api'
   import utils from '../../utils/PageUtils'
+  import PubSub from 'pubsub-js'
+  import RoleItemUp from '../../components/RoleItem/RoleItemUp'
   //角色管理
   export default {
     data () {
-      var userAccountStatus = (rule, value, callback) => {
-        if (!Number.isInteger(value)) {
-          callback(new Error('请输入数字'))
-        } else {
-          callback()
-        }
-      }
       return {
-        test: '',
+        rName: '', //角色名称
         msgInput: '',//当选择后获得第一个下拉框的id
-        inputValue: '',//序号
         tableTitle: [],//表头信息
+        menuTableTitle: {},//菜单查询到的表头信息
         tableData: [],//表信息
         roleValue: '', //下拉框的model
-        multipleSelection: [],
+        roleSelection: [],
         role: {
           currentPage: 1,//当前页
           total_size: 0,//总的页
@@ -141,6 +138,9 @@
         this.role.total_size = dataRole.total_size
       }
     },
+    components:{
+      RoleItemUp
+    },
     methods: {
       //分页
       handleSizeChange (val) {
@@ -153,9 +153,10 @@
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
       handleSelectionChange (val) {
-        this.multipleSelection = val
+        this.roleSelection = val
+        console.log(val)
       },
-      //tabale表头上下箭头 排序
+      //table表头上下箭头 排序
       arraySpanMethod ({row, column, rowIndex, columnIndex}) {
         if (rowIndex % 2 === 0) {
           if (columnIndex === 0) {
@@ -165,26 +166,35 @@
           }
         }
       },
+      roleUp () {
+        PubSub.publish('roleUp', this.roleSelection)
+      },
       //获得第一个input框里的id 通过id去判断显示哪个输入框
       getValue (selVal) {
         this.msgInput = selVal
       },
-      handleNodeClick (data) {
+      async handleNodeClick (data) {
         console.log(data)
-        if(!data){
-          this.test=''
-        }else{
-          this.test = data
+        const menuId = data.menuId
+        const resultGetHead = await repGetHead(menuId)
+        console.log(resultGetHead)
+        if (resultGetHead.code === 200) {
+          if (resultGetHead.data !== null) {
+            this.menuTableTitle = resultGetHead.data
+          } else {
+            this.menuTableTitle = ''
+          }
         }
-
       },
       async handleClick (row) {
         const rid = row.rId
+        this.rName = row.rName
         const resultRoleMenu = await repMenuRole(rid)
         if (resultRoleMenu.code === 200) {
           this.menuList = resultRoleMenu.data
         }
-      }
+      },
+
     }
   }
 </script>

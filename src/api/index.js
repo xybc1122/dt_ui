@@ -10,7 +10,8 @@ export const repLoginUser = ({userName, pwd, checked}) => ajax(BASE_URL + `/ajax
   pwd,
   checked
 }, 'POST')
-
+//获得所有用户信息
+export const repGetUsers = () => ajax(BASE_URL + `/user/getUsers`)
 //获取用户管理信息
 export const repUsers = ({currentPage, pageSize, userName, name, createDate}) =>
   ajax(BASE_URL + `/user/show`, {currentPage, pageSize, userName, name, createDate}, 'POST')
@@ -18,6 +19,8 @@ export const repUsers = ({currentPage, pageSize, userName, name, createDate}) =>
 //查询table头信息
 export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
 
+//查询table头信息
+export const repGetHead = (menu_id) => ajax(BASE_URL + '/getByHead', {menu_id})
 //访问index页面
 export const repIndex = () => ajax(BASE_URL + `/menu/index`)
 
