@@ -28,6 +28,7 @@
       show-checkbox
       node-key="menuId"
       @check-change="handleCheckChange"
+      :default-expanded-keys="checkedKeys"
       :default-checked-keys="checkedKeys"
       ref="tree"
       :props="defaultProps">
@@ -45,7 +46,7 @@
   import {repGetUsers, repMenu, repMenuRole} from '../../api'
 
   export default {
-    data () {
+    data() {
       return {
         menuDateList: [],
         roleUpVisible: false,
@@ -63,56 +64,56 @@
         }
       }
     },
-    async mounted () {
+    async mounted() {
       PubSub.subscribe('roleUp', (msg, roleSelection) => {
-        console.log(roleSelection)
-        const roleUpSelection = roleSelection
+        this.checkedKeys = [];
+        const roleUpSelection = roleSelection;
         if (roleUpSelection.length <= 0) {
-          message.errorMessage('必须选中一条修改')
+          message.errorMessage('必须选中一条修改');
           return
         } else if (roleUpSelection.length >= 2) {
-          message.errorMessage('修改只能选中一条')
+          message.errorMessage('修改只能选中一条');
           return
         }
-        this.roleUpVisible = true
+        this.roleUpVisible = true;
         roleUpSelection.forEach(item => {
-          this.roleFrom['rName'] = item.rName
-          this.roleFrom['uIds'] = item.uIds
+          this.roleFrom['rName'] = item.rName;
+          this.roleFrom['uIds'] = item.uIds;
           this.roleFrom['rId'] = item.rId
-        })
-        const resultUsers = repGetUsers()
+        });
+        const resultUsers = repGetUsers();
         resultUsers.then((result) => {
           if (result.code === 200) {
             const generateData = _ => {
-              const data = []
-              const users = result.data
+              const data = [];
+              const users = result.data;
               users.forEach((user, index) => {
                 data.push({
                   label: user.userName,
                   key: user.uid,
                   users: users[index]
                 })
-              })
+              });
               return data
-            }
-            this.userData = generateData()
+            };
+            this.userData = generateData();
             if (this.roleFrom.uIds) {
-              var userStr = this.roleFrom.uIds.split(',')
+              var userStr = this.roleFrom.uIds.split(',');
               this.usersId = userStr.map(function (data) {
                 return +data
               })
             }
-            const resultMenuList = repMenu()
+            const resultMenuList = repMenu();
             resultMenuList.then((result) => {
               if (result.code === 200) {
                 this.menuDateList = result.data
               }
-            })
-            const rid = this.roleFrom.rId
-            const resultRoleMenu = repMenuRole(rid)
+            });
+            const rid = this.roleFrom.rId;
+            const resultRoleMenu = repMenuRole(rid);
             resultRoleMenu.then((result) => {
               //递归获取菜单的id
-              this.find(result.data, [])
+              this.find(result.data, []);
               console.log(this.checkedKeys)
             })
           }
@@ -121,26 +122,28 @@
     },
     methods: {
       //通过关键字搜索
-      filterMethod (query, item) {
+      filterMethod(query, item) {
         return item.users.userName.indexOf(query) > -1
       },
-      async transferChange (value, direction, movedKeys) {
+      async transferChange(value, direction, movedKeys) {
 
       },
-      handleCheckChange (data, checked, indeterminate) {
+      handleCheckChange(data, checked, indeterminate) {
         console.log(data, checked, indeterminate)
       },
       //递归遍历菜单获取id
-      find (arr, menuList) {
+      find(arr, menuList) {
         arr.forEach((item) => {
           //判断是否为空
           if (item.menuId) {
-            menuList.push(item.menuId)
+            if (item.url) {
+              menuList.push(item.menuId);
+            }
             if (item.childMenus && item.childMenus.length > 0) {
               this.find(item.childMenus, menuList)
             }
           }
-        })
+        });
         this.checkedKeys = menuList
       }
     }
