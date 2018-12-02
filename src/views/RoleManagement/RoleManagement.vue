@@ -166,6 +166,7 @@
           }
         }
       },
+      //修改隐藏框
       roleUp () {
         PubSub.publish('roleUp', this.roleSelection)
       },
@@ -173,8 +174,8 @@
       getValue (selVal) {
         this.msgInput = selVal
       },
+      //点击节点获取这个菜单拥有的头信息
       async handleNodeClick (data) {
-        console.log(data)
         const menuId = data.menuId
         const resultGetHead = await repGetHead(menuId)
         console.log(resultGetHead)
