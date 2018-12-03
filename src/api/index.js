@@ -29,8 +29,13 @@ export const repLogout = () => ajax(BASE_URL + `/logout`)
 
 //查询哪些用户有哪些菜单
 export const repMenu = () => ajax(BASE_URL + '/menu/show')
-//通过角色查询菜单
+
+//通过角色查询菜单列表
 export const repMenuRole = (rid) => ajax(BASE_URL + '/menu/role/menu', {rid})
+
+//通过角色id来获取菜单id
+export const repGetMenus =({rid, menuIds,menuFlg}) => ajax(BASE_URL + '/rm/upMenus', {rid , menuIds,menuFlg}, 'POST')
+
 //查询菜单信息
 export const repMenuList = () => ajax(BASE_URL + `/menu/findMenuList`)
 
@@ -95,7 +100,8 @@ export const repSaveUserInfo = ({
 }, 'POST')
 
 //移除角色信息
-export const repDelRole = ({movedKeys, uid}) => ajax(BASE_URL + '/ur/delRole', {movedKeys, uid}, 'POST')
+export const repDelRole = ({rolesId, uid}) => ajax(BASE_URL + '/ur/delRole', {rolesId, uid}, 'POST')
 
 //新增角色
-export const repAdRole = ({movedKeys, uid}) => ajax(BASE_URL + '/ur/addRole', {movedKeys, uid}, 'POST')
+export const repAdRole = ({rolesId, uid}) => ajax(BASE_URL + '/ur/addRole', {rolesId, uid}, 'POST')
+

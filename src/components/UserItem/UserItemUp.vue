@@ -325,9 +325,10 @@
       },
       //角色框移动信息
       async transferChange (value, direction, movedKeys) {
+        const rolesId=movedKeys;
+        const uid = this.userForm.uid
+        const rid = {rolesId, uid}
         if (direction === 'left') {
-          const uid = this.userForm.uid
-          const rid = {movedKeys, uid}
           const resultDel = await repDelRole(rid)
           console.log(resultDel)
           if (resultDel.code === 200) {
@@ -335,8 +336,6 @@
             PubSub.publish('delRole', user_role)
           }
         } else {
-          const uid = this.userForm.uid
-          const rid = {movedKeys, uid}
           const resultAdd = await repAdRole(rid)
           if (resultAdd.code === 200) {
             user_role = false
