@@ -3,32 +3,33 @@
   <el-dialog title="用户信息修改" :visible.sync="upFormValue" width="800px">
     <el-form :model="userForm" ref="userForm" :rules="rules" label-width="80px">
       <template v-for="(title ,index) in tableTitle">
-        <el-form-item v-if="title.topType==='up_pwd'" :label="title.headName" style="width: 350px">
+        <el-form-item v-if="title.topType==='up_pwd'" :label="title.headName" style="width: 350px"class="header">
           <el-switch
             @change="switchPwd"
             v-model="isPwd"
             active-color="#13ce66"
             inactive-color="#ff4949">
           </el-switch>
-          <el-checkbox v-model="userForm.checkedUpPwd">首次登陆修改密码</el-checkbox>
-          <el-checkbox v-model="userForm.checkedPwd">密码满足复杂度要求</el-checkbox>
+
         </el-form-item>
         <el-form-item v-if="title.topType==='pwd' && isPwd===true" :label="title.headName" prop="pwd">
           <el-input clearable style="width: 250px" v-model="userForm.pwd" type="password" maxlength="20"></el-input>
+          <el-checkbox v-model="userForm.checkedUpPwd">首次登陆修改密码</el-checkbox>
+          <el-checkbox v-model="userForm.checkedPwd">密码满足复杂度要求</el-checkbox>
         </el-form-item>
         <el-form-item v-if="title.topType==='confirmPwd' && isPwd===true" :label="title.headName" prop="confirmPwd">
           <el-input clearable style="width: 250px" v-model="userForm.confirmPwd" type="password"></el-input>
         </el-form-item>
-        <el-form-item v-if="title.topType==='uName'" :label="title.headName" style="width: 350px">
+        <el-form-item v-if="title.topType==='uName'" :label="title.headName" style="width: 350px"class="aaa">
           <el-tag>{{userForm.uName}}</el-tag>
         </el-form-item>
-        <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px">
+        <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px"class="bbb">
           <el-tag>{{userForm.name}}</el-tag>
         </el-form-item>
-        <el-form-item v-if="title.topType==='phone'" :label="title.headName" style="width: 350px">
+        <el-form-item v-if="title.topType==='phone'" :label="title.headName" style="width: 350px"class="ccc">
           <el-tag>{{userForm.uMobilePhone}}</el-tag>
         </el-form-item>
-        <el-form-item v-if="title.topType==='account_status'" :label="title.headName">
+        <el-form-item v-if="title.topType==='account_status'" :label="title.headName" class="ddd">
           <el-select v-model="userForm.accountStatus" clearable value="">
             <el-option v-for="(item,index) in accountStatusOptions" :key="index" :label="item.name"
                        :value="item.id"></el-option>
@@ -365,6 +366,8 @@
 </script>
 
 <style lang="scss">
+  .el-form-item{
 
+  }
 
 </style>
