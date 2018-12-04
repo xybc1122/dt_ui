@@ -1,27 +1,28 @@
 <template>
   <!--隐藏新增from表单-->
-  <el-dialog title="新增用户" :visible.sync="saveFormValue" width="850px">
-    <el-form :model="addForm" ref="addForm" :rules="rules" label-width="80px">
-      <el-form-item label="账号:" prop="userName">
+  <el-dialog title="新增用户" :visible.sync="saveFormValue" width="850px" >
+    <el-form :model="addForm" ref="addForm" :rules="rules" label-width="92px">
+      <el-form-item label="账号:" prop="userName" class="username">
         <el-input clearable style="width: 250px" v-model="addForm.userName"></el-input>
       </el-form-item>
-      <el-form-item label="密码:" prop="pwd">
+      <el-form-item label="密码:" prop="pwd" class="pwd">
         <el-input clearable style="width: 250px" v-model="addForm.pwd" type="password" maxlength="20"></el-input>
       </el-form-item>
-      <el-form-item label="确认密码:" prop="confirmPwd">
+      <el-form-item label="确认密码:" prop="confirmPwd" class="pwd">
         <el-input clearable style="width: 250px" v-model="addForm.confirmPwd" type="password"></el-input>
       </el-form-item>
-      <el-checkbox v-model="addForm.checkedUpPwd">首次登陆修改密码</el-checkbox>
-      <el-checkbox v-model="addForm.checkedPwd">密码满足复杂度要求</el-checkbox>
-      <el-form-item label="员工:" prop="staffValue">
-        <el-select clearable value="" v-model="addForm.staffValue">
+      <el-checkbox v-model="addForm.checkedUpPwd" class="box">首次登陆修改密码</el-checkbox>
+      <el-checkbox v-model="addForm.checkedPwd" class="box">密码满足复杂度要求</el-checkbox>
+      <el-form-item label="员工:" prop="staffValue" class="staff" >
+        <el-select clearable value="" v-model="addForm.staffValue" style="width: 250px">
           <el-option v-for="(item,index) in staffStatusOptions" :key="index" :label="item.sName"
                      :value="item"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户有效期:" prop="effectiveDate">
-        <div class="block">
+      <el-form-item label="用户有效期:" prop="effectiveDate" class="date1">
+        <div class="block" >
           <el-date-picker
+            style="width: 250px"
             type="datetime"
             :disabled="isUserFlg"
             @change="changeSearchForUser" v-model="addForm.effectiveDate">
@@ -30,24 +31,25 @@
           </el-checkbox>
         </div>
       </el-form-item>
-      <el-form-item label="密码有效期:" prop="pwdAlwaysInput">
+      <el-form-item label="密码有效期:" prop="pwdAlwaysInput" class="date2">
         <el-input clearable @blur="blurSearchForAlways" style="width: 250px" :disabled="isAlwaysFlg"
                   v-model.number="addForm.pwdAlwaysInput" maxlength="4"></el-input>
         <span>天</span>
         <el-checkbox @change="checkedAlways" v-model="addForm.checkedPwdAlways" :disabled="isCheFlgAlways">密码始终有效
         </el-checkbox>
       </el-form-item>
-      <el-form-item prop="rolesId">
-        <div>
+      <el-form-item prop="rolesId" class="transfers">
+        <div class="transfer">
           <el-transfer
             filterable
             :filter-method="filterMethod"
+            :button-texts="['移除', '添加']"
+            :titles="['角色信息', '添加角色信息']"
             filter-placeholder="请输入角色信息"
             v-model="addForm.rolesId"
             :data="rolesData"
             @change="transferChange"
-            :titles="['角色信息', '添加角色信息']"
-            :button-texts="['移除', '添加']">
+            >
           </el-transfer>
         </div>
       </el-form-item>
@@ -283,9 +285,137 @@
 </script>
 
 
-<style>
+<style lang="scss">
   .transfer-footer {
     margin-left: 20px;
     padding: 6px 5px;
   }
+  .el-dialog__header{
+    text-align: center;
+    background-color: #e8e8e8;
+    .el-dialog__title{
+      font-family: "宋体";
+      font-size: 20px;
+    }
+  }
+  //表单样式
+  .el-dialog__headerbtn{
+    background-color: #F56C6C;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    width: 20px;
+    height: 20px;
+  }
+  //关闭表单
+  .el-dialog {
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+  }
+  //头部样式
+  .el-dialog__header{
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+  }
+  //用户
+  .el-form-item.username{
+    .el-form-item__label{
+      font-family: "宋体";
+      font-size: 15px;
+    }
+  }
+  //密码
+  .el-form-item.pwd{
+    float: left;
+    padding-right: 55px;
+    .el-form-item__label{
+      color: #F56C6C;
+      font-family: "宋体";
+      font-size: 15px;
+    }
+  }
+  //复选框
+  .el-checkbox.box{
+    margin-left: 95px;
+    margin-right: 155px;
+    padding-bottom: 25px;
+    .el-checkbox__label{
+      font-family: "宋体";
+      font-size: 15px;
+    }
+  }
+  //员工
+  .el-form-item.staff{
+    .el-form-item__label{
+      font-family: "宋体";
+      font-size: 15px;
+    }
+  }
+  //有效期
+  .el-form-item.date1{
+    .el-form-item__label{
+      color: #F56C6C;
+      font-family: "宋体";
+    }
+    .el-form-item__content{
+      .block{
+        .el-checkbox{
+          padding-left: 50px;
+          font-family: "宋体";
+        }
+      }
+    }
+  }
+  //密码有效期
+  .el-form-item.date2{
+    .el-form-item__label{
+      color: #F56C6C;
+      font-family: "宋体";
+    }
+    .el-form-item__content{
+      font-family: "宋体";
+      .el-checkbox{
+        padding-left: 32px;
+        font-family: "宋体";
+      }
+    }
+  }
+  //自定义添加转移
+  .transfer{
+    margin-left: 50px;
+    .el-transfer{
+      .el-transfer__buttons{
+        width: 150px;
+        .el-button.el-button--primary.is-disabled.el-transfer__button.is-with-texts{
+          margin-left: 0;
+          width: 89px;
+          font-family: "宋体";
+        }
+        .el-button.el-button--primary.el-transfer__button.is-with-texts{
+          margin-left: 0;
+          width: 89px;
+          font-family: "宋体";
+        }
+      }
+    }
+  }
+  //自定义transfers组建内容样式
+  .el-transfer-panel__body{
+    .el-transfer-panel__filter.el-input.el-input--small.el-input--prefix{
+      width: 168px;
+    }
+    .el-checkbox-group.el-transfer-panel__list.is-filterable{
+      .el-checkbox.el-transfer-panel__item{
+        margin-left: 20px;
+        display: block;
+        font-family: "宋体";
+      }
+    }
+  }
+
+
+
 </style>
