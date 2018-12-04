@@ -16,11 +16,13 @@ export const repGetUsers = () => ajax(BASE_URL + `/user/getUsers`)
 export const repUsers = ({currentPage, pageSize, userName, name, createDate}) =>
   ajax(BASE_URL + `/user/show`, {currentPage, pageSize, userName, name, createDate}, 'POST')
 
-//查询table头信息
+//通过menu_id查询table头信息
 export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
 
-//查询table头信息
-export const repGetHead = (menu_id) => ajax(BASE_URL + '/getByHead', {menu_id})
+//通过menuIds查询table头信息
+export const repGetHead = ({menuIds}) => ajax(BASE_URL + '/getByHead', {menuIds}, 'POST')
+  //获取所有表头的信息
+export const repFindByHeads=()=> ajax(BASE_URL + '/findHeads')
 //访问index页面
 export const repIndex = () => ajax(BASE_URL + `/menu/index`)
 
@@ -34,7 +36,7 @@ export const repMenu = () => ajax(BASE_URL + '/menu/show')
 export const repMenuRole = (rid) => ajax(BASE_URL + '/menu/role/menu', {rid})
 
 //通过角色id来获取菜单id
-export const repGetMenus =({rid, menuIds,menuFlg}) => ajax(BASE_URL + '/rm/upMenus', {rid , menuIds,menuFlg}, 'POST')
+export const repGetMenus = ({rid, menuIds, menuFlg}) => ajax(BASE_URL + '/rm/upMenus', {rid, menuIds, menuFlg}, 'POST')
 
 //查询菜单信息
 export const repMenuList = () => ajax(BASE_URL + `/menu/findMenuList`)

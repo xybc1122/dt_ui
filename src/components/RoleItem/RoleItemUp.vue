@@ -1,70 +1,85 @@
 <template>
-  <el-dialog
-    title="提示"
-    :visible.sync="roleUpVisible"
-    width="50%">
-    <el-form :model="roleFrom" ref="roleFrom" label-width="80px">
-      <el-form-item style="width: 350px">
-        <el-tag>{{roleFrom.rName}}</el-tag>
-      </el-form-item>
-      <el-form-item prop="usersId">
-        <div>
-          <el-transfer
-            filterable
-            :filter-method="filterMethod"
-            :right-default-checked="usersId"
-            filter-placeholder="请输入角色信息"
-            v-model="usersId"
-            :data="userData"
-            @change="transferChange"
-            :titles="['用户信息', '已有用户信息']"
-            :button-texts="['移除', '添加']">
-          </el-transfer>
-        </div>
-      </el-form-item>
-    </el-form>
-    <el-tree
-      show-checkbox
-      :data="menuDateList"
-      node-key="menuId"
-      :default-expanded-keys="noUrlCheckedKeys"
-      :default-checked-keys="noUrlCheckedKeys"
-      @check="checkChange"
-      ref="tree"
-      :props="defaultProps">
-    </el-tree>
-    <el-switch
-      v-model="menuFlg"
-      active-text="添加菜单"
-      inactive-text="删除菜单">
-    </el-switch>
-    <el-button type="primary" @click="lookMenuHead">查看菜单下的表头信息</el-button>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="roleUpVisible = false">取 消</el-button>
-      <el-button type="primary" @click="upMenuRole">确 定</el-button>
-    </div>
-  </el-dialog>
+  <div>
+    <el-dialog
+      title="提示"
+      :visible.sync="roleUpVisible"
+      width="50%">
+      <el-form :model="roleFrom" ref="roleFrom" label-width="80px">
+        <el-form-item style="width: 350px">
+          <el-tag>{{roleFrom.rName}}</el-tag>
+        </el-form-item>
+        <el-form-item prop="usersId">
+          <div>
+            <el-transfer
+              filterable
+              :filter-method="filterMethod"
+              :right-default-checked="usersId"
+              filter-placeholder="请输入角色信息"
+              v-model="usersId"
+              :data="userData"
+              @change="transferChange"
+              :titles="['用户信息', '已有用户信息']"
+              :button-texts="['移除', '添加']">
+            </el-transfer>
+          </div>
+        </el-form-item>
+      </el-form>
+      <el-tree
+        show-checkbox
+        :data="menuDateList"
+        node-key="menuId"
+        :default-expanded-keys="noUrlCheckedKeys"
+        :default-checked-keys="noUrlCheckedKeys"
+        @check="checkChange"
+        ref="tree"
+        :props="defaultProps">
+      </el-tree>
+      <el-switch
+        v-model="menuFlg"
+        active-text="添加菜单"
+        inactive-text="删除菜单">
+      </el-switch>
+      <el-button type="primary" @click="lookMenuHead">查看菜单下的表头信息</el-button>
+      <el-table
+        :data="menuTableTitleData"
+        border
+        style="width: 100%" v-if="menuHedaFlg">
+        <el-table-column prop="name" label="菜单名称" width="120"></el-table-column>
+        <el-table-column prop="headName" label="拥有的头信息" width="120" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="100">
+          <template slot-scope="scope">
+            <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="roleUpVisible = false">取 消</el-button>
+        <el-button type="primary" @click="upMenuRole">确 定</el-button>
+      </div>
+    </el-dialog>
+    <MenuHeadItem/>
+  </div>
 </template>
 
 <script>
   import PubSub from 'pubsub-js'
   import message from '../../utils/Message'
   import {repGetUsers, repMenu, repMenuRole, repGetHead, repGetMenus, repAdRole, repDelRole} from '../../api'
-
+  import MenuHeadItem from '../../components/RoleItem/MenuHeadItem/MenuHeadItem'
   export default {
     data () {
       return {
-        menuFlg: true,
+        menuHedaFlg:false,//table框的隐藏跟显示
+        menuFlg: true,//选择删除 还是添加
         urlMenList: [],//获得父节点 menuId
         newMenuList: [],//新的一个数组
-        upCheckedMenuList: [],
         checkedMenuList: [],//获得选中的id 添加或更新菜单
-        menuDateList: [],
+        menuDateList: [],//菜单数据
+        menuTableTitleData:[],//菜单对应的头数据
         roleUpVisible: false,
         usersId: [],//用户ID
         userData: [],//用户数据
         noUrlCheckedKeys: [],//进去选中的keys没有URL的
-        // urlCheckedKeys: [],//有url的
         roleFrom: {
           rName: '',
           uIds: '',
@@ -79,6 +94,8 @@
     async mounted () {
       PubSub.subscribe('roleUp', (msg, roleSelection) => {
         this.noUrlCheckedKeys = []
+        this.menuTableTitleData=[]
+        this.menuHedaFlg=false;
         const roleUpSelection = roleSelection
         if (roleUpSelection.length <= 0) {
           message.errorMessage('必须选中一条修改')
@@ -131,6 +148,9 @@
         })
       })
     },
+    components:{
+      MenuHeadItem
+    },
     methods: {
       //通过关键字搜索
       filterMethod (query, item) {
@@ -153,12 +173,21 @@
         }
       },
       //查看所有菜单头信息
-      lookMenuHead () {
+      async lookMenuHead () {
+        this.menuHedaFlg=true;
+        //获得当前选中的menuIds
         let keys = this.$refs.tree.getCheckedKeys()
+        //获得当前半选中的menuIds
+        let menuIds = this.$refs.tree.getHalfCheckedKeys()
         keys.forEach((i) => {
-          // repGetHead();
-          console.log(i)
+          menuIds.push(i)
         })
+        const menuId = {menuIds}
+        const resultHead = await repGetHead(menuId)
+        if (resultHead.code === 200){
+          this.menuTableTitleData=resultHead.data
+          console.log(resultHead.data)
+        }
       },
       //indeterminate节点的子数有没有被选中
       checkChange (data, daraArr) {
@@ -182,6 +211,11 @@
           this.roleUpVisible = false
         }
       },
+      //编辑
+      handleClick(row) {
+        PubSub.publish('upMenuHead',row)
+        console.log(row);
+      },
       //递归遍历菜单获取id 点击修改的时候自动勾选
       getMenuId (arr, noUrlMenuList) {
         arr.forEach((item) => {
@@ -204,5 +238,8 @@
 </script>
 
 <style>
-
+  .el-tooltip__popper {
+    max-width: 500px;
+    line-height: 180%;
+  }
 </style>
