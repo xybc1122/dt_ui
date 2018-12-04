@@ -93,10 +93,9 @@
           </el-table-column>
         </template>
       </el-table>
-      <el-button type="success" icon="el-icon-edit" size="mini" @click="upUserInfo" v-if="singleUser.status===1">修改
+      <el-button type="success" icon="el-icon-edit" size="mini" @click="upUserInfo">修改
       </el-button>
-      <el-button type="info" icon="el-icon-delete" size="mini" @click="delUserInfo"
-                 v-if="singleUser.status===1 ">
+      <el-button type="info" icon="el-icon-delete" size="mini" @click="delUserInfo">
         删除
       </el-button>
       <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUserForm">
