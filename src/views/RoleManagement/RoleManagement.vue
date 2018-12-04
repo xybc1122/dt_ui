@@ -3,7 +3,7 @@
     <!--多选输入框选择输入-->
     <div id="printCheck">
       <div class="check1">
-        <el-select v-model="roleValue" clearable placeholder="角色查看" @change="getValue" value="">
+        <el-select v-model="roleValue" clearable placeholder="角色查看" value="">
           <el-option
             v-for="(item,index) in tableTitle"
             :key="index"
@@ -91,7 +91,7 @@
   </div>
 </template>
 <script>
-  import {repHead, repGetRoles, repGetHead, repMenuRole} from '../../api'
+  import {repHead, repGetRoles, repShowByHead, repMenuRole} from '../../api'
   import utils from '../../utils/PageUtils'
   import PubSub from 'pubsub-js'
   import RoleItemUp from '../../components/RoleItem/RoleItemUp'
@@ -100,7 +100,6 @@
     data () {
       return {
         rName: '', //角色名称
-        msgInput: '',//当选择后获得第一个下拉框的id
         tableTitle: [],//表头信息
         menuTableTitle: {},//菜单查询到的表头信息
         tableData: [],//表信息
@@ -170,14 +169,10 @@
       roleUp () {
         PubSub.publish('roleUp', this.roleSelection)
       },
-      //获得第一个input框里的id 通过id去判断显示哪个输入框
-      getValue (selVal) {
-        this.msgInput = selVal
-      },
       //点击节点获取这个菜单拥有的头信息
       async handleNodeClick (data) {
-        const menuId = data.menuId
-        const resultGetHead = await repGetHead(menuId)
+        const mId = data.menuId
+        const resultGetHead = await repShowByHead(mId)
         console.log(resultGetHead)
         if (resultGetHead.code === 200) {
           if (resultGetHead.data !== null) {

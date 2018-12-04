@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import {repFindByHeads} from '../../../api'
+  import {repFindByHeads, repAddHeadMenu, repDelHeadMenu} from '../../../api'
 
   export default {
     data () {
@@ -40,6 +40,7 @@
         menuHeadFrom: {
           name: '',
           ids: [],
+          menuId: ''
         }
       }
     },
@@ -47,6 +48,7 @@
       PubSub.subscribe('upMenuHead', (msg, row) => {
         this.menuHeadFrom.ids = []
         this.menuHeadUpVisible = true
+        this.menuHeadFrom.menuId = row.menuId
         const resultHeads = repFindByHeads()
         resultHeads.then((result) => {
           if (result.code === 200) {
@@ -80,7 +82,20 @@
         return item.heads.headName.indexOf(query) > -1
       },
       async transferChange (value, direction, movedKeys) {
-        console.log(direction, movedKeys)
+        const thIds = movedKeys
+        const mId = this.menuHeadFrom.menuId
+        const menuHead = {mId, thIds}
+        if (direction === 'left') {
+          const resultDel = repDelHeadMenu(menuHead)
+          if(resultDel.code===200){
+            console.log('移除成功~')
+          }
+        } else {
+          const resultAdd = await repAddHeadMenu(menuHead)
+          if (resultAdd.code === 200) {
+            console.log('添加成功~')
+          }
+        }
       }
     }
   }

@@ -19,8 +19,11 @@ export const repUsers = ({currentPage, pageSize, userName, name, createDate}) =>
 //通过menu_id查询table头信息
 export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
 
-//通过menuIds查询table头信息
+//通过menuIds查询table头List集合
 export const repGetHead = ({menuIds}) => ajax(BASE_URL + '/getByHead', {menuIds}, 'POST')
+
+//通过一个mid查询table头信息
+export const repShowByHead = (mId) => ajax(BASE_URL + `/showByHead`, {mId})
   //获取所有表头的信息
 export const repFindByHeads=()=> ajax(BASE_URL + '/findHeads')
 //访问index页面
@@ -106,4 +109,10 @@ export const repDelRole = ({rolesId, uid}) => ajax(BASE_URL + '/ur/delRole', {ro
 
 //新增角色
 export const repAdRole = ({rolesId, uid}) => ajax(BASE_URL + '/ur/addRole', {rolesId, uid}, 'POST')
+
+//新增菜单关联表头字段
+export const repAddHeadMenu=({mId,thIds})=> ajax(BASE_URL + '/hm/saveHeadMenu', {mId, thIds}, 'POST')
+
+//删除菜单关联表头字段
+export const repDelHeadMenu=({mId,thIds})=> ajax(BASE_URL + '/hm/delTbHeadMenu', {mId, thIds}, 'POST')
 
