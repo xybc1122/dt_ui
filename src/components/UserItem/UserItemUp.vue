@@ -1,9 +1,9 @@
 <template>
   <!--隐藏修改from表单-->
   <el-dialog title="用户信息修改" :visible.sync="upFormValue" width="800px">
-    <el-form :model="userForm" ref="userForm" :rules="rules" label-width="80px">
+    <el-form :model="userForm" ref="userForm" :rules="rules" label-width="92px">
       <template v-for="(title ,index) in tableTitle">
-        <el-form-item v-if="title.topType==='up_pwd'" :label="title.headName" style="width: 350px"class="header">
+        <el-form-item v-if="title.topType==='up_pwd'" :label="title.headName" style="width: 350px"class="eee">
           <el-switch
             @change="switchPwd"
             v-model="isPwd"
@@ -12,32 +12,34 @@
           </el-switch>
 
         </el-form-item>
-        <el-form-item v-if="title.topType==='pwd' && isPwd===true" :label="title.headName" prop="pwd">
+        <el-form-item v-if="title.topType==='pwd' && isPwd===true" :label="title.headName" prop="pwd" class="pwd3">
           <el-input clearable style="width: 250px" v-model="userForm.pwd" type="password" maxlength="20"></el-input>
           <el-checkbox v-model="userForm.checkedUpPwd">首次登陆修改密码</el-checkbox>
+
+        </el-form-item>
+        <el-form-item v-if="title.topType==='confirmPwd' && isPwd===true" :label="title.headName" prop="confirmPwd" class="pwd3">
+          <el-input clearable style="width: 250px" v-model="userForm.confirmPwd" type="password"></el-input>
           <el-checkbox v-model="userForm.checkedPwd">密码满足复杂度要求</el-checkbox>
         </el-form-item>
-        <el-form-item v-if="title.topType==='confirmPwd' && isPwd===true" :label="title.headName" prop="confirmPwd">
-          <el-input clearable style="width: 250px" v-model="userForm.confirmPwd" type="password"></el-input>
-        </el-form-item>
-        <el-form-item v-if="title.topType==='uName'" :label="title.headName" style="width: 350px"class="aaa">
+        <el-form-item v-if="title.topType==='uName'" :label="title.headName" style="width: 350px"class="username un">
           <el-tag>{{userForm.uName}}</el-tag>
         </el-form-item>
-        <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px"class="bbb">
+        <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px"class="username un">
           <el-tag>{{userForm.name}}</el-tag>
         </el-form-item>
-        <el-form-item v-if="title.topType==='phone'" :label="title.headName" style="width: 350px"class="ccc">
+        <el-form-item v-if="title.topType==='phone'" :label="title.headName" style="width: 350px"class="state">
           <el-tag>{{userForm.uMobilePhone}}</el-tag>
         </el-form-item>
-        <el-form-item v-if="title.topType==='account_status'" :label="title.headName" class="ddd">
-          <el-select v-model="userForm.accountStatus" clearable value="">
+        <el-form-item v-if="title.topType==='account_status'" :label="title.headName" class="state">
+          <el-select v-model="userForm.accountStatus" clearable value="" style="width: 250px">
             <el-option v-for="(item,index) in accountStatusOptions" :key="index" :label="item.name"
                        :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="title.headName" v-if="title.topType==='u_eff_date'" prop="effectiveDate">
+        <el-form-item :label="title.headName" v-if="title.topType==='u_eff_date'" prop="effectiveDate" class="date3">
           <div class="block">
             <el-date-picker
+              style="width: 250px"
               type="datetime"
               :disabled="isUserFlg"
               @change="changeSearchForUser" v-model="userForm.effectiveDate">
@@ -46,9 +48,10 @@
             </el-checkbox>
           </div>
         </el-form-item>
-        <el-form-item :label="title.headName" prop="pwdStatus" v-if="title.topType==='p_eff_date'">
+        <el-form-item :label="title.headName" prop="pwdStatus" v-if="title.topType==='p_eff_date'" class="date3">
           <div class="block">
             <el-date-picker
+              style="width: 250px"
               type="datetime"
               :disabled="isAlwaysFlg"
               @change="blurSearchForAlways" v-model="userForm.pwdStatus">
@@ -58,8 +61,8 @@
           </div>
         </el-form-item>
       </template>
-      <el-form-item prop="rolesId">
-        <div>
+      <el-form-item prop="rolesId" >
+        <div class="transfer2">
           <el-transfer
             filterable
             :filter-method="filterMethod"
@@ -366,8 +369,60 @@
 </script>
 
 <style lang="scss">
-  .el-form-item{
+  //用户
+  .el-form-item.un {
+    float: left;
+  }
+  //密码修改
+  .el-form-item.pwd3{
+    font-family: "宋体";
+    font-size: 15px;
 
+    .el-form-item__content{
+      .el-checkbox{
+        padding-left: 50px;
+        color: #F56C6C;
+      }
+    }
+  }
+  //有效期
+  .el-form-item.date3 {
+    .el-form-item__label {
+      color: #F56C6C;
+      font-family: "宋体";
+    }
+    .el-form-item__content {
+      .block {
+        .el-checkbox {
+          padding-left: 50px;
+          font-family: "宋体";
+        }
+      }
+    }
+  }
+  //账号状态
+  .el-form-item.state{
+    float: left;
+    font-family: "宋体";
+    font-size: 15px;
+  }
+  //自定义添加转移
+  .transfer2 {
+    .el-transfer {
+      .el-transfer__buttons {
+        width: 150px;
+        .el-button.el-button--primary.is-disabled.el-transfer__button.is-with-texts {
+          margin-left: 0;
+          width: 89px;
+          font-family: "宋体";
+        }
+        .el-button.el-button--primary.el-transfer__button.is-with-texts {
+          margin-left: 0;
+          width: 89px;
+          font-family: "宋体";
+        }
+      }
+    }
   }
 
 </style>
