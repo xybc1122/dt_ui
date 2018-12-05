@@ -1,6 +1,6 @@
 <template>
   <!--隐藏新增from表单-->
-  <el-dialog title="新增用户" :visible.sync="saveFormValue" width="850px" >
+  <el-dialog title="新增用户" :visible.sync="saveFormValue" width="850px">
     <el-form :model="addForm" ref="addForm" :rules="rules" label-width="92px">
       <el-form-item label="账号:" prop="userName" class="username">
         <el-input clearable style="width: 250px" v-model="addForm.userName"></el-input>
@@ -13,19 +13,19 @@
       </el-form-item>
       <el-checkbox v-model="addForm.checkedUpPwd" class="box">首次登陆修改密码</el-checkbox>
       <el-checkbox v-model="addForm.checkedPwd" class="box">密码满足复杂度要求</el-checkbox>
-      <el-form-item label="员工:" prop="staffValue" class="staff" >
+      <el-form-item label="员工:" prop="staffValue" class="staff">
         <el-select clearable value="" v-model="addForm.staffValue" style="width: 250px">
           <el-option v-for="(item,index) in staffStatusOptions" :key="index" :label="item.sName"
                      :value="item"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="用户有效期:" prop="effectiveDate" class="date1">
-        <div class="block" >
+        <div class="block">
           <el-date-picker
             style="width: 250px"
             type="datetime"
             :disabled="isUserFlg"
-            @change="changeSearchForUser" v-model="addForm.effectiveDate">
+            @change="changeSearchForEffectiveDate" v-model="addForm.effectiveDate">
           </el-date-picker>
           <el-checkbox @change="checkedUser" v-model="addForm.checkedUserAlways" :disabled="isCheFlgUser">用户始终有效
           </el-checkbox>
@@ -49,7 +49,7 @@
             v-model="addForm.rolesId"
             :data="rolesData"
             @change="transferChange"
-            >
+          >
           </el-transfer>
         </div>
       </el-form-item>
@@ -67,6 +67,7 @@
   import {repFindRoles, repGetStaff, repGetUserName, repSaveUserInfo} from '../../api'
   import PubSub from 'pubsub-js'
   import message from '../../utils/Message'
+
   export default {
     data () {
       var userName = (rule, value, callback) => {
@@ -248,22 +249,22 @@
       blurSearchForAlways () {
         this.isCheFlgAlways = !!this.addForm.pwdAlwaysInput
       },
-      //blurSearchForUser 失去焦点时 判断值是否为空 如果不为空 锁定按钮
-      changeSearchForUser () {
-        this.isCheFlgUser = !!this.addForm.pwdUserDate
+      //用户有效期 失去焦点时 判断值是否为空 如果不为空 锁定按钮
+      changeSearchForEffectiveDate () {
+        this.isCheFlgUser = !!this.addForm.effectiveDate
       },
       //点击确定
       determine (formName) {
         this.$refs[formName].validate((valid) => {
+          console.log(this.addForm)
           if (valid) {
             const resultSave = repSaveUserInfo(this.addForm)
             resultSave.then((result) => {
               console.log(result)
               if (result.code === 200) {
-                this.saveFormValue = false;
+                this.saveFormValue = false
                 message.successMessage(result.msg)
                 PubSub.publish('saveFormValue', this.saveFormValue)
-
               }
             })
           } else {
@@ -275,10 +276,6 @@
       //重置
       resetForm (formName) {
         this.$refs[formName].resetFields()
-      },
-      //角色框移动信息
-      transferChange (value, direction, movedKeys) {
-        console.log(value, direction, movedKeys)
       }
     }
   }
@@ -290,16 +287,18 @@
     margin-left: 20px;
     padding: 6px 5px;
   }
-  .el-dialog__header{
+
+  .el-dialog__header {
     text-align: center;
     background-color: #e8e8e8;
-    .el-dialog__title{
+    .el-dialog__title {
       font-family: "宋体";
       font-size: 20px;
     }
   }
+
   //表单样式
-  .el-dialog__headerbtn{
+  .el-dialog__headerbtn {
     background-color: #F56C6C;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -308,6 +307,7 @@
     width: 20px;
     height: 20px;
   }
+
   //关闭表单
   .el-dialog {
     border-top-left-radius: 25px;
@@ -315,86 +315,94 @@
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
   }
+
   //头部样式
-  .el-dialog__header{
+  .el-dialog__header {
     border-top-left-radius: 25px;
     border-top-right-radius: 25px;
   }
+
   //用户
-  .el-form-item.username{
-    .el-form-item__label{
+  .el-form-item.username {
+    .el-form-item__label {
       font-family: "宋体";
       font-size: 15px;
     }
   }
+
   //密码
-  .el-form-item.pwd{
+  .el-form-item.pwd {
     float: left;
     padding-right: 55px;
-    .el-form-item__label{
+    .el-form-item__label {
       color: #F56C6C;
       font-family: "宋体";
       font-size: 15px;
     }
   }
+
   //复选框
-  .el-checkbox.box{
+  .el-checkbox.box {
     margin-left: 95px;
     margin-right: 155px;
     padding-bottom: 25px;
-    .el-checkbox__label{
+    .el-checkbox__label {
       font-family: "宋体";
       font-size: 15px;
     }
   }
+
   //员工
-  .el-form-item.staff{
-    .el-form-item__label{
+  .el-form-item.staff {
+    .el-form-item__label {
       font-family: "宋体";
       font-size: 15px;
     }
   }
+
   //有效期
-  .el-form-item.date1{
-    .el-form-item__label{
+  .el-form-item.date1 {
+    .el-form-item__label {
       color: #F56C6C;
       font-family: "宋体";
     }
-    .el-form-item__content{
-      .block{
-        .el-checkbox{
+    .el-form-item__content {
+      .block {
+        .el-checkbox {
           padding-left: 50px;
           font-family: "宋体";
         }
       }
     }
   }
+
   //密码有效期
-  .el-form-item.date2{
-    .el-form-item__label{
+  .el-form-item.date2 {
+    .el-form-item__label {
       color: #F56C6C;
       font-family: "宋体";
     }
-    .el-form-item__content{
+    .el-form-item__content {
       font-family: "宋体";
-      .el-checkbox{
+      .el-checkbox {
         padding-left: 32px;
         font-family: "宋体";
       }
     }
   }
+
   //自定义添加转移
-  .transfer{
+  .transfer {
     margin-left: 50px;
-    .el-transfer{
-      .el-transfer__buttons{
+    .el-transfer {
+      .el-transfer__buttons {
         width: 150px;
-        .el-button.el-button--primary.is-disabled.el-transfer__button.is-with-texts{
+        .el-button.el-button--primary.is-disabled.el-transfer__button.is-with-texts {
           margin-left: 0;
           width: 89px;
           font-family: "宋体";
         }
-        .el-button.el-button--primary.el-transfer__button.is-with-texts{
+        .el-button.el-button--primary.el-transfer__button.is-with-texts {
           margin-left: 0;
           width: 89px;
           font-family: "宋体";
@@ -402,20 +410,20 @@
       }
     }
   }
+
   //自定义transfers组建内容样式
-  .el-transfer-panel__body{
-    .el-transfer-panel__filter.el-input.el-input--small.el-input--prefix{
+  .el-transfer-panel__body {
+    .el-transfer-panel__filter.el-input.el-input--small.el-input--prefix {
       width: 168px;
     }
-    .el-checkbox-group.el-transfer-panel__list.is-filterable{
-      .el-checkbox.el-transfer-panel__item{
+    .el-checkbox-group.el-transfer-panel__list.is-filterable {
+      .el-checkbox.el-transfer-panel__item {
         margin-left: 20px;
         display: block;
         font-family: "宋体";
       }
     }
   }
-
 
 
 </style>
