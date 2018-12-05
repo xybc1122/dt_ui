@@ -1,12 +1,13 @@
 <template>
   <el-row class="tac">
     <el-aside width="200px">
-      <el-menu :default-active="$router.path" router class="el-menu-vertical-demo">
+
+      <el-menu :default-active="$router.path" router class="el-menu-vertical-demo none" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
         <!--判断父菜单没有url的-->
         <el-submenu v-if="!menu.url" :index="index.toString()" v-show="isRole" v-for="(menu,index) in menuList"
                     :key="index">
           <template slot="title">
-            <span><i :class="menu.icon"></i></span>
+            <i :class="menu.icon"></i>
             <span>{{menu.name}}</span>
           </template>
 
@@ -35,6 +36,7 @@
           <span>{{menu.name}}</span>
         </el-menu-item>
       </el-menu>
+      <el-button icon="el-icon-d-arrow-left" @click="bt" class="none bt"></el-button>
     </el-aside>
   </el-row>
 </template>
@@ -46,6 +48,7 @@
   export default {
     data () {
       return {
+        isCollapse: true,
         isRole: true,
         menuList: []
       }
@@ -56,13 +59,39 @@
         console.log(result.data)
         this.menuList = result.data
       }
+    },
+    methods: {
+      bt(){
+        if(!this.isCollapse){
+          this.isCollapse=true
+        }else{
+          this.isCollapse=false
+        }
+
+      },
+      handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
+      }
     }
   }
 </script>
 
-<style>
+<style lang="scss">
   .el-aside {
     text-align: center;
     line-height: 100px;
+
+  }
+  .bt{
+    margin-top: 429px;
+    padding-right: 0;
+    padding-left: 0;
+    background-color: #CBEEFF;
+  }
+  .none{
+    float: left;
   }
 </style>

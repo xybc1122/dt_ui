@@ -14,9 +14,9 @@
             <router-view></router-view>
           </keep-alive>
           </el-main>
-        <el-footer>Footer</el-footer>
       </el-container>
     </el-container>
+    <el-footer class="aaaa">Footer</el-footer>
   </el-container>
 </template>
 
@@ -55,11 +55,12 @@
   }
 </script>
 
-<style>
+<style lang="scss">
   .el-footer {
     background-color: #B3C0D1;
     color: #333;
     text-align: center;
     line-height: 60px;
   }
+
 </style>

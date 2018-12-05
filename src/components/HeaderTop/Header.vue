@@ -1,7 +1,11 @@
 <template>
 
   <div>
-    <div class="logo"><img src="./img/logo.png"/></div>
+    <div class="logo">
+      <img src="./img/logo.png" style="width: 195px"/>
+
+    </div>
+
     <i class="iconfont icon_dt-yuangong" style="color: #ffffff;font-size: 25px"></i>
     <span style="color: #ffffff ;font-size: 20px">{{userName}}</span>
     <a class="el-icon-message" style="color: #ffffff"></a>
@@ -55,7 +59,7 @@
   }
 </script>
 
-<style>
+<style >
   .logo{
     float: left;
   }
