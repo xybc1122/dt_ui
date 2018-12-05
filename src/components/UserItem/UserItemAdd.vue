@@ -286,17 +286,19 @@
     margin-left: 20px;
     padding: 6px 5px;
   }
-
+//头部样式
   .el-dialog__header {
     text-align: center;
     background-color: #e8e8e8;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
     .el-dialog__title {
       font-family: "宋体";
       font-size: 20px;
     }
   }
 
-  //表单样式
+  //表单关闭
   .el-dialog__headerbtn {
     background-color: #F56C6C;
     border-top-left-radius: 10px;
@@ -307,7 +309,7 @@
     height: 20px;
   }
 
-  //关闭表单
+  //表单边框
   .el-dialog {
     border-top-left-radius: 25px;
     border-top-right-radius: 25px;
@@ -315,11 +317,7 @@
     border-bottom-right-radius: 25px;
   }
 
-  //头部样式
-  .el-dialog__header {
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
-  }
+
 
   //用户
   .el-form-item.username {
@@ -368,7 +366,7 @@
     .el-form-item__content {
       .block {
         .el-checkbox {
-          padding-left: 50px;
+          padding-left: 56px;
           font-family: "宋体";
         }
       }
