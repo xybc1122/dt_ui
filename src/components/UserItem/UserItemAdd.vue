@@ -48,7 +48,6 @@
             filter-placeholder="请输入角色信息"
             v-model="addForm.rolesId"
             :data="rolesData"
-            @change="transferChange"
           >
           </el-transfer>
         </div>
