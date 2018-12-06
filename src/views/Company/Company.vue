@@ -73,20 +73,26 @@
           </el-table-column>
         </template>
       </el-table>
-      <el-button type="primary" icon="el-icon-edit" size="mini">修改
+      <el-button type="primary" icon="el-icon-edit" size="mini" @click="upUserForm">修改
       </el-button>
       <el-button type="primary" icon="el-icon-delete" size="mini">
         删除
       </el-button>
-      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini">
+      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUserForm">
         新增
       </el-button>
     </div>
+    <CompanyAdd/>
+    <CompanyUp/>
   </div>
+
 </template>
 <script>
   import {repHead, repGetCompanyInfo} from '../../api'
+  import CompanyAdd from '../../components/CompanyItem/CompanyAdd'
+  import CompanyUp from '../../components/CompanyItem/CompanyUp'
   import utils from '../../utils/PageUtils'
+  import PubSub_com from 'pubsub-js'
 //公司
   export default {
     data () {
@@ -95,13 +101,18 @@
         inputValue: '',//序号
         tableTitle: [],//表头信息
         tableData: [],//表信息
-        multipleSelection: [],
+        multipleSelection: [],//更新按钮数组收集
+        saveFormValue_com: false,//新增隐藏form
         role: {
           currentPage: 1,//当前页
           total_size: 0,//总的页
           pageSize: 10//显示最大的页
         }
       }
+    },
+    components:{
+      CompanyAdd,
+      CompanyUp
     },
     async mounted () {
       //查询获得table表的 头信息
@@ -117,6 +128,71 @@
       if (resultGetCompany.code === 200) {
         this.tableData = resultGetCompany.data
       }
+      //新增成功后收到订阅消息
+      PubSub_com.subscribe('saveFormValue_com', (msg, saveFormValue_com) => {
+        if (!saveFormValue_com) {
+          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+          const resultUsers = repUsers(userPage)
+          resultUsers.then((result) => {
+            if (result.code === 200) {
+              //赋值 然后显示
+              this.pageUser(result)
+            }
+          })
+        }
+      })
+      //删除角色成功后收到订阅消息
+      PubSub_com.subscribe('delRole', (msg, delRole) => {
+        if (delRole) {
+          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+          const resultUsers = repUsers(userPage)
+          resultUsers.then((result) => {
+            if (result.code === 200) {
+              //赋值 然后显示
+              this.pageUser(result)
+            }
+          })
+        }
+      })
+      //新增角色成功后收到订阅消息
+      PubSub_com.subscribe('addRole', (msg, addRole) => {
+        if (!addRole) {
+          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+          const resultUsers = repUsers(userPage)
+          resultUsers.then((result) => {
+            if (result.code === 200) {
+              //赋值 然后显示
+              this.pageUser(result)
+            }
+          })
+        }
+      })
+      //更新用户信息功后收到订阅消息
+      PubSub_com.subscribe('upFormValue', (msg, upFormValue) => {
+        if (!upFormValue) {
+          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+          const resultUsers = repUsers(userPage)
+          resultUsers.then((result) => {
+            if (result.code === 200) {
+              //赋值 然后显示
+              this.pageUser(result)
+            }
+          })
+        }
+      })
+      //恢复用户信息后收到订阅消息
+      PubSub_com.subscribe('isReUser', (msg, isReUser) => {
+        if (isReUser) {
+          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+          const resultUsers = repUsers(userPage)
+          resultUsers.then((result) => {
+            if (result.code === 200) {
+              //赋值 然后显示
+              this.pageUser(result)
+            }
+          })
+        }
+      })
     },
     methods: {
       //分页
@@ -129,6 +205,7 @@
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
       handleSelectionChange (val) {
+        console.log(val)
         this.multipleSelection = val
       },
       //tabale表头上下箭头 排序
@@ -140,7 +217,17 @@
             return [0, 0]
           }
         }
-      }
+      },
+      saveUserForm () {
+        this.saveFormValue_com = true
+        //发布搜索消息
+        PubSub_com.publish('saveFormValue_com', this.saveFormValue_com)
+      },
+      //点击修改的时候 获得 Checkbox中 的属性
+      upUserForm () {
+        //发布订阅消息 修改
+        PubSub_com.publish('multipleSelection', this.multipleSelection)
+      },
     }
   }
 </script>

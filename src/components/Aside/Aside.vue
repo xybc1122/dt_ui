@@ -1,7 +1,6 @@
 <template>
   <el-row class="tac">
-    <el-aside width="200px">
-
+    <el-aside width="218px" class="none">
       <el-menu :default-active="$router.path" router class="el-menu-vertical-demo none" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
         <!--判断父菜单没有url的-->
         <el-submenu v-if="!menu.url" :index="index.toString()" v-show="isRole" v-for="(menu,index) in menuList"
@@ -36,8 +35,13 @@
           <span>{{menu.name}}</span>
         </el-menu-item>
       </el-menu>
-      <el-button icon="el-icon-d-arrow-left" @click="bt" class="none bt"></el-button>
+      <el-button icon="el-icon-d-arrow-left" @click="bt" class=" none bt"></el-button>
     </el-aside>
+    <div class="none">
+
+    </div>
+
+
   </el-row>
 </template>
 
@@ -80,18 +84,21 @@
 </script>
 
 <style lang="scss">
-  .el-aside {
-    text-align: center;
-    line-height: 100px;
-
-  }
   .bt{
     margin-top: 429px;
     padding-right: 0;
     padding-left: 0;
     background-color: #CBEEFF;
+
+
   }
   .none{
     float: left;
   }
+  .el-submenu__title{
+    padding-right: 50px;
+  }
+
+
+
 </style>
