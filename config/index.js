@@ -19,12 +19,8 @@ module.exports = {
         }
       }
     },
-    // Various Dev Server settings 192.168.208.109
-<<<<<<< HEAD
-    host: '192.168.208.109', // can be overwritten by process.env.HOST
-=======
-    host: '192.168.1.183', // can be overwritten by process.env.HOST
->>>>>>> 9156b95b997daa0556fd4e0703b4000f3356ebce
+
+    host: '127.0.0.1', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
