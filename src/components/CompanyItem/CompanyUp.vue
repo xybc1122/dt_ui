@@ -1,9 +1,33 @@
 <template>
   <el-dialog title="用户信息修改" :visible.sync="upFormValue_com" width="800px">
     <el-form :model="upForm" ref="upForm" :rules="rules" label-width="92px">
-      <template v-for="(title ,index) in companys">
+      <template v-for="(title ,index) in tableTitle_com">
+        <el-form-item v-if="title.topType==='c_full_name'" :label="title.headName" style="width: 350px"class="username un">
+          <el-tag>{{upForm.up_id}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='c_short_name'" :label="title.headName" style="width: 350px"class="username un">
+          <el-tag>{{upForm.up_id}}</el-tag>
+        </el-form-item>
         <el-form-item v-if="title.topType==='c_code'" :label="title.headName" style="width: 350px"class="username un">
-          <el-tag>{{upForm.up_name}}</el-tag>
+          <el-tag>{{upForm.up_id}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='b_of_de'" :label="title.headName" style="width: 350px"class="username un">
+          <el-tag>{{upForm.up_id}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='b_acc'" :label="title.headName" style="width: 350px"class="username un">
+          <el-tag>{{upForm.up_id}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='address'" :label="title.headName" style="width: 350px"class="username un">
+          <el-tag>{{upForm.up_id}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='tel_phone'" :label="title.headName" style="width: 350px"class="username un">
+          <el-tag>{{upForm.up_id}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='remark'" :label="title.headName" style="width: 350px"class="username un">
+          <el-tag>{{upForm.up_id}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='status_bit'" :label="title.headName" style="width: 350px"class="username un">
+          <el-tag>{{upForm.up_id}}</el-tag>
         </el-form-item>
       </template>
     </el-form>
@@ -34,7 +58,7 @@
         tableTitle_com:[],//表头信息
         companys:[],//公司的所有信息
         upForm: {
-          up_id: '',
+          up_id: '123',
           up_name: '',
           up_name_abbr: '',
           up_code: '',
