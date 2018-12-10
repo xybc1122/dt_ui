@@ -1,11 +1,9 @@
 <template>
   <el-upload
     class="upload-demo"
-    action="url"
+    :action="url"
     drag
-    :headers="headers"
     :on-progress="onProgressFile"
-    :http-request="myUpload"
     :on-preview="handlePreview"
     :on-remove="handleRemove"
     :on-success="uploadSuccess"
@@ -28,20 +26,13 @@
   export default {
     data () {
       return {
-        headers: {
-          'Content-Type': 'application/json'
-        },
         fileList: [],
         url: BASE_URL + '/upload/germany'
-
       }
     },
     methods: {
-      onProgressFile(event, file, fileList){
-          console.log(event, file, fileList)
-      },
-      myUpload(content){
-      console.log(content)
+      onProgressFile (event, file, fileList) {
+        console.log(event, file, fileList)
       },
       handleRemove (file, fileList) {
         console.log(file, fileList)
