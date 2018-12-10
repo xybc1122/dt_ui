@@ -52,7 +52,7 @@
   export default {
     data () {
       return {
-        isCollapse: true,
+        isCollapse: false,
         isRole: true,
         menuList: []
       }
