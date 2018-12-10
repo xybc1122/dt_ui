@@ -10,6 +10,7 @@ import Shop from '../views/Shop/Shop'
 import Region from '../views/Region/Region'
 import Site from '../views/Site/Site'
 import Currency from '../views/Currency/Currency'
+import Upload from '../views/Upload/UploadFile'
 Vue.use(Router)
 
 export default new Router({
@@ -52,6 +53,10 @@ export default new Router({
         {
           path: '/index/currency/:id',
           component: Currency
+        },
+        {
+          path: '/index/upload/:id',
+          component: Upload
         }
       ]
     },
