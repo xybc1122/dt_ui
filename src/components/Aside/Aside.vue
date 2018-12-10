@@ -1,13 +1,13 @@
 <template>
   <el-row class="tac">
-    <el-aside width="218px" class="none">
+    <el-aside width="217px" class="none">
       <el-menu :default-active="$router.path" router class="el-menu-vertical-demo none" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
         <!--判断父菜单没有url的-->
         <el-submenu v-if="!menu.url" :index="index.toString()" v-show="isRole" v-for="(menu,index) in menuList"
                     :key="index">
           <template slot="title">
             <i :class="menu.icon"></i>
-            <span>{{menu.name}}</span>
+            <span id="spans">{{menu.name}}</span>
           </template>
 
           <!--判断一级菜单下的子菜单有url的-->
@@ -36,7 +36,7 @@
           <span>{{menu.name}}</span>
         </el-menu-item>
       </el-menu>
-      <el-button icon="el-icon-d-arrow-left" @click="bt" class=" none bt"></el-button>
+      <el-button v-bind:icon="aa" @click="bt"  class=" none bt"></el-button>
     </el-aside>
     <div class="none">
 
@@ -55,7 +55,8 @@
       return {
         isCollapse: false,
         isRole: true,
-        menuList: []
+        menuList: [],
+        aa:'el-icon-d-arrow-left'
       }
     },
     async mounted () {
@@ -66,13 +67,14 @@
       }
     },
     methods: {
+      //伸缩
       bt(){
         if(!this.isCollapse){
           this.isCollapse=true
-
+          this.aa='el-icon-d-arrow-right'
         }else{
           this.isCollapse=false
-
+          this.aa='el-icon-d-arrow-left'
         }
 
       },
@@ -91,8 +93,9 @@
     margin-top: 429px;
     padding-right: 0;
     padding-left: 0;
-    background-color: #CBEEFF;
-
+    background-color: #E9F8FF;
+  }
+  #spans{
 
   }
   .none{
@@ -100,6 +103,20 @@
   }
   .el-submenu__title{
     padding-right: 50px;
+  }
+  .el-menu-vertical-demo.none.el-menu--collapse.el-menu{
+    .el-submenu__title{
+      padding-right: 43px;
+    }
+  }
+  .el-submenu{
+    .el-submenu__title:hover{
+      background-color: #C6E7FF;
+    }
+
+  }
+  .el-menu-item:hover{
+    background-color: #C6E7FF;
   }
 
 
