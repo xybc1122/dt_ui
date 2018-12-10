@@ -16,7 +16,7 @@
             </el-menu-item>
           </el-menu-item-group>
           <!--判断一级菜单下的子菜单没有url的-->
-          <el-submenu v-if="!cMenu.url" :index="index.toString()+'-'+cMenu.menuOrder.toString()"
+          <el-submenu v-if="!cMenu.url" :index="index.toString()+'-'+cMenu.menuId.toString()"
                       v-for="(cMenu,indexChild) in menu.childMenus" :key="indexChild">
             <template slot="title">
                 <span><i :class="cMenu.icon"></i>
@@ -28,10 +28,11 @@
               {{sMenu.name}}
             </el-menu-item>
           </el-submenu>
+
         </el-submenu>
         <!--判断父菜单有url的-->
         <el-menu-item v-if="menu.url" :index="menu.url" v-show="isRole" v-for="(menu,index) in menuList" :key="index">
-          <span><i :class="menu.icon"></i></span>
+          <i :class="menu.icon"></i>
           <span>{{menu.name}}</span>
         </el-menu-item>
       </el-menu>
@@ -68,8 +69,10 @@
       bt(){
         if(!this.isCollapse){
           this.isCollapse=true
+
         }else{
           this.isCollapse=false
+
         }
 
       },
