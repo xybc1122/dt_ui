@@ -16,7 +16,7 @@
           </el-main>
       </el-container>
     </el-container>
-    <el-footer class="aaaa">Footer</el-footer>
+    <el-footer >Footer</el-footer>
   </el-container>
 </template>
 
@@ -62,5 +62,6 @@
     text-align: center;
     line-height: 60px;
   }
+
 
 </style>

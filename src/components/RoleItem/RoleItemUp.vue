@@ -3,7 +3,7 @@
     <el-dialog
       title="提示"
       :visible.sync="roleUpVisible"
-      width="50%">
+      width="850px">
       <el-form :model="roleFrom" ref="roleFrom" label-width="80px">
         <el-form-item style="width: 350px">
           <el-tag>{{roleFrom.rName}}</el-tag>
@@ -24,34 +24,37 @@
           </div>
         </el-form-item>
       </el-form>
-      <el-tree
-        show-checkbox
-        :data="menuDateList"
-        node-key="menuId"
-        :default-expanded-keys="noUrlCheckedKeys"
-        :default-checked-keys="noUrlCheckedKeys"
-        @check="checkChange"
-        ref="tree"
-        :props="defaultProps">
-      </el-tree>
-      <el-switch
-        v-model="menuFlg"
-        active-text="添加菜单"
-        inactive-text="删除菜单">
-      </el-switch>
-      <el-button type="primary" @click="lookMenuHead">查看菜单下的表头信息</el-button>
-      <el-table
-        :data="menuTableTitleData"
-        border
-        style="width: 100%" v-if="menuHedaFlg">
-        <el-table-column prop="name" label="菜单名称" width="120"></el-table-column>
-        <el-table-column prop="headName" label="拥有的头信息" width="120" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
-          <template slot-scope="scope">
-            <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <div id="role_up_from" style="float: right">
+        <el-tree
+          show-checkbox
+          :data="menuDateList"
+          node-key="menuId"
+          :default-expanded-keys="noUrlCheckedKeys"
+          :default-checked-keys="noUrlCheckedKeys"
+          @check="checkChange"
+          ref="tree"
+          :props="defaultProps">
+        </el-tree>
+        <el-switch
+          v-model="menuFlg"
+          active-text="添加菜单"
+          inactive-text="删除菜单">
+        </el-switch>
+        <el-button type="primary" @click="lookMenuHead">查看菜单下的表头信息</el-button>
+        <el-table
+          :data="menuTableTitleData"
+          border
+          style="width: 50%" v-if="menuHedaFlg">
+          <el-table-column prop="name" label="菜单名称" width="120"></el-table-column>
+          <el-table-column prop="headName" label="拥有的头信息" width="120" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="100">
+            <template slot-scope="scope">
+              <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="roleUpVisible = false">取 消</el-button>
         <el-button type="primary" @click="upMenuRole">确 定</el-button>
@@ -237,9 +240,82 @@
   }
 </script>
 
-<style>
+<style lang="scss">
   .el-tooltip__popper {
     max-width: 500px;
     line-height: 180%;
   }
+  .el-dialog__body{
+    .el-tree{
+      width: 288px;
+      padding-left: 80px;
+    }
+    .el-switch.is-checked{
+
+    }
+    #role_up_from{
+      width: 100%;
+      float: left;
+      background-color: #3c763d;
+    }
+  }
+  //自定义添加转移
+  .el-transfer {
+    .el-transfer__buttons {
+      width: 150px;
+      .el-button.el-button--primary.is-disabled.el-transfer__button.is-with-texts {
+        margin-left: 0;
+        width: 89px;
+        font-family: "宋体";
+      }
+      .el-button.el-button--primary.el-transfer__button.is-with-texts {
+        margin-left: 0;
+        width: 89px;
+        font-family: "宋体";
+      }
+    }
+  }
+  //自定义transfers组建内容样式
+  .el-transfer-panel__body {
+    .el-transfer-panel__filter.el-input.el-input--small.el-input--prefix {
+      width: 168px;
+    }
+    .el-checkbox-group.el-transfer-panel__list.is-filterable {
+      .el-checkbox.el-transfer-panel__item {
+        margin-left: 20px;
+        display: block;
+        font-family: "宋体";
+      }
+    }
+  }
+  .el-dialog__header {
+    text-align: center;
+    background-color: #e8e8e8;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    .el-dialog__title {
+      font-family: "宋体";
+      font-size: 20px;
+    }
+  }
+  //表单关闭
+  .el-dialog__headerbtn {
+    background-color: #F56C6C;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    width: 20px;
+    height: 20px;
+  }
+
+  //表单边框
+  .el-dialog {
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+  }
+
+
 </style>
