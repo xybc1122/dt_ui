@@ -29,26 +29,28 @@
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
-          width="55">
+          width="55"
+          v-if="tableTitle.length>0">
         </el-table-column>
         <el-table-column
           type="index"
           width="50"
+          v-if="tableTitle.length>0"
           fixed>
         </el-table-column>
         <template v-for="(title ,index) in tableTitle">
-          <el-table-column v-if="title.topType==='rName'" :label="title.headName" prop="rName" width="150"
-                           sortable fixed></el-table-column>
+          <el-table-column v-if="title.topType==='rName'" :label="title.headName" prop="rName" width="700"
+                           sortable ></el-table-column>
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='role_holder'" :label="title.headName"
-                           prop="userName" width="100"
-                           sortable></el-table-column>
+                           prop="userName" width="700"
+                           sortable ></el-table-column>
         </template>
         <el-table-column
           fixed="right"
           label="操作"
           width="100">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+            <el-button v-if="tableTitle.length>0" @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -66,9 +68,9 @@
         <span>{{menuTableTitle.headName}}</span>
       </div>
       <div class="check5">
-        <el-button type="primary" icon="el-icon-edit" size="mini" @click="roleUp">修改
+        <el-button type="success" icon="el-icon-edit" size="mini" @click="roleUp">修改
         </el-button>
-        <el-button type="primary" icon="el-icon-delete" size="mini">
+        <el-button type="danger" icon="el-icon-delete" size="mini">
           删除
         </el-button>
         <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini">
@@ -124,6 +126,7 @@
       if (resultHead.code === 200) {
         // console.log(resultHead.data)
         this.tableTitle = resultHead.data
+        console.log(this.tableTitle)
       }
       var rolePage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
       //获得用户信息
@@ -196,7 +199,7 @@
 </script>
 
 
-<style>
+<style lang="scss">
   /* 输入 下拉款*/
   #printCheck {
     width: 100%;

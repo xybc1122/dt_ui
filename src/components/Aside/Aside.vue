@@ -1,29 +1,30 @@
 <template>
-  <el-row class="tac">
-    <el-aside width="217px" class="none">
+  <el-row class="tac" >
+    <el-aside :width="width"class="none">
       <el-menu :default-active="$router.path" router class="el-menu-vertical-demo none" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
         <!--判断父菜单没有url的-->
         <el-submenu v-if="!menu.url" :index="index.toString()" v-show="isRole" v-for="(menu,index) in menuList"
-                    :key="index">
+                    :key="index" style="background-color: #D4D4D4">
           <template slot="title">
             <i :class="menu.icon ? menu.icon : 'el-icon-loading'"></i>
             <span id="spans">{{menu.name}}</span>
           </template>
 
           <!--判断一级菜单下的子菜单有url的-->
-          <el-menu-item-group v-if="cMenu.url" v-for="(cMenu,indexChild) in menu.childMenus" :key="indexChild">
+          <el-menu-item-group v-if="cMenu.url" v-for="(cMenu,indexChild) in menu.childMenus" :key="indexChild"
+                              style="background-color: #EDEDED">
             <el-menu-item :index="cMenu.url+'/'+cMenu.menuId"><span><i :class="cMenu.icon"></i></span> {{cMenu.name}}
             </el-menu-item>
           </el-menu-item-group>
           <!--判断一级菜单下的子菜单没有url的-->
           <el-submenu v-if="!cMenu.url" :index="index.toString()+'-'+cMenu.menuId.toString()"
-                      v-for="(cMenu,indexChild) in menu.childMenus" :key="indexChild" >
-            <template slot="title">
+                      v-for="(cMenu,indexChild) in menu.childMenus" :key="indexChild" style="background-color: #EDEDED">
+            <template slot="title" style="background-color: #FDFDFD">
                 <span><i :class="cMenu.icon ? cMenu.icon : 'el-icon-loading'"></i>
                 </span> {{cMenu.name}}
             </template>
             <el-menu-item :index="sMenu.url+'/'+sMenu.menuId"
-                          v-for="(sMenu,indexSun) in cMenu.childMenus" :key="indexSun">
+                          v-for="(sMenu,indexSun) in cMenu.childMenus" :key="indexSun" style="background-color: #FDFDFD">
               <span><i :class="sMenu.icon"></i></span>
               {{sMenu.name}}
             </el-menu-item>
@@ -31,7 +32,8 @@
 
         </el-submenu>
         <!--判断父菜单有url的-->
-        <el-menu-item v-if="menu.url" :index="menu.url" v-show="isRole" v-for="(menu,index) in menuList" :key="index">
+        <el-menu-item v-if="menu.url" :index="menu.url" v-show="isRole" v-for="(menu,index) in menuList" :key="index"
+                      style="background-color: #D4D4D4">
           <i :class="menu.icon"></i>
           <span>{{menu.name}}</span>
         </el-menu-item>
@@ -53,6 +55,7 @@
   export default {
     data () {
       return {
+        width:"217px",
         isCollapse: false,
         isRole: true,
         menuList: [],
@@ -72,9 +75,11 @@
         if(!this.isCollapse){
           this.isCollapse=true
           this.aa='el-icon-d-arrow-right'
+          this.width="80px"
         }else{
           this.isCollapse=false
           this.aa='el-icon-d-arrow-left'
+          this.width="217px"
         }
 
       },
@@ -90,7 +95,7 @@
 
 <style lang="scss">
   .bt{
-    margin-top: 429px;
+    margin-top: 385px;
     padding-right: 0;
     padding-left: 0;
     background-color: #E9F8FF;
@@ -110,11 +115,11 @@
   //鼠标悬浮样式
   .el-submenu{
     .el-submenu__title:hover{
-      background-color: #C6E7FF;
+      background-color: #F1F0FF;
     }
   }
   .el-menu-item:hover{
-    background-color: #C6E7FF;
+    background-color: #F1F0FF;
   }
   //分类长宽
   .el-menu-vertical-demo:not(.el-menu--collapse) {

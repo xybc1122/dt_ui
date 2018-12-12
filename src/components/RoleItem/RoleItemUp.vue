@@ -3,6 +3,7 @@
     <el-dialog
       title="提示"
       :visible.sync="roleUpVisible"
+      @close='closeDialog'
       width="850px">
       <el-form :model="roleFrom" ref="roleFrom" label-width="80px">
         <el-form-item style="width: 350px">
@@ -40,7 +41,7 @@
           active-text="添加菜单"
           inactive-text="删除菜单">
         </el-switch>
-        <el-button type="primary" @click="lookMenuHead">查看菜单下的表头信息</el-button>
+        <el-button type="primary" @click="lookMenuHead" :disabled="disabled">查看菜单下的表头信息</el-button>
         <el-table
           :data="menuTableTitleData"
           border
@@ -54,7 +55,6 @@
           </el-table-column>
         </el-table>
       </div>
-
       <div slot="footer" class="dialog-footer">
         <el-button @click="roleUpVisible = false">取 消</el-button>
         <el-button type="primary" @click="upMenuRole">确 定</el-button>
@@ -72,6 +72,7 @@
   export default {
     data () {
       return {
+        disabled:true,//菜单点击
         menuHedaFlg:false,//table框的隐藏跟显示
         menuFlg: true,//选择删除 还是添加
         urlMenList: [],//获得父节点 menuId
@@ -155,6 +156,21 @@
       MenuHeadItem
     },
     methods: {
+      //清空数据
+      closeDialog(){
+        this.disabled = true
+        this.menuHedaFlg=false
+        this.menuFlg=true
+        this.urlMenList= []
+        this.newMenuList= []
+        this.checkedMenuList= []
+        this.menuDateList= []
+        this.menuTableTitleData=[]
+        this.roleUpVisible= false
+        this.usersId= []
+        this.userData= []
+        this.noUrlCheckedKeys= []
+      },
       //通过关键字搜索
       filterMethod (query, item) {
         return item.users.userName.indexOf(query) > -1
@@ -193,8 +209,15 @@
         }
       },
       //indeterminate节点的子数有没有被选中
-      checkChange (data, daraArr) {
+      async checkChange (data, daraArr) {
         console.log(data, daraArr)
+        if(daraArr.checkedNodes.length<=0){
+          this.disabled=true
+          this.menuHedaFlg=false
+          this.menuTableTitleData=[]
+        }else{
+          this.disabled=false
+        }
       },
       //点击确认获得数据
       async upMenuRole () {
@@ -246,17 +269,13 @@
     line-height: 180%;
   }
   .el-dialog__body{
-    .el-tree{
-      width: 288px;
-      padding-left: 80px;
-    }
-    .el-switch.is-checked{
-
-    }
     #role_up_from{
       width: 100%;
-      float: left;
-      background-color: #3c763d;
+      .el-tree{
+        width: 288px;
+        padding-left: 80px;
+        float: left;
+      }
     }
   }
   //自定义添加转移
