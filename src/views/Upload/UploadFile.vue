@@ -58,6 +58,8 @@
         radio: '',
         shopArr: [],
         siteOptions: [],//站点信息
+        isNoSkuId: false,
+        fileName: ''
       }
     },
     async mounted () {
@@ -88,17 +90,19 @@
         this.siteName = obj.siteName
         this.isFileUp = true
       },
+      //文件上传时的钩子
       onProgressFile (event, file, fileList) {
-        console.log(event, file, fileList)
+        //console.log(file)
       },
       handleRemove (file, fileList) {
         console.log(file, fileList)
       },
+      //点击文件的时候
       handlePreview (file) {
         console.log(file)
       },
       handleExceed (files, fileList) {
-        //console.log(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+        message.errorMessage(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
       },
       //移除
       beforeRemove (file, fileList) {
@@ -130,10 +134,14 @@
       },
       //上传成功
       uploadSuccess (success) {
+        console.log(success)
         if (success.code === -1) {
           message.errorMessage('上传成功~' + success.msg)
         } else {
           message.successMessage(success.msg)
+        }
+        if (success.data) {
+          this.isNoSkuId = true
         }
       },
       // 上传错误
