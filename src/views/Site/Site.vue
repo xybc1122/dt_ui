@@ -75,24 +75,28 @@
           </el-table-column>
         </template>
       </el-table>
-      <el-button type="primary" icon="el-icon-edit" size="mini">修改
+      <el-button type="success" icon="el-icon-edit" size="mini">修改
       </el-button>
-      <el-button type="primary" icon="el-icon-delete" size="mini">
+      <el-button type="info" icon="el-icon-delete" size="mini">
         删除
       </el-button>
-      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini">
+      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="Site_Add">
         新增
       </el-button>
     </div>
+    <SiteAdd></SiteAdd>
   </div>
 </template>
 <script>
+  import PubSub_Site from 'pubsub-js'
+  import SiteAdd from '../../components/SiteItem/SiteAdd'
   import {repHead, repGetSiteInfo} from '../../api'
   //店铺
 
   export default {
     data () {
       return {
+        saveSiteValue:true,
         msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
         tableTitle: [],//表头信息
@@ -121,6 +125,9 @@
         this.tableData = resultGetSite.data
       }
     },
+    components:{
+      SiteAdd
+    },
     methods: {
       //分页
       handleSizeChange (val) {
@@ -143,6 +150,10 @@
             return [0, 0]
           }
         }
+      },
+      Site_Add(){
+        console.log(123)
+        PubSub_Site.publish('SiteValue', this.saveSiteValue)
       }
     }
   }

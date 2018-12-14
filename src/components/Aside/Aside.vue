@@ -23,11 +23,25 @@
                 <span><i :class="cMenu.icon ? cMenu.icon : 'el-icon-loading'"></i>
                 </span> {{cMenu.name}}
             </template>
-            <el-menu-item :index="sMenu.url+'/'+sMenu.menuId"
-                          v-for="(sMenu,indexSun) in cMenu.childMenus" :key="indexSun" style="background-color: #FDFDFD">
-              <span><i :class="sMenu.icon"></i></span>
-              {{sMenu.name}}
-            </el-menu-item>
+            <!--判断二级菜单下的子菜单有url的-->
+            <el-menu-item-group v-if="sMenu.url" v-for="(sMenu,indexSun) in cMenu.childMenus" :key="indexSun"
+                                style="background-color: #EDEDED">
+              <el-menu-item :index="sMenu.url+'/'+sMenu.menuId"><span><i :class="sMenu.icon"></i></span> {{sMenu.name}}
+              </el-menu-item>
+            </el-menu-item-group>
+            <!--判断二级菜单下的子菜单没有url的-->
+            <el-submenu v-if="!sMenu.url" :index="cMenu.menuId.toString()+'/'+sMenu.menuId.toString()"
+                        v-for="(sMenu,indexSun) in cMenu.childMenus" :key="indexSun" style="background-color: #EDEDED">
+              <template slot="title" >
+                <span><i :class="sMenu.icon ? sMenu.icon : 'el-icon-loading'"></i>
+                </span> {{sMenu.name}}
+              </template>
+              <el-menu-item :index="ssMenu.url+'//'+ssMenu.menuId"
+                            v-for="(ssMenu,indexSuns) in sMenu.childMenus" :key="indexSuns" style="background-color: #FDFDFD">
+                <span><i :class="ssMenu.icon"></i></span>
+                {{ssMenu.name}}
+              </el-menu-item>
+            </el-submenu>
           </el-submenu>
 
         </el-submenu>
@@ -75,11 +89,11 @@
         if(!this.isCollapse){
           this.isCollapse=true
           this.aa='el-icon-d-arrow-right'
-          this.width="80px"
+          // this.width="80px"
         }else{
           this.isCollapse=false
           this.aa='el-icon-d-arrow-left'
-          this.width="217px"
+          // this.width="217px"
         }
 
       },
@@ -95,6 +109,7 @@
 
 <style lang="scss">
   .bt{
+    position: fixed;
     margin-top: 385px;
     padding-right: 0;
     padding-left: 0;

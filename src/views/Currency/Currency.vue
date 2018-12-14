@@ -60,24 +60,28 @@
           </el-table-column>
         </template>
       </el-table>
-      <el-button type="primary" icon="el-icon-edit" size="mini">修改
+      <el-button type="success" icon="el-icon-edit" size="mini" >修改
       </el-button>
-      <el-button type="primary" icon="el-icon-delete" size="mini">
+      <el-button type="info" icon="el-icon-delete" size="mini">
         删除
       </el-button>
-      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini">
+      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="CurrencyAdd">
         新增
       </el-button>
     </div>
+    <currency></currency>
   </div>
 </template>
 <script>
+  import PubSubAdd from 'pubsub-js'
+  import currency from '../../components/CurrencyItem/CurrencyAdd'
   import {repHead, repGetCurrencyInfo} from '../../api'
   //店铺
 
   export default {
     data () {
       return {
+        saveCurrencyAdd:true,
         msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
         tableTitle: [],//表头信息
@@ -105,7 +109,13 @@
         this.tableData = resultGetCurrency.data
       }
     },
+    components:{
+      currency
+    },
     methods: {
+      CurrencyAdd(){
+        PubSubAdd.publish('CurrencyAdd', this.saveCurrencyAdd)
+      },
       //分页
       handleSizeChange (val) {
         console.log(`每页 ${val} 条`)
@@ -127,7 +137,7 @@
             return [0, 0]
           }
         }
-      }
+      },
     }
   }
 </script>

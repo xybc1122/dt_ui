@@ -67,7 +67,7 @@
       <el-button type="info" icon="el-icon-delete" size="mini">
         删除
       </el-button>
-      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini">
+      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="RegionAdd">
         新增
       </el-button>
       <el-button type="warning"  size="mini">
@@ -85,14 +85,18 @@
         </el-pagination>
       </div>
     </div>
+    <AreaAdd></AreaAdd>
   </div>
 </template>
 <script>
   import {repHead, repGetRegionInfo} from '../../api'
   import utils from '../../utils/PageUtils'
+  import AreaAdd from '../../components/ReginItem/AreaAdd'
+  import PubSub from 'pubsub-js'
   //区域
   export default {
     data () {
+      RegionAdd:true
       return {
         msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
@@ -104,6 +108,9 @@
         pageSize: 5,//显示最大的页
         page_sizes:[5,10,15,20,25]
       }
+    },
+    components:{
+      AreaAdd
     },
     async mounted () {
       //查询获得table表的 头信息
@@ -125,6 +132,10 @@
       }
     },
     methods: {
+      //新增
+      RegionAdd(){
+        PubSub.publish('RegionAdd', this.RegionAdd)
+      },
       //分页
       async handleSizeChange (val) {
         this.pageSize = val

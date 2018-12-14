@@ -64,20 +64,23 @@
           </el-table-column>
         </template>
       </el-table>
-      <el-button type="primary" icon="el-icon-edit" size="mini">修改
+      <el-button type="success" icon="el-icon-edit" size="mini">修改
       </el-button>
-      <el-button type="primary" icon="el-icon-delete" size="mini">
+      <el-button type="danger" icon="el-icon-delete" size="mini">
         删除
       </el-button>
-      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini">
+      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="Shop_Add">
         新增
       </el-button>
     </div>
+    <ShopAdd></ShopAdd>
   </div>
 </template>
 <script>
   import {repHead, repGetShopInfo} from '../../api'
   //店铺
+  import ShopAdd from '../../components/ShopItem/ShopAdd'
+  import PubSub_ShopAdd from 'pubsub-js'
 
   export default {
     data () {
@@ -87,12 +90,16 @@
         tableTitle: [],//表头信息
         tableData: [],//表信息
         multipleSelection: [],
+        saveShopValue:true,
         role: {
           currentPage: 1,//当前页
           total_size: 0,//总的页
           pageSize: 10//显示最大的页
         }
       }
+    },
+    components:{
+      ShopAdd
     },
     async mounted () {
       //查询获得table表的 头信息
@@ -131,6 +138,9 @@
             return [0, 0]
           }
         }
+      },
+      Shop_Add(){
+        PubSub_ShopAdd.publish('saveShopValue', this.saveShopValue)
       }
     }
   }
