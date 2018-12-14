@@ -71,6 +71,36 @@
     }
   }
 </script>
+<style lang="scss">
+  .el-dialog__header {
+    text-align: center;
+    background-color: #e8e8e8;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    .el-dialog__title {
+      font-family: "宋体";
+      font-size: 20px;
+    }
+  }
+  //表单关闭
+  .el-dialog__headerbtn {
+    background-color: #F56C6C;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    width: 20px;
+    height: 20px;
+  }
+
+  //表单边框
+  .el-dialog {
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+  }
+</style>
 
 
 

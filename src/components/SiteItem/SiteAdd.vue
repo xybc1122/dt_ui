@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增店铺" :visible.sync="SiteValueAdd" width="900px">
+  <el-dialog title="新增站点" :visible.sync="SiteValueAdd" width="900px">
     <el-row type="flex"  justify="center">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" >
         <el-form-item label="站点编号:" prop="id">
@@ -53,7 +53,7 @@
   export default {
     data() {
       return {
-        SiteValueAdd:true,
+        SiteValueAdd:false,
         ruleForm: {
           id:'',
           name: '',

@@ -99,7 +99,7 @@
       },
       //点击文件的时候
       handlePreview (file) {
-        console.log(file)
+        console.log("下载文件")
       },
       handleExceed (files, fileList) {
         message.errorMessage(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
@@ -135,6 +135,9 @@
       //上传成功
       uploadSuccess (success) {
         console.log(success)
+        if(!success.data){
+          //增添图标
+        }
         if (success.code === -1) {
           message.errorMessage('上传成功~' + success.msg)
         } else {
