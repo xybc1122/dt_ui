@@ -41,7 +41,7 @@
           active-text="添加菜单"
           inactive-text="删除菜单">
         </el-switch>
-        <el-button type="primary" @click="lookMenuHead" :disabled="disabled">查看菜单下的表头信息</el-button>
+        <el-button type="primary" @click="lookMenuHead" :disabled="isViewMenu">查看菜单下的表头信息</el-button>
         <el-table
           :data="menuTableTitleData"
           border
@@ -69,17 +69,18 @@
   import message from '../../utils/Message'
   import {repGetUsers, repMenu, repMenuRole, repGetHead, repGetMenus, repAdRole, repDelRole} from '../../api'
   import MenuHeadItem from '../../components/RoleItem/MenuHeadItem/MenuHeadItem'
+
   export default {
     data () {
       return {
-        disabled:true,//菜单点击
-        menuHedaFlg:false,//table框的隐藏跟显示
+        isViewMenu: true,//查看菜单
+        menuHedaFlg: false,//table框的隐藏跟显示
         menuFlg: true,//选择删除 还是添加
         urlMenList: [],//获得父节点 menuId
         newMenuList: [],//新的一个数组
         checkedMenuList: [],//获得选中的id 添加或更新菜单
         menuDateList: [],//菜单数据
-        menuTableTitleData:[],//菜单对应的头数据
+        menuTableTitleData: [],//菜单对应的头数据
         roleUpVisible: false,
         usersId: [],//用户ID
         userData: [],//用户数据
@@ -98,8 +99,8 @@
     async mounted () {
       PubSub.subscribe('roleUp', (msg, roleSelection) => {
         this.noUrlCheckedKeys = []
-        this.menuTableTitleData=[]
-        this.menuHedaFlg=false;
+        this.menuTableTitleData = []
+        this.menuHedaFlg = false
         const roleUpSelection = roleSelection
         if (roleUpSelection.length <= 0) {
           message.errorMessage('必须选中一条修改')
@@ -147,29 +148,33 @@
             resultRoleMenu.then((result) => {
               //递归获取菜单的id
               this.getMenuId(result.data, [])
+              //判断是否为0 如果是0 则不禁止点击-----查看菜单下的表头数据
+              if (this.noUrlCheckedKeys.length !== 0) {
+                this.isViewMenu = false
+              }
             })
           }
         })
       })
     },
-    components:{
+    components: {
       MenuHeadItem
     },
     methods: {
       //清空数据
-      closeDialog(){
-        this.disabled = true
-        this.menuHedaFlg=false
-        this.menuFlg=true
-        this.urlMenList= []
-        this.newMenuList= []
-        this.checkedMenuList= []
-        this.menuDateList= []
-        this.menuTableTitleData=[]
-        this.roleUpVisible= false
-        this.usersId= []
-        this.userData= []
-        this.noUrlCheckedKeys= []
+      closeDialog () {
+        this.isViewMenu = true
+        this.menuHedaFlg = false
+        this.menuFlg = true
+        this.urlMenList = []
+        this.newMenuList = []
+        this.checkedMenuList = []
+        this.menuDateList = []
+        this.menuTableTitleData = []
+        this.roleUpVisible = false
+        this.usersId = []
+        this.userData = []
+        this.noUrlCheckedKeys = []
       },
       //通过关键字搜索
       filterMethod (query, item) {
@@ -193,7 +198,7 @@
       },
       //查看所有菜单头信息
       async lookMenuHead () {
-        this.menuHedaFlg=true;
+        this.menuHedaFlg = true
         //获得当前选中的menuIds
         let keys = this.$refs.tree.getCheckedKeys()
         //获得当前半选中的menuIds
@@ -203,20 +208,19 @@
         })
         const menuId = {menuIds}
         const resultHead = await repGetHead(menuId)
-        if (resultHead.code === 200){
-          this.menuTableTitleData=resultHead.data
-          console.log(resultHead.data)
+        if (resultHead.code === 200) {
+          this.menuTableTitleData = resultHead.data
         }
       },
       //indeterminate节点的子数有没有被选中
       async checkChange (data, daraArr) {
         console.log(data, daraArr)
-        if(daraArr.checkedNodes.length<=0){
-          this.disabled=true
-          this.menuHedaFlg=false
-          this.menuTableTitleData=[]
-        }else{
-          this.disabled=false
+        if (daraArr.checkedNodes.length <= 0) {
+          this.isViewMenu = true
+          this.menuHedaFlg = false
+          this.menuTableTitleData = []
+        } else {
+          this.isViewMenu = false
         }
       },
       //点击确认获得数据
@@ -238,9 +242,9 @@
         }
       },
       //编辑
-      handleClick(row) {
-        PubSub.publish('upMenuHead',row)
-        console.log(row);
+      handleClick (row) {
+        PubSub.publish('upMenuHead', row)
+        console.log(row)
       },
       //递归遍历菜单获取id 点击修改的时候自动勾选
       getMenuId (arr, noUrlMenuList) {
@@ -268,16 +272,18 @@
     max-width: 500px;
     line-height: 180%;
   }
-  .el-dialog__body{
-    #role_up_from{
+
+  .el-dialog__body {
+    #role_up_from {
       width: 100%;
-      .el-tree{
+      .el-tree {
         width: 288px;
         padding-left: 80px;
         float: left;
       }
     }
   }
+
   //自定义添加转移
   .el-transfer {
     .el-transfer__buttons {
@@ -294,6 +300,7 @@
       }
     }
   }
+
   //自定义transfers组建内容样式
   .el-transfer-panel__body {
     .el-transfer-panel__filter.el-input.el-input--small.el-input--prefix {
@@ -307,6 +314,7 @@
       }
     }
   }
+
   .el-dialog__header {
     text-align: center;
     background-color: #e8e8e8;
@@ -317,6 +325,7 @@
       font-size: 20px;
     }
   }
+
   //表单关闭
   .el-dialog__headerbtn {
     background-color: #F56C6C;
