@@ -32,6 +32,11 @@
       <div class="el-upload__text">将{{shopName}}店铺---{{siteName}}站点---文件拖到此处，或<em>点击上传</em></div>
       <div class="el-upload__tip" slot="tip">只能上传.csv/.xls/.xlsx格式文件/不能超过100MB</div>
     </el-upload>
+    <div style="margin-top: 10px">
+      <div  class="icons" v-for="(cc,index) in icon_list" >
+        <span :class="cc.icon?'el-icon-circle-check' : 'el-icon-warning'"></span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -46,6 +51,7 @@
   export default {
     data () {
       return {
+        icon_list:[],
         uploadFrom: {
           sId: '',//店铺ID
           seId: ''//站点 ID
@@ -99,7 +105,13 @@
       },
       //点击文件的时候
       handlePreview (file) {
-        console.log("下载文件")
+        console.log(file);
+        console.log("点击下载");
+        if(file.success===1){
+          console.log(1);
+        }else{
+          console.log(2);
+        }
       },
       handleExceed (files, fileList) {
         message.errorMessage(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
@@ -135,9 +147,8 @@
       //上传成功
       uploadSuccess (success) {
         console.log(success)
-        if(!success.data){
-          //增添图标
-        }
+        this.icon_list.push({icon:false})
+
         if (success.code === -1) {
           message.errorMessage('上传成功~' + success.msg)
         } else {
@@ -147,6 +158,17 @@
           this.isNoSkuId = true
         }
       },
+      //删除重复
+      // checkSelArr(selected){
+      //   let len = this.listAdd.length;
+      //   for(let i = 0; i < len; i++) {
+      //     if(selected.name == this.listAdd[i].name) {
+      //       //重复文件提交无效
+      //       return;
+      //     }
+      //   };
+      //   this.listAdd.push(selected)
+      // },
       // 上传错误
       uploadError (response, file, fileList) {
         message.errorMessage(response.message)
@@ -154,5 +176,24 @@
     }
   }
 </script>
+<style lang="scss">
+  .icons{
+    margin-top: 5px;
+    height: 26px;
+  }
+  .el-upload-list{
+    float: right;
+    margin-right: 35px !important;
+  }
+  .el-upload-list__item-name{
+    width: 300px;
+  }
+  .el-icon-warning{
+    color: #F56C6C;
+  }
+  .el-icon-circle-check{
+    color: #67C23A;
+  }
+</style>
 
 
