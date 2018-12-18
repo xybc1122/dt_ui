@@ -185,11 +185,11 @@
       uploadSuccess (success) {
         console.log(success)
         if (success.code === -1) {
-          message.errorMessage('文件上传成功~' + success.msg)
-          this.icon_list.push({icon: true, id: this.id})
+          message.errorMessage('上传成功~' + success.msg)
+          this.icon_list.push({icon:true,id:this.id})
         } else {
           message.successMessage(success.msg)
-          this.icon_list.push({icon: false, id: this.id})
+          this.icon_list.push({icon:false,id:this.id})
         }
         if (success.data) {
           this.isNoSkuId = true
