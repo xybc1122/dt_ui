@@ -35,7 +35,7 @@
         <div class="el-upload__tip" slot="tip">只能上传.csv/.xls/.xlsx格式文件/不能超过100MB</div>
       </el-upload>
       <div style="margin-top: 10px">
-        <div  class="icons" v-for="(cc,index) in icon_list" >
+        <div class="icons" v-for="(cc,index) in icon_list">
           <span :class="cc.icon?'el-icon-circle-check' : 'el-icon-warning'"></span>
         </div>
       </div>
@@ -55,7 +55,8 @@
   export default {
     data () {
       return {
-        icon_list:[],//上传成功后遍历
+        id: '',
+        icon_list: [],//上传成功后遍历
         uploadFrom: {
           sId: '',//店铺ID
           seId: ''//站点 ID
@@ -79,13 +80,13 @@
         this.shopArr = resultShop.data
       }
     },
-    watch:{
-      icon_list() {
-        for(let i=0;i<this.icon_list.length;i++){
-          if(this.icon_list[i].icon){
-            console.log("此时为true状态")
-          }else{
-            console.log("此时为false状态")
+    watch: {
+      icon_list () {
+        for (let i = 0; i < this.icon_list.length; i++) {
+          if (this.icon_list[i].icon) {
+            console.log('此时为true状态')
+          } else {
+            console.log('此时为false状态')
           }
         }
       }
@@ -94,7 +95,7 @@
       async changeRadio (value) {
         this.shopName = value.shopName
         this.uploadFrom.sId = value.shopId
-        this.icon_list=[]
+        this.icon_list = []
         //通过 sId  获得站点信息
         const resultSite = await repGetShopIdSiteInfo(this.uploadFrom.sId)
         if (resultSite.code === 200) {
@@ -114,23 +115,24 @@
       },
       //文件上传时的钩子
       onProgressFile (event, file, fileList) {
-        //console.log(file)
+        // console.log(file)
+         this.id = file.uid
       },
       handleRemove (file, fileList) {
-        console.log(file.uid);
-        for(let i = 0; i < this.icon_list.length; i++) {
-          if(this.icon_list[i].id == file.uid) {
-            this.icon_list.splice(i, 1);
-            break;
+        console.log(file.uid)
+        for (let i = 0; i < this.icon_list.length; i++) {
+          if (this.icon_list[i].id === file.uid) {
+            this.icon_list.splice(i, 1)
+            break
           }
         }
-        console.log(fileList);
+        console.log(fileList)
 
       },
       //点击文件的时候
       handlePreview (file) {
-        console.log(file);
-        console.log("点击下载");
+        console.log(file)
+        console.log('点击下载')
 
       },
       handleExceed (files, fileList) {
@@ -145,6 +147,21 @@
       beforeAvatarUpload (file) {
         let fileName = []
         let index = file.name.indexOf('.')
+        let fileShopNameDt = file.name.indexOf('电兔')
+        //宏名
+        let fileShopNameHm = file.name.indexOf('宏名')
+        //诚夕
+        let fileShopNameCx = file.name.indexOf('诚夕')
+        if (fileShopNameDt === -1 && this.uploadFrom.sId === 1) {
+          message.errorMessage('不是电兔的文件/请注意操作~')
+          return false
+        } else if (fileShopNameHm === -1 && this.uploadFrom.sId === 2) {
+          message.errorMessage('不是宏名的文件/请注意操作~')
+          return false
+        } else if (fileShopNameCx === -1 && this.uploadFrom.sId === 3) {
+          message.errorMessage('不是诚夕的文件/请注意操作~')
+          return false
+        }
         fileName = file.name.substring(index + 1)
         const csv = fileName === 'csv'
         const xls = fileName === 'xls'
@@ -166,20 +183,13 @@
       },
       //上传成功
       uploadSuccess (success) {
-<<<<<<< HEAD
         console.log(success)
-        this.icon_list.push({icon:success.data})
-=======
-        console.log("上传成功执行")
-        //需要文件的id
-        this.id=success.uid
-        console.log(success.uid)
-        this.icon_list.push({icon:true,id:this.id})
->>>>>>> e02789ca89b357ca8dcc0375ed17de3102568f93
         if (success.code === -1) {
-          message.errorMessage('上传成功~' + success.msg)
+          message.errorMessage('文件上传成功~' + success.msg)
+          this.icon_list.push({icon: true, id: this.id})
         } else {
           message.successMessage(success.msg)
+          this.icon_list.push({icon: false, id: this.id})
         }
         if (success.data) {
           this.isNoSkuId = true
@@ -204,21 +214,25 @@
   }
 </script>
 <style lang="scss">
-  .icons{
+  .icons {
     margin-top: 5px;
     height: 26px;
   }
-  .el-upload-list{
+
+  .el-upload-list {
     float: right;
     margin-right: 35px !important;
   }
-  .el-upload-list__item-name{
+
+  .el-upload-list__item-name {
     width: 300px;
   }
-  .el-icon-warning{
+
+  .el-icon-warning {
     color: #F56C6C;
   }
-  .el-icon-circle-check{
+
+  .el-icon-circle-check {
     color: #67C23A;
   }
 </style>
