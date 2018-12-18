@@ -55,7 +55,7 @@
   export default {
     data () {
       return {
-        icon_list:[],
+        icon_list:[],//上传成功后遍历
         uploadFrom: {
           sId: '',//店铺ID
           seId: ''//站点 ID
@@ -153,7 +153,6 @@
       uploadSuccess (success) {
         console.log(success)
         this.icon_list.push({icon:success.data})
-
         if (success.code === -1) {
           message.errorMessage('上传成功~' + success.msg)
         } else {
