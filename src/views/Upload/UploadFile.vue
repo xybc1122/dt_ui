@@ -55,8 +55,12 @@
   export default {
     data () {
       return {
+<<<<<<< HEAD
         id:'',
         icon_list:[],
+=======
+        icon_list:[],//上传成功后遍历
+>>>>>>> 2e200b8946d59bd3f604bc775b7c7c2aebffc3d8
         uploadFrom: {
           sId: '',//店铺ID
           seId: ''//站点 ID
@@ -167,11 +171,21 @@
       },
       //上传成功
       uploadSuccess (success) {
+<<<<<<< HEAD
+        console.log(success)
+        this.icon_list.push({icon:success.data})
+=======
         console.log("上传成功执行")
         //需要文件的id
         this.id=success.uid
         console.log(success.uid)
+<<<<<<< HEAD
         if (success.code === 200) {
+=======
+        this.icon_list.push({icon:true,id:this.id})
+>>>>>>> e02789ca89b357ca8dcc0375ed17de3102568f93
+        if (success.code === -1) {
+>>>>>>> 2e200b8946d59bd3f604bc775b7c7c2aebffc3d8
           message.errorMessage('上传成功~' + success.msg)
           this.icon_list.push({icon:true,id:this.id})
         } else {
