@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="margin-top: 20px">
+    <div style="margin-top: 20px;">
       <el-radio-group v-model="radio" size="mini" @change="changeRadio">
         <el-radio-button :label="sArr" v-for="(sArr,index) in shopArr" :key="index">{{sArr.shopName}}</el-radio-button>
       </el-radio-group>
@@ -13,30 +13,34 @@
         :value="item.siteId">
       </el-option>
     </el-select>
-    <el-upload
-      class="upload-demo"
-      :action="url"
-      drag
-      :on-progress="onProgressFile"
-      :on-preview="handlePreview"
-      :on-remove="handleRemove"
-      :on-success="uploadSuccess"
-      :onError="uploadError"
-      :before-remove="beforeRemove"
-      :before-upload="beforeAvatarUpload"
-      :data="uploadFrom"
-      multiple
-      :limit="5"
-      :on-exceed="handleExceed"
-      :file-list="fileList" v-if="isFileUp">
-      <div class="el-upload__text">将{{shopName}}店铺---{{siteName}}站点---文件拖到此处，或<em>点击上传</em></div>
-      <div class="el-upload__tip" slot="tip">只能上传.csv/.xls/.xlsx格式文件/不能超过100MB</div>
-    </el-upload>
-    <div style="margin-top: 10px">
-      <div  class="icons" v-for="(cc,index) in icon_list" >
-        <span :class="cc.icon?'el-icon-circle-check' : 'el-icon-warning'"></span>
+
+    <div style="width: 400px">
+      <el-upload
+        class="upload-demo"
+        :action="url"
+        drag
+        :on-progress="onProgressFile"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :on-success="uploadSuccess"
+        :onError="uploadError"
+        :before-remove="beforeRemove"
+        :before-upload="beforeAvatarUpload"
+        :data="uploadFrom"
+        multiple
+        :limit="5"
+        :on-exceed="handleExceed"
+        :file-list="fileList" v-if="isFileUp">
+        <div class="el-upload__text">将{{shopName}}店铺---{{siteName}}站点---文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">只能上传.csv/.xls/.xlsx格式文件/不能超过100MB</div>
+      </el-upload>
+      <div style="margin-top: 10px">
+        <div  class="icons" v-for="(cc,index) in icon_list" >
+          <span :class="cc.icon?'el-icon-circle-check' : 'el-icon-warning'"></span>
+        </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -102,6 +106,7 @@
       },
       handleRemove (file, fileList) {
         console.log(file, fileList)
+
       },
       //点击文件的时候
       handlePreview (file) {
@@ -147,7 +152,7 @@
       //上传成功
       uploadSuccess (success) {
         console.log(success)
-        this.icon_list.push({icon:false})
+        this.icon_list.push({icon:success.data})
 
         if (success.code === -1) {
           message.errorMessage('上传成功~' + success.msg)
