@@ -55,6 +55,7 @@
   export default {
     data () {
       return {
+        id:'',
         icon_list:[],
         uploadFrom: {
           sId: '',//店铺ID
@@ -170,11 +171,12 @@
         //需要文件的id
         this.id=success.uid
         console.log(success.uid)
-        this.icon_list.push({icon:true,id:this.id})
-        if (success.code === -1) {
+        if (success.code === 200) {
           message.errorMessage('上传成功~' + success.msg)
+          this.icon_list.push({icon:true,id:this.id})
         } else {
           message.successMessage(success.msg)
+          this.icon_list.push({icon:false,id:this.id})
         }
         if (success.data) {
           this.isNoSkuId = true
