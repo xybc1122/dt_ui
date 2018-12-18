@@ -79,10 +79,22 @@
         this.shopArr = resultShop.data
       }
     },
+    watch:{
+      icon_list() {
+        for(let i=0;i<this.icon_list.length;i++){
+          if(this.icon_list[i].icon){
+            console.log("此时为true状态")
+          }else{
+            console.log("此时为false状态")
+          }
+        }
+      }
+    },
     methods: {
       async changeRadio (value) {
         this.shopName = value.shopName
         this.uploadFrom.sId = value.shopId
+        this.icon_list=[]
         //通过 sId  获得站点信息
         const resultSite = await repGetShopIdSiteInfo(this.uploadFrom.sId)
         if (resultSite.code === 200) {
@@ -105,18 +117,21 @@
         //console.log(file)
       },
       handleRemove (file, fileList) {
-        console.log(file, fileList)
+        console.log(file.uid);
+        for(let i = 0; i < this.icon_list.length; i++) {
+          if(this.icon_list[i].id == file.uid) {
+            this.icon_list.splice(i, 1);
+            break;
+          }
+        }
+        console.log(fileList);
 
       },
       //点击文件的时候
       handlePreview (file) {
         console.log(file);
         console.log("点击下载");
-        if(file.success===1){
-          console.log(1);
-        }else{
-          console.log(2);
-        }
+
       },
       handleExceed (files, fileList) {
         message.errorMessage(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
@@ -151,9 +166,11 @@
       },
       //上传成功
       uploadSuccess (success) {
-        console.log(success)
-        this.icon_list.push({icon:success.data})
-
+        console.log("上传成功执行")
+        //需要文件的id
+        this.id=success.uid
+        console.log(success.uid)
+        this.icon_list.push({icon:true,id:this.id})
         if (success.code === -1) {
           message.errorMessage('上传成功~' + success.msg)
         } else {
