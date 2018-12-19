@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import './fiters' //加载过滤器
+
 import {
   Button,
   Input,
@@ -90,6 +91,7 @@ Vue.component(Tree.name, Tree)
 Vue.component(Card.name, Card)
 Vue.component(Upload.name, Upload)
 
+
 // 设置Cookie
 Vue.prototype.setCookie = function (c_name, value, expiredays) {
   var exdate = new Date()
@@ -111,10 +113,13 @@ Vue.prototype.getCookie = function (c_name) {
   return ''
 }
 
+
 new Vue({
   el: '#app',
   router,
   store,
+
   render: h => h(App),
   template: '<App/>'
+
 })
