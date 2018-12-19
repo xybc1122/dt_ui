@@ -2,7 +2,7 @@
   <div id="body">
     <img src="./img/ReportServer.png" width="100%" height="979">
     <!--登录-->
-    <div class="login-box" v-show="isLogin">
+    <div class="login-box" v-show="isLogin" >
       <div>
           <div class="login">
             <img src="../../components/HeaderTop/img/logo.png"/>
@@ -33,8 +33,8 @@
   export default {
     data () {
       return {
-        userName: '',
-        passWord: '',
+        userName: 'tt',
+        passWord: 't',
         isLogin: true, // <!--登录-->
         checked: true
       }
