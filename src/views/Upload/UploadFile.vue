@@ -134,7 +134,7 @@
       //上传校验
       beforeAvatarUpload (file) {
         let fileName = []
-        let index = file.name.indexOf('.')
+        let index = file.name.lastIndexOf('.')
         let fileShopNameDt = file.name.indexOf('电兔')
         //宏名
         let fileShopNameHm = file.name.indexOf('宏名')
