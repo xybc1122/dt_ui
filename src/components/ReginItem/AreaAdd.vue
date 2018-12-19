@@ -50,7 +50,8 @@
       };
     },
     async mounted(){
-      PubSub.subscribe('RegionAdd',(msg,RegionAdd)=>{
+      PubSub.subscribe('Area_RegionAdd',(msg,RegionAdd)=>{
+        console.log(RegionAdd)
         this.saveAreaValueAdd=RegionAdd
       })
     },

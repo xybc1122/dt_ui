@@ -11,9 +11,9 @@
                       prefix-icon="iconfont icon_dt-xiaoren"></el-input>
             <p></p>
             <el-input v-model="passWord" placeholder="密码" id="pwd" maxlength="15"
-                      prefix-icon="iconfont icon_dt-suo" type="password"></el-input>
+                      prefix-icon="iconfont icon_dt-suo" type="password" @keyup.enter.native="Login"></el-input>
             <div class="success">
-              <el-button type="primary" @click="Login" size="medium" @keyup.enter.native="Login">
+              <el-button type="primary" @click="Login"  size="medium" >
                 登陆
               </el-button>
               <!--<el-checkbox v-model="checked">记住我</el-checkbox>-->
@@ -43,6 +43,7 @@
 
     },
     methods: {
+
       async Login () {
         let loadingInstance = Loading.service(this.options)
         const userName = this.userName

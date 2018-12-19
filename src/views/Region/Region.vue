@@ -62,12 +62,12 @@
           </el-table-column>
         </template>
       </el-table>
-      <el-button type="success" icon="el-icon-edit" size="mini">修改
+      <el-button type="success" icon="el-icon-edit" size="mini" @click="Shop_Up">修改
       </el-button>
       <el-button type="info" icon="el-icon-delete" size="mini">
         删除
       </el-button>
-      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="RegionAdd">
+      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="Area_RegionAdd">
         新增
       </el-button>
       <el-button type="warning"  size="mini">
@@ -86,18 +86,20 @@
       </div>
     </div>
     <AreaAdd></AreaAdd>
+    <AreaUp></AreaUp>
   </div>
 </template>
 <script>
   import {repHead, repGetRegionInfo} from '../../api'
   import utils from '../../utils/PageUtils'
   import AreaAdd from '../../components/ReginItem/AreaAdd'
-  import PubSub from 'pubsub-js'
+  import AreaUp from '../../components/ReginItem/AreaUp'
+  import PubSub_Area from 'pubsub-js'
   //区域
   export default {
     data () {
-      RegionAdd:true
       return {
+        aregionAdd:true,
         msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
         tableTitle: [],//表头信息
@@ -110,7 +112,8 @@
       }
     },
     components:{
-      AreaAdd
+      AreaAdd,
+      AreaUp
     },
     async mounted () {
       //查询获得table表的 头信息
@@ -133,8 +136,8 @@
     },
     methods: {
       //新增
-      RegionAdd(){
-        PubSub.publish('RegionAdd', this.RegionAdd)
+      Area_RegionAdd(){
+        PubSub_Area.publish('Area_RegionAdd', this.aregionAdd)
       },
       //分页
       async handleSizeChange (val) {
@@ -159,6 +162,11 @@
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
       handleSelectionChange (val) {
         this.multipleSelection = val
+        console.log(this.multipleSelection)
+      },
+      //点击修改按钮传递消息
+      Shop_Up(){
+        PubSub_Area.publish('Area_multipleSelection', this.multipleSelection)
       },
       //tabale表头上下箭头 排序
       arraySpanMethod ({row, column, rowIndex, columnIndex}) {

@@ -3,10 +3,10 @@
     <el-form :model="upForm" ref="upForm" :rules="rules" label-width="92px">
       <template v-for="(title ,index) in tableTitle_com">
         <el-form-item v-if="title.topType==='c_full_name'" :label="title.headName" style="width: 350px"class="username un">
-          <el-tag>{{upForm.up_id}}</el-tag>
+          <el-tag>{{upForm.companyFullName}}</el-tag>
         </el-form-item>
         <el-form-item v-if="title.topType==='c_short_name'" :label="title.headName" style="width: 350px"class="username un">
-          <el-tag>{{upForm.up_id}}</el-tag>
+          <el-tag>{{upForm.companyShortName}}</el-tag>
         </el-form-item>
         <el-form-item v-if="title.topType==='c_code'" :label="title.headName" style="width: 350px"class="username un">
           <el-tag>{{upForm.up_id}}</el-tag>
@@ -32,9 +32,9 @@
       </template>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="resetForm('userForm')">重置</el-button>
+      <el-button @click="resetForm('upForm')">重置</el-button>
       <el-button @click="upFormValue = false">取 消</el-button>
-      <el-button type="primary" @click="saveUserInfo('userForm')">确 定</el-button>
+      <el-button type="primary" @click="savecomInfo('upForm')">确 定</el-button>
     </div>
   </el-dialog>
 </template>
@@ -58,8 +58,8 @@
         tableTitle_com:[],//表头信息
         companys:[],//公司的所有信息
         upForm: {
-          up_id: '123',
-          up_name: '',
+          companyFullName: '',
+          companyShortName: '',
           up_name_abbr: '',
           up_code: '',
           up_city: '',
@@ -110,11 +110,10 @@
           return
         }
         this.upFormValue_com = true
-        console.log(upFormValue_com)
         //将数组转换成对象
         userSaveSelection_com.forEach(item => {
-          this.upForm['up_id'] = item.up_id
-          this.upForm['up_name'] = item.up_name
+          this.upForm['companyFullName'] = item.companyFullName
+          this.upForm['companyShortName'] = item.companyShortName
           this.upForm['up_name_abbr'] = item.up_name_abbr
           this.upForm['up_code'] = item.up_code
           this.upForm['up_city'] = item.up_city
@@ -129,8 +128,8 @@
     },
     methods:{
       //确认
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
+      savecomInfo(upForm) {
+        this.$refs[upForm].validate((valid) => {
           if (valid) {
             alert('submit!');
           } else {
@@ -140,8 +139,8 @@
         });
       },
       //重置
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
+      resetForm(upForm) {
+        this.$refs[upForm].resetFields();
       }
     }
   }
