@@ -80,17 +80,6 @@
         this.shopArr = resultShop.data
       }
     },
-    watch: {
-      icon_list () {
-        for (let i = 0; i < this.icon_list.length; i++) {
-          if (this.icon_list[i].icon) {
-            console.log('此时为true状态')
-          } else {
-            console.log('此时为false状态')
-          }
-        }
-      }
-    },
     methods: {
       async changeRadio (value) {
         this.shopName = value.shopName
@@ -116,8 +105,9 @@
       //文件上传时的钩子
       onProgressFile (event, file, fileList) {
         // console.log(file)
-         this.id = file.uid
+        this.id = file.uid
       },
+      //文件列表移除文件时的钩子
       handleRemove (file, fileList) {
         console.log(file.uid)
         for (let i = 0; i < this.icon_list.length; i++) {
@@ -126,8 +116,6 @@
             break
           }
         }
-        console.log(fileList)
-
       },
       //点击文件的时候
       handlePreview (file) {
@@ -138,7 +126,7 @@
       handleExceed (files, fileList) {
         message.errorMessage(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
       },
-      //移除
+      //删除文件之前的钩子，参数为上传的文件和文件列表，若返回 false 或者返回 Promise 且被 reject，则停止上传。
       beforeRemove (file, fileList) {
         return console.log(`确定移除 ${ file.name }？`)
       },
@@ -183,13 +171,16 @@
       },
       //上传成功
       uploadSuccess (success) {
-        if(this.icon_list.length<6){
-          this.icon_list.push({icon:success.data,id:this.id})
-        }
+        console.log(success)
+        // if (this.icon_list.length < 5) {
+        //   this.icon_list.push({icon: success.data, id: this.id})
+        // }
         if (success.code === -1) {
           message.errorMessage('上传成功~' + success.msg)
+          this.icon_list.push({icon: false, id: this.id})
         } else {
           message.successMessage(success.msg)
+          this.icon_list.push({icon: true, id: this.id})
         }
         if (success.data) {
           this.isNoSkuId = true
