@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="区域信息修改" :visible.sync="Shop_up_Form" width="800px">
+  <el-dialog title="店铺信息修改" :visible.sync="Shop_up_Form" width="800px">
     <el-form :model="Shop_Form" ref="upForm" :rules="rules" label-width="92px">
       <template v-for="">
 
@@ -14,14 +14,42 @@
 </template>
 
 <script>
+  import PubSubUp from 'pubsub-js'
+  import message from '../../utils/Message'
+  import {repHead, repGetShopInfo} from '../../api'
   export default {
     data(){
       return{
+        Shop_up_Form:false,
+        tableTitle:[],
         Shop_Form:{
+
+        },
+        rules:{
 
         }
       }
-    }
+    },
+    async mounted(){
+      //查询获得table表的 头信息
+      const resultHead = await
+        repHead(this.$route.params.id)
+      if (resultHead.code === 200) {
+        // console.log(resultHead.data)
+        this.tableTitle = resultHead.data
+      }
+      PubSubUp.subscribe('multipleSelectionUp',(msg,multipleSelectionUp)=>{
+        const userSaveSelection_Up = multipleSelectionUp
+        if (userSaveSelection_Up.length <= 0) {
+          message.errorMessage('必须选中一条修改')
+          return
+        } else if (userSaveSelection_Up.length >= 2) {
+          message.errorMessage('修改只能选中一条')
+          return
+        }
+        this.Shop_up_Form=true
+      })
+    },
   }
 </script>
 

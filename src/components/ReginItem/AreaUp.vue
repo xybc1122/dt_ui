@@ -2,7 +2,30 @@
   <el-dialog title="区域信息修改" :visible.sync="Area_up_Form" width="800px">
     <el-form :model="Area_Form" ref="Area_Form" :rules="rules" label-width="92px">
       <template v-for="(title,index) in tableTitle">
-
+        <el-form-item v-if="title.topType==='a_eng'" :label="title.headName">
+          <el-tag>{{Area_Form.areaEng}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='a_name'" :label="title.headName">
+          <el-tag>{{Area_Form.areaName}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='a_number'" :label="title.headName">
+          <el-tag>{{Area_Form.areaName}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='principal'" :label="title.headName">
+          <el-tag>{{Area_Form.areaName}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='remark'" :label="title.headName">
+          <el-tag>{{Area_Form.areaName}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='status_bit'" :label="title.headName">
+          <el-tag>{{Area_Form.areaName}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='create_user'" :label="title.headName">
+          <el-tag>{{Area_Form.areaName}}</el-tag>
+        </el-form-item>
+        <el-form-item v-if="title.topType==='modify_date'" :label="title.headName">
+          <el-tag>{{Area_Form.areaName}}</el-tag>
+        </el-form-item>
       </template>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -17,6 +40,7 @@
   import {repHead, repGetRegionInfo} from '../../api'
   import PubSub_AreaUp from 'pubsub-js'
   import message from '../../utils/Message'
+  import utils from '../../utils/PageUtils'
   export default {
     data(){
       return{
@@ -28,12 +52,18 @@
         pageSize: 5,//显示最大的页
         page_sizes:[5,10,15,20,25],
         Area_Form:{
+          areaEng:'123',
+          areaName:'31',
+
+        },
+        rules:{
 
         }
       }
     },
     async mounted () {
       //查询获得table表的 头信息
+      // console.log("开始执行")
       const resultHead = await
         repHead(this.$route.params.id)
       if (resultHead.code === 200) {
@@ -41,7 +71,7 @@
         this.tableTitle = resultHead.data
       }
       //获得店铺信息
-      var regionPage = utils.getUserPage(this.currentPage, this.pageSize)
+      const regionPage = utils.getUserPage(this.currentPage, this.pageSize)
       const resultGetRegion = await repGetRegionInfo(regionPage)
       console.log(resultGetRegion)
       if (resultGetRegion.code === 200) {
@@ -50,9 +80,10 @@
         this.currentPage = data.current_page
         this.total_size = data.total_size
       }
-      PubSub_AreaUp.subscribe('Area_multipleSelection',(msg,multipleSelection)=>{
-        console.log(multipleSelection)
-        const AreaSaveSelection_com = multipleSelection
+      PubSub_AreaUp.subscribe('Area_multipleSelection',(msg,multipleSelections)=>{
+        // console.log("接收数据")
+        console.log(multipleSelections)
+        const AreaSaveSelection_com = multipleSelections
         if (AreaSaveSelection_com.length <= 0) {
           message.errorMessage('必须选中一条修改')
           return
@@ -61,7 +92,11 @@
           return
         }
         this.Area_up_Form=true
+        console.log(this.tableTitle)
         //数组转化对象
+        AreaSaveSelection_com.forEach(item =>{
+          //
+        })
       })
     },
     methods:{

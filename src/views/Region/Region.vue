@@ -104,7 +104,7 @@
         inputValue: '',//序号
         tableTitle: [],//表头信息
         tableData: [],//表信息
-        multipleSelection: [],
+        multipleSelections: [],
         currentPage: 1,//当前页
         total_size: 0,//总的页
         pageSize: 5,//显示最大的页
@@ -161,12 +161,15 @@
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
       handleSelectionChange (val) {
-        this.multipleSelection = val
-        console.log(this.multipleSelection)
+        this.multipleSelections = val
+        console.log("数据获取")
+        console.log(this.multipleSelections)
       },
       //点击修改按钮传递消息
       Shop_Up(){
-        PubSub_Area.publish('Area_multipleSelection', this.multipleSelection)
+        console.log("开始传递")
+        PubSub_Area.publish('Area_multipleSelection', this.multipleSelections)
+        console.log("完毕")
       },
       //tabale表头上下箭头 排序
       arraySpanMethod ({row, column, rowIndex, columnIndex}) {

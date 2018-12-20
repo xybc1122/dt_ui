@@ -64,7 +64,7 @@
           </el-table-column>
         </template>
       </el-table>
-      <el-button type="success" icon="el-icon-edit" size="mini">修改
+      <el-button type="success" icon="el-icon-edit" size="mini" @click="Shop_Up">修改
       </el-button>
       <el-button type="danger" icon="el-icon-delete" size="mini">
         删除
@@ -74,13 +74,15 @@
       </el-button>
     </div>
     <ShopAdd></ShopAdd>
+    <ShopUp></ShopUp>
   </div>
 </template>
 <script>
   import {repHead, repGetShopInfo} from '../../api'
   //店铺
   import ShopAdd from '../../components/ShopItem/ShopAdd'
-  import PubSub_ShopAdd from 'pubsub-js'
+  import ShopUp from '../../components/ShopItem/ShopUp'
+  import PubSub_Shop from 'pubsub-js'
 
   export default {
     data () {
@@ -89,7 +91,7 @@
         inputValue: '',//序号
         tableTitle: [],//表头信息
         tableData: [],//表信息
-        multipleSelection: [],
+        multipleSelectionUp: [],
         saveShopValue:true,
         role: {
           currentPage: 1,//当前页
@@ -99,7 +101,8 @@
       }
     },
     components:{
-      ShopAdd
+      ShopAdd,
+      ShopUp
     },
     async mounted () {
       //查询获得table表的 头信息
@@ -127,7 +130,7 @@
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
       handleSelectionChange (val) {
-        this.multipleSelection = val
+        this.multipleSelectionUp = val
       },
       //tabale表头上下箭头 排序
       arraySpanMethod ({row, column, rowIndex, columnIndex}) {
@@ -140,7 +143,10 @@
         }
       },
       Shop_Add(){
-        PubSub_ShopAdd.publish('saveShopValue', this.saveShopValue)
+        PubSub_Shop.publish('saveShopValue', this.saveShopValue)
+      },
+      Shop_Up(){
+        PubSub_Shop.publish('multipleSelectionUp', this.multipleSelectionUp)
       }
     }
   }

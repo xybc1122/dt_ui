@@ -60,7 +60,7 @@
           </el-table-column>
         </template>
       </el-table>
-      <el-button type="success" icon="el-icon-edit" size="mini" >修改
+      <el-button type="success" icon="el-icon-edit" size="mini" @click="CurrencyUp">修改
       </el-button>
       <el-button type="info" icon="el-icon-delete" size="mini">
         删除
@@ -69,24 +69,26 @@
         新增
       </el-button>
     </div>
-    <currency></currency>
+    <currencyAdd></currencyAdd>
+    <currencyUp></currencyUp>
   </div>
 </template>
 <script>
   import PubSubAdd from 'pubsub-js'
-  import currency from '../../components/CurrencyItem/CurrencyAdd'
+  import currencyAdd from '../../components/CurrencyItem/CurrencyAdd'
+  import currencyUp from '../../components/CurrencyItem/CurrencyUp'
   import {repHead, repGetCurrencyInfo} from '../../api'
   //店铺
 
   export default {
     data () {
       return {
-        saveCurrencyAdd:true,
+        saveCurrencyAdd:true,//显示
         msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
         tableTitle: [],//表头信息
         tableData: [],//表信息
-        multipleSelection: [],
+        multipleSelection_cur_Up: [],
         role: {
           currentPage: 1,//当前页
           total_size: 0,//总的页
@@ -110,11 +112,15 @@
       }
     },
     components:{
-      currency
+      currencyAdd,
+      currencyUp
     },
     methods: {
       CurrencyAdd(){
         PubSubAdd.publish('CurrencyAdd', this.saveCurrencyAdd)
+      },
+      CurrencyUp(){
+        PubSubAdd.publish('CurrencyUp', this.multipleSelection_cur_Up)
       },
       //分页
       handleSizeChange (val) {
@@ -126,7 +132,7 @@
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
       handleSelectionChange (val) {
-        this.multipleSelection = val
+        this.multipleSelection_cur_Up = val
       },
       //tabale表头上下箭头 排序
       arraySpanMethod ({row, column, rowIndex, columnIndex}) {

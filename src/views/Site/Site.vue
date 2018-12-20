@@ -75,7 +75,7 @@
           </el-table-column>
         </template>
       </el-table>
-      <el-button type="success" icon="el-icon-edit" size="mini">修改
+      <el-button type="success" icon="el-icon-edit" size="mini" @click="Site_Up">修改
       </el-button>
       <el-button type="info" icon="el-icon-delete" size="mini">
         删除
@@ -85,11 +85,13 @@
       </el-button>
     </div>
     <SiteAdd></SiteAdd>
+    <SiteUp></SiteUp>
   </div>
 </template>
 <script>
   import PubSub_Site from 'pubsub-js'
   import SiteAdd from '../../components/SiteItem/SiteAdd'
+  import SiteUp from '../../components/SiteItem/SiteUp'
   import {repHead, repGetSiteInfo} from '../../api'
   //店铺
 
@@ -101,7 +103,7 @@
         inputValue: '',//序号
         tableTitle: [],//表头信息
         tableData: [],//表信息
-        multipleSelection: [],
+        multipleSelection_shop_up: [],
         role: {
           currentPage: 1,//当前页
           total_size: 0,//总的页
@@ -126,7 +128,8 @@
       }
     },
     components:{
-      SiteAdd
+      SiteAdd,
+      SiteUp
     },
     methods: {
       //分页
@@ -139,7 +142,7 @@
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
       handleSelectionChange (val) {
-        this.multipleSelection = val
+        this.multipleSelection_shop_up = val
       },
       //tabale表头上下箭头 排序
       arraySpanMethod ({row, column, rowIndex, columnIndex}) {
@@ -152,8 +155,10 @@
         }
       },
       Site_Add(){
-        console.log(123)
         PubSub_Site.publish('SiteValue', this.saveSiteValue)
+      },
+      Site_Up(){
+        PubSub_Site.publish('Site_Up', this.multipleSelection_shop_up)
       }
     }
   }
