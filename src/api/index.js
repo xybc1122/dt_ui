@@ -119,3 +119,8 @@ export const repAddHeadMenu = ({mId, thIds}) => ajax(BASE_URL + '/hm/saveHeadMen
 //删除菜单关联表头字段
 export const repDelHeadMenu = ({mId, thIds}) => ajax(BASE_URL + '/hm/delTbHeadMenu', {mId, thIds}, 'POST')
 
+//通过uID sID seID 查询用户记录
+export const repGetUserUploadInfo = (sId, seId) => ajax(BASE_URL + '/upload/getInfo', {sId, seId})
+
+//通过id 删除用户记录信息
+export const repDelUploadInfo = (id) => ajax(BASE_URL + '/upload/delInfo', {id})
