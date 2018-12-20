@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div style="margin-left: 150px">
     <div style="margin-top: 20px;">
-      <el-radio-group v-model="radio" size="mini" @change="changeRadio">
+      <el-radio-group v-model="radioShop" size="mini" @change="changeRadio">
         <el-radio-button :label="sArr" v-for="(sArr,index) in shopArr" :key="index">{{sArr.shopName}}</el-radio-button>
       </el-radio-group>
     </div>
@@ -28,15 +28,17 @@
         :before-upload="beforeAvatarUpload"
         :data="uploadFrom"
         multiple
-        :limit="5"
+        :limit="20"
         :on-exceed="handleExceed"
         :file-list="fileList" v-if="isFileUp">
         <div class="el-upload__text">将{{shopName}}店铺---{{siteName}}站点---文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__tip" slot="tip">只能上传.csv/.xls/.xlsx格式文件/不能超过100MB</div>
       </el-upload>
       <div style="margin-top: 10px">
-        <div class="icons" v-for="(cc,index) in icon_list">
-          <span :class="cc.icon?'el-icon-circle-check' : 'el-icon-warning'"></span>
+        <div class="icons" v-for="(ic,index) in icon_list">
+          <span v-if="ic.isIcon" @click="download(ic)">
+             <i class="el-icon-caret-bottom"></i>
+          </span>
         </div>
       </div>
     </div>
@@ -48,14 +50,16 @@
   import message from '../../utils/Message'
   import {
     repGetShopInfo,
-    repGetShopIdSiteInfo
+    repGetShopIdSiteInfo,
+    repGetUserUploadInfo,
+    repDelUploadInfo
   } from '../../api'
 
   const BASE_URL = '/api'
   export default {
     data () {
       return {
-        id: '',
+        // id: '',//上传文件的ID
         icon_list: [],//上传成功后遍历
         uploadFrom: {
           sId: '',//店铺ID
@@ -63,14 +67,13 @@
         },
         shopName: '',//店铺名称
         siteName: '',//站点名称
-        isFileUp: false,
-        fileList: [],
-        url: BASE_URL + '/upload/file',
-        radio: '',
-        shopArr: [],
+        isFileUp: false, //点击站点 显示上传功能
+        fileList: [],//
+        url: BASE_URL + '/upload/file', //上传的 api  接口
+        radioShop: '',//店铺 model
+        shopArr: [], //店铺集合
         siteOptions: [],//站点信息
-        isNoSkuId: false,
-        fileName: ''
+        fileName: ''//文件名称
       }
     },
     async mounted () {
@@ -94,46 +97,78 @@
         this.isFileUp = false
       },
       //下拉时获取 通过value=siteId  查询对应的对象 获取 label
-      changeSelect (value) {
+      async changeSelect (value) {
+        this.fileList = []
+        this.icon_list = []
         let obj = {}
         obj = this.siteOptions.find((item) => {
           return item.siteId === value
         })
         this.siteName = obj.siteName
         this.isFileUp = true
+        const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId)
+        if (resultUploadInfo.code === 200) {
+          for (let i = 0; i < resultUploadInfo.data.length; i++) {
+            let uploadInfo = resultUploadInfo.data[i]
+            //2代表 有些sku没有的 可以重新下载
+            if (uploadInfo.status === 2) {
+              this.icon_list.push({'isIcon': true, 'id': uploadInfo.id, 'data': uploadInfo.name})
+              this.fileList.push(uploadInfo)
+            } else {
+              this.icon_list.push(false)
+              this.fileList.push(uploadInfo)
+            }
+          }
+        }
       },
       //文件上传时的钩子
       onProgressFile (event, file, fileList) {
         // console.log(file)
-        this.id = file.uid
+        // this.id = file.uid
       },
       //文件列表移除文件时的钩子
       handleRemove (file, fileList) {
-        console.log(file.uid)
-        for (let i = 0; i < this.icon_list.length; i++) {
-          if (this.icon_list[i].id === file.uid) {
-            this.icon_list.splice(i, 1)
-            break
-          }
-        }
+        console.log('handleRemove')
       },
       //点击文件的时候
       handlePreview (file) {
         console.log(file)
-        console.log('点击下载')
-
+        console.log('点击查看信息')
       },
       handleExceed (files, fileList) {
-        message.errorMessage(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+        message.errorMessage(`当前限制选择 20 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
       },
       //删除文件之前的钩子，参数为上传的文件和文件列表，若返回 false 或者返回 Promise 且被 reject，则停止上传。
       beforeRemove (file, fileList) {
-        return console.log(`确定移除 ${ file.name }？`)
+        const delFileInfo = message.messageBox(`确定移除 ${ file.name }？`)
+        delFileInfo.then(i => {
+          //点击确定
+          const resultDelInfo = repDelUploadInfo(file.id)
+          resultDelInfo.then(result => {
+            if (result.code === 200) {
+              for (let i = 0; i < this.icon_list.length; i++) {
+                let id = this.icon_list[i].id
+                if (id === file.id) {
+                  this.icon_list.splice(i, 1)
+                }
+              }
+              message.successMessage('删除成功~')
+            } else {
+              message.errorMessage('删除失败~')
+            }
+          })
+        }).catch(() => {
+          //点击取消
+        })
+        return delFileInfo
       },
-
+      //点击下载
+      download (file) {
+        console.log(file)
+      },
       //上传校验
       beforeAvatarUpload (file) {
-        let fileName = []
+        let fileNames = []
         let index = file.name.lastIndexOf('.')
         let fileShopNameDt = file.name.indexOf('电兔')
         //宏名
@@ -150,10 +185,10 @@
           message.errorMessage('不是诚夕的文件/请注意操作~')
           return false
         }
-        fileName = file.name.substring(index + 1)
-        const csv = fileName === 'csv'
-        const xls = fileName === 'xls'
-        const xlsx = fileName === 'xlsx'
+        fileNames = file.name.substring(index + 1)
+        const csv = fileNames === 'csv'
+        const xls = fileNames === 'xls'
+        const xlsx = fileNames === 'xlsx'
 
         if (csv || xls || xlsx) {
 
@@ -166,24 +201,15 @@
           message.errorMessage('文件不能超过100MB')
           return false
         }
-        return confirm('确定要上传吗？')
-
+        return message.messageBox('确认上传吗~')
       },
       //上传成功
       uploadSuccess (success) {
-        console.log(success)
-        // if (this.icon_list.length < 5) {
-        //   this.icon_list.push({icon: success.data, id: this.id})
-        // }
+
         if (success.code === -1) {
           message.errorMessage('上传成功~' + success.msg)
-          this.icon_list.push({icon: false, id: this.id})
         } else {
           message.successMessage(success.msg)
-          this.icon_list.push({icon: true, id: this.id})
-        }
-        if (success.data) {
-          this.isNoSkuId = true
         }
       },
       //删除重复
