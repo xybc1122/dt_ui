@@ -36,7 +36,7 @@
       </el-upload>
       <div style="margin-top: 10px">
         <div class="icons" v-for="(ic,index) in icon_list" :key="ic.id">
-          <span v-if="ic.isIcon" @click="download(ic)" >
+          <span v-if="ic.isIcon" @click="download(ic)">
              <i class="el-icon-caret-bottom"></i>
           </span>
         </div>
