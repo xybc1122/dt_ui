@@ -72,6 +72,17 @@
       <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="Shop_Add">
         新增
       </el-button>
+      <div class="block" style="display: inline-block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="role.currentPage"
+          :page-sizes="role.page_size"
+          :page-size="role.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="role.total_size">
+        </el-pagination>
+      </div>
     </div>
     <ShopAdd></ShopAdd>
     <ShopUp></ShopUp>
@@ -83,6 +94,7 @@
   import ShopAdd from '../../components/ShopItem/ShopAdd'
   import ShopUp from '../../components/ShopItem/ShopUp'
   import PubSub_Shop from 'pubsub-js'
+  import utils from '../../utils/PageUtils'
 
   export default {
     data () {
@@ -92,11 +104,13 @@
         tableTitle: [],//表头信息
         tableData: [],//表信息
         multipleSelectionUp: [],
-        saveShopValue:true,
+        shopPage:'',//当前页
+        saveShopValue:true,//新增显示
         role: {
           currentPage: 1,//当前页
-          total_size: 0,//总的页
-          pageSize: 10//显示最大的页
+          total_size: 10,//总数
+          pageSize: 5,//显示最大的页
+          page_size:[5,10,15,20,25],//显示页数
         }
       }
     },
@@ -113,20 +127,41 @@
         this.tableTitle = resultHead.data
       }
       //获得店铺信息
+      // var regionPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
       const resultGetShop = await repGetShopInfo()
       console.log(resultGetShop)
       if (resultGetShop.code === 200) {
         this.tableData = resultGetShop.data
+        // const data = resultGetShop.data
+        //
+        // this.role.currentPage = data.current_page
+        // this.role.total_size = data.total_size
       }
     },
     methods: {
-      //分页
-      handleSizeChange (val) {
-        console.log(`每页 ${val} 条`)
+      //条目数变化
+      async handleSizeChange(val){
+        // console.log("条目数发生变化")
+        // this.role.pageSize = val
+        // var userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
+        // const resultUsers = await repGetShopInfo(userPage)
+        //
+        // if (resultUsers.code === 200) {
+        //   //赋值 然后显示
+        //   this.pageUser(resultUsers)
+        // }
       },
-      //val=当前页 分页
-       handleCurrentChange (val) {
-        console.log(`当前页 ${val} 条`)
+      //页数发生变化
+      async handleCurrentChange(val){
+        // console.log("页数发生变化")
+        // var userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
+        // const resultUsers = await repGetShopInfo(userPage)
+        //
+        // if (resultUsers.code === 200) {
+        //   //赋值 然后显示
+        //   this.pageUser(resultUsers)
+        // }
+
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
       handleSelectionChange (val) {
@@ -147,6 +182,12 @@
       },
       Shop_Up(){
         PubSub_Shop.publish('multipleSelectionUp', this.multipleSelectionUp)
+      },
+      pageUser (resultUsers) {
+        const dataUser = resultUsers.data
+        this.tableData = dataUser.dataLists
+        this.role.currentPage = dataUser.current_page
+        this.role.total_size = dataUser.total_size
       }
     }
   }
