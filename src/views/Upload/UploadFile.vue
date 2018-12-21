@@ -1,19 +1,31 @@
 <template>
   <div style="margin-left: 150px">
-    <div style="margin-top: 20px;">
+    <div>
+      <el-select style="width: 120px" v-model="pay.id" placeholder="付款类型" @change="changeShow" value="">
+        <el-option
+          v-for="item in payOptions"
+          :key="item.Id"
+          :label="item.name"
+          :value="item.value">
+        </el-option>
+      </el-select>
+    </div>
+    <div style="margin-top: 20px;" v-if="mShow">
       <el-radio-group v-model="radioShop" size="mini" @change="changeRadio">
         <el-radio-button :label="sArr" v-for="(sArr,index) in shopArr" :key="index">{{sArr.shopName}}</el-radio-button>
       </el-radio-group>
     </div>
-    <el-select v-model="uploadFrom.seId" placeholder="请选择" @change="changeSelect" value="">
-      <el-option
-        v-for="item in siteOptions"
-        :key="item.siteId"
-        :label="item.siteName"
-        :value="item.siteId">
-      </el-option>
-    </el-select>
 
+    <div v-if="mShow" >
+      <el-select v-model="uploadFrom.seId" placeholder="请选择" @change="changeSelect" value="">
+        <el-option
+          v-for="item in siteOptions"
+          :key="item.siteId"
+          :label="item.siteName"
+          :value="item.siteId">
+        </el-option>
+      </el-select>
+    </div>
     <div style="width: 400px">
       <el-upload
         class="upload-demo"
@@ -32,11 +44,11 @@
         :on-exceed="handleExceed"
         :file-list="fileList" v-if="isFileUp">
         <div class="el-upload__text">将{{shopName}}店铺---{{siteName}}站点---文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">只能上传.csv/.xls/.xlsx格式文件/不能超过100MB</div>
+        <div class="el-upload__tip" slot="tip">只能上传.csv格式文件/不能超过100MB</div>
       </el-upload>
       <div style="margin-top: 10px">
-        <div class="icons" v-for="(ic,index) in icon_list" :key="ic.id">
-          <span v-if="ic.isIcon" @click="download(ic)" >
+        <div class="icons" v-for="(ic,index) in icon_list">
+          <span v-if="ic.isIcon" @click="download(ic)">
              <i class="el-icon-caret-bottom"></i>
           </span>
         </div>
@@ -59,7 +71,13 @@
   export default {
     data () {
       return {
-        // id: '',//上传文件的ID
+        mShow:false,//付款方式
+        payOptions:[{name:'付款一',value:'选项一'},{name:'付款二',value:'选项二'}],//付款类型
+        pay:{
+          payId:'',//
+          payValue:'',//
+        },
+        id: '',//上传文件的ID
         icon_list: [],//上传成功后遍历
         uploadFrom: {
           sId: '',//店铺ID
@@ -112,21 +130,20 @@
             let uploadInfo = resultUploadInfo.data[i]
             //2代表 有些sku没有的 可以重新下载
             if (uploadInfo.status === 2) {
-              //this.icon_list.push({'isIcon': true, 'id': uploadInfo.id, 'data': uploadInfo.name})
               this.$set(this.icon_list,this.icon_list.length,{'isIcon': true, 'id': uploadInfo.id, 'data': uploadInfo.name})
               this.fileList.push(uploadInfo)
             } else {
-              this.icon_list.push(false)
+              this.$set(this.icon_list,this.icon_list.length,{'isIcon': false, 'id': uploadInfo.id})
               this.fileList.push(uploadInfo)
             }
           }
-
         }
       },
+
       //文件上传时的钩子
       onProgressFile (event, file, fileList) {
-        // console.log(file)
-        // this.id = file.uid
+       // console.log(file)
+        this.id = file.uid
       },
       //文件列表移除文件时的钩子
       handleRemove (file, fileList) {
@@ -153,7 +170,6 @@
                 let id = this.icon_list[i].id
                 if (id === file.id) {
                   this.icon_list.splice(i, 1)
-
                   console.log(this.icon_list)
                 }
               }
@@ -192,13 +208,11 @@
         }
         fileNames = file.name.substring(index + 1)
         const csv = fileNames === 'csv'
-        const xls = fileNames === 'xls'
-        const xlsx = fileNames === 'xlsx'
 
-        if (csv || xls || xlsx) {
+        if (csv) {
 
         } else {
-          message.errorMessage('只能上传.csv/.xls/.xlsx格式文件')
+          message.errorMessage('只能上传.csv格式文件')
           return false
         }
         const fileSize = file.size / 1024 / 1024 < 100
@@ -208,14 +222,22 @@
         }
         return message.messageBox('确认上传吗~')
       },
-      //上传成功
       uploadSuccess (success) {
-
         if (success.code === -1) {
           message.errorMessage('上传成功~' + success.msg)
+          this.$set(this.icon_list,this.icon_list.length,{'isIcon': true, 'id': this.id,})
         } else {
           message.successMessage(success.msg)
+          this.$set(this.icon_list,this.icon_list.length,{'isIcon': false, 'id': this.id,})
         }
+      },
+      //付款类型
+      async changeShow(value){
+        //const resultSite = await repGetShopIdSiteInfo(this.uploadFrom.sId) 获取付款信息
+        // if (resultSite.code === 200) {
+        //   this.payOptions = resultSite.data 付款类型
+        // }
+        this.mShow=true
       },
       //删除重复
       // checkSelArr(selected){

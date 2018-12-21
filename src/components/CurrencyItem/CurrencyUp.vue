@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="用户信息修改" :visible.sync="currencyUp_Form" width="800px">
+  <el-dialog title="币别信息修改" :visible.sync="currencyUp_Form" width="800px">
     <el-form :model="currency_upForm" ref="currency_upForm" :rules="rules" label-width="92px">
 
     </el-form>
@@ -13,6 +13,7 @@
 
 <script>
   import PubSubcurr_Up from 'pubsub-js'
+  import message from '../../utils/Message'
   import {repHead, repGetCurrencyInfo} from '../../api'
   export default {
     data(){
@@ -28,6 +29,14 @@
     },
     async mounted(){
       PubSubcurr_Up.subscribe('CurrencyUp',(msg,multipleSelection_cur_Up)=>{
+        const multipleSelection_Up = multipleSelection_cur_Up
+        if (multipleSelection_Up.length <= 0) {
+          message.errorMessage('必须选中一条修改')
+          return
+        } else if (multipleSelection_Up.length >= 2) {
+          message.errorMessage('修改只能选中一条')
+          return
+        }
         this.currencyUp_Form=true
       })
     },
