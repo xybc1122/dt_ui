@@ -120,7 +120,7 @@ export const repAddHeadMenu = ({mId, thIds}) => ajax(BASE_URL + '/hm/saveHeadMen
 export const repDelHeadMenu = ({mId, thIds}) => ajax(BASE_URL + '/hm/delTbHeadMenu', {mId, thIds}, 'POST')
 
 //通过uID sID seID 查询用户记录
-export const repGetUserUploadInfo = (sId, seId) => ajax(BASE_URL + '/upload/getInfo', {sId, seId})
+export const repGetUserUploadInfo = (sId, seId,payId) => ajax(BASE_URL + '/upload/getInfo', {sId, seId,payId})
 
 //通过id 删除用户记录信息
 export const repDelUploadInfo = (id) => ajax(BASE_URL + '/upload/delInfo', {id})

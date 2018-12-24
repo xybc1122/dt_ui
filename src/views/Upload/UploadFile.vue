@@ -1,10 +1,10 @@
 <template>
   <div style="margin-left: 150px">
     <div>
-      <el-select style="width: 120px" v-model="pay.id" placeholder="付款类型" @change="changeShow" value="">
+      <el-select style="width: 120px" v-model="uploadFrom.payId" placeholder="付款类型" @change="changeShow" value="">
         <el-option
           v-for="item in payOptions"
-          :key="item.Id"
+          :key="item.value"
           :label="item.name"
           :value="item.value">
         </el-option>
@@ -16,7 +16,7 @@
       </el-radio-group>
     </div>
 
-    <div v-if="mShow" >
+    <div v-if="mShow">
       <el-select v-model="uploadFrom.seId" placeholder="请选择" @change="changeSelect" value="">
         <el-option
           v-for="item in siteOptions"
@@ -71,17 +71,14 @@
   export default {
     data () {
       return {
-        mShow:false,//付款方式
-        payOptions:[{name:'付款一',value:'选项一'},{name:'付款二',value:'选项二'}],//付款类型
-        pay:{
-          payId:'',//
-          payValue:'',//
-        },
+        mShow: false,//付款方式
+        payOptions: [{name: '标准订单', value: '1'}, {name: '发票支付', value: '2'}],//付款类型
         id: '',//上传文件的ID
         icon_list: [],//上传成功后遍历
         uploadFrom: {
           sId: '',//店铺ID
-          seId: ''//站点 ID
+          seId: '',//站点 ID
+          payId: '' //付款类型ID
         },
         shopName: '',//店铺名称
         siteName: '',//站点名称
@@ -124,16 +121,20 @@
         })
         this.siteName = obj.siteName
         this.isFileUp = true
-        const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId)
+        const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
         if (resultUploadInfo.code === 200) {
           for (let i = 0; i < resultUploadInfo.data.length; i++) {
             let uploadInfo = resultUploadInfo.data[i]
             //2代表 有些sku没有的 可以重新下载
             if (uploadInfo.status === 2) {
-              this.$set(this.icon_list,this.icon_list.length,{'isIcon': true, 'id': uploadInfo.id, 'data': uploadInfo.name})
+              this.$set(this.icon_list, this.icon_list.length, {
+                'isIcon': true,
+                'id': uploadInfo.id,
+                'data': uploadInfo.name
+              })
               this.fileList.push(uploadInfo)
             } else {
-              this.$set(this.icon_list,this.icon_list.length,{'isIcon': false, 'id': uploadInfo.id})
+              this.$set(this.icon_list, this.icon_list.length, {'isIcon': false, 'id': uploadInfo.id})
               this.fileList.push(uploadInfo)
             }
           }
@@ -142,7 +143,7 @@
 
       //文件上传时的钩子
       onProgressFile (event, file, fileList) {
-       // console.log(file)
+        // console.log(file)
         this.id = file.uid
       },
       //文件列表移除文件时的钩子
@@ -159,29 +160,29 @@
       },
       //删除文件之前的钩子，参数为上传的文件和文件列表，若返回 false 或者返回 Promise 且被 reject，则停止上传。
       beforeRemove (file, fileList) {
-        console.log(fileList)
-        const delFileInfo = message.messageBox(`确定移除 ${ file.name }？`)
-        delFileInfo.then(i => {
-          //点击确定
-          const resultDelInfo = repDelUploadInfo(file.id)
-          resultDelInfo.then(result => {
-            if (result.code === 200) {
-              for (let i = 0; i < this.icon_list.length; i++) {
-                let id = this.icon_list[i].id
-                if (id === file.id) {
-                  this.icon_list.splice(i, 1)
-                  console.log(this.icon_list)
+        if (file.status !== 'ready') {
+          const delFileInfo = message.messageBox(`确定移除 ${ file.name }？`)
+          delFileInfo.then(i => {
+            //点击确定
+            const resultDelInfo = repDelUploadInfo(file.id)
+            resultDelInfo.then(result => {
+              if (result.code === 200) {
+                for (let i = 0; i < this.icon_list.length; i++) {
+                  let id = this.icon_list[i].id
+                  if (id === file.id) {
+                    this.icon_list.splice(i, 1)
+                    console.log(this.icon_list)
+                  }
                 }
+                message.successMessage('删除成功~')
+              } else {
+                message.errorMessage('删除失败~')
               }
-              message.successMessage('删除成功~')
-            } else {
-              message.errorMessage('删除失败~')
-            }
+            })
+          }).catch(() => {
+            //点击取消
           })
-        }).catch(() => {
-          //点击取消
-        })
-        return delFileInfo
+        }
       },
       //点击下载
       download (file) {
@@ -196,6 +197,7 @@
         let fileShopNameHm = file.name.indexOf('宏名')
         //诚夕
         let fileShopNameCx = file.name.indexOf('诚夕')
+        //店铺文件判断
         if (fileShopNameDt === -1 && this.uploadFrom.sId === 1) {
           message.errorMessage('不是电兔的文件/请注意操作~')
           return false
@@ -206,9 +208,44 @@
           message.errorMessage('不是诚夕的文件/请注意操作~')
           return false
         }
+        //站点文件判断
+        if (file.name.indexOf('美国') === -1 && this.uploadFrom.seId === 1) {
+          message.errorMessage('不是美国站的文件~')
+          return false
+        } else if (file.name.indexOf('加拿大') === -1 && this.uploadFrom.seId === 2) {
+          message.errorMessage('不是加拿大站的文件~')
+          return false
+        } else if (file.name.indexOf('澳大利亚') === -1 && this.uploadFrom.seId === 3) {
+          message.errorMessage('不是澳大利亚站的文件~')
+          return false
+        }
+        else if (file.name.indexOf('英国') === -1 && this.uploadFrom.seId === 4) {
+          message.errorMessage('不是英国站的文件~')
+          return false
+        }
+        else if (file.name.indexOf('德国') === -1 && this.uploadFrom.seId === 5) {
+          message.errorMessage('不是德国站的文件~')
+          return false
+        }
+        else if (file.name.indexOf('法国') === -1 && this.uploadFrom.seId === 6) {
+          message.errorMessage('不是法国站的文件~')
+          return false
+        } else if (file.name.indexOf('意大利') === -1 && this.uploadFrom.seId === 7) {
+          message.errorMessage('不是意大利站的文件~')
+          return false
+        } else if (file.name.indexOf('西班牙') === -1 && this.uploadFrom.seId === 8) {
+          message.errorMessage('不是西班牙站的文件~')
+          return false
+        } else if (file.name.indexOf('日本') === -1 && this.uploadFrom.seId === 9) {
+          message.errorMessage('不是日本站的文件~')
+          return false
+        } else if (file.name.indexOf('墨西哥') === -1 && this.uploadFrom.seId === 10) {
+          message.errorMessage('不是墨西哥站的文件~')
+          return false
+        }
+
         fileNames = file.name.substring(index + 1)
         const csv = fileNames === 'csv'
-
         if (csv) {
 
         } else {
@@ -225,19 +262,19 @@
       uploadSuccess (success) {
         if (success.code === -1) {
           message.errorMessage('上传成功~' + success.msg)
-          this.$set(this.icon_list,this.icon_list.length,{'isIcon': true, 'id': this.id,})
+          this.$set(this.icon_list, this.icon_list.length, {'isIcon': true, 'id': this.id,})
         } else {
           message.successMessage(success.msg)
-          this.$set(this.icon_list,this.icon_list.length,{'isIcon': false, 'id': this.id,})
+          this.$set(this.icon_list, this.icon_list.length, {'isIcon': false, 'id': this.id,})
         }
       },
       //付款类型
-      async changeShow(value){
+      async changeShow (value) {
         //const resultSite = await repGetShopIdSiteInfo(this.uploadFrom.sId) 获取付款信息
         // if (resultSite.code === 200) {
         //   this.payOptions = resultSite.data 付款类型
         // }
-        this.mShow=true
+        this.mShow = true
       },
       // 上传错误
       uploadError (response, file, fileList) {
