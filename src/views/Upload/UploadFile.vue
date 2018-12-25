@@ -74,7 +74,7 @@
       return {
         mShow: false,//付款方式
         payOptions: [{name: '标准订单', value: '1'}, {name: '发票支付', value: '2'}],//付款类型
-        id: '',//上传文件的ID
+        //id: '',//上传文件的ID
         icon_list: [],//上传成功后遍历
         uploadFrom: {
           sId: '',//店铺ID
@@ -123,6 +123,7 @@
         this.siteName = obj.siteName
         this.isFileUp = true
         const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
+        console.log(resultUploadInfo)
         if (resultUploadInfo.code === 200) {
           for (let i = 0; i < resultUploadInfo.data.length; i++) {
             let uploadInfo = resultUploadInfo.data[i]
@@ -145,7 +146,7 @@
       //文件上传时的钩子
       onProgressFile (event, file, fileList) {
         // console.log(file)
-        this.id = file.uid
+
       },
       //文件列表移除文件时的钩子
       handleRemove (file, fileList) {
@@ -263,13 +264,18 @@
       //上传成功~ 后  后台请求数据
       async uploadSuccess (success) {
         console.log(success)
-        if (success.code === 200) {
-          message.successMessage(success.msg)
-          const result =await repAddUploadInfoMysql(success.data)
-          this.$set(this.icon_list, this.icon_list.length, {'isIcon': false, 'id': this.id,})
-        } else {
+        const result =await repAddUploadInfoMysql(success.data)
+        console.log(result)
+        if (result.code === 200 && result.data === false) {
           message.errorMessage(success.msg)
-          this.$set(this.icon_list, this.icon_list.length, {'isIcon': true, 'id': this.id,})
+          this.$set(this.icon_list, this.icon_list.length, {'isIcon': true, 'id': success.data.id,})
+          //获取后台文件id，并赋值给fileList指定下标的文件
+          // const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
+          // this.$set(this.fileList, this.fileList.length-1, {'id': resultUploadInfo[resultUploadInfo.data.length-1].data.id,})
+        } else {
+          message.successMessage(success.msg)
+          this.$set(this.icon_list, this.icon_list.length, {'isIcon': false, 'id': success.data.id,})
+          console.log(this.fileList)
         }
       },
       //付款类型
