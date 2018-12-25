@@ -126,4 +126,8 @@ export const repGetUserUploadInfo = (sId, seId, payId) => ajax(BASE_URL + '/uplo
 export const repDelUploadInfo = (id) => ajax(BASE_URL + '/upload/delInfo', {id})
 
 //上传成功后 发送数据给后台读数据
-export const repAddUploadInfoMysql = ({filePath,name,shopId,siteId,pId}) => ajax(BASE_URL + `/upload/addInfo`, {filePath,name,shopId,siteId,pId},'POST')
+export const repAddUploadInfoMysql = ({filePath,name,shopId,siteId,pId,id}) => ajax(BASE_URL + `/upload/addInfo`, {filePath,name,shopId,siteId,pId,id},'POST')
+
+
+//上传成功后 发送数据给后台读数据
+export const up = ({filePath,name,shopId,siteId,pId,id}) => ajax(BASE_URL + `/upload/addInfo`, {filePath,name,shopId,siteId,pId,id},'POST')
