@@ -64,7 +64,8 @@
     repGetShopInfo,
     repGetShopIdSiteInfo,
     repGetUserUploadInfo,
-    repDelUploadInfo
+    repDelUploadInfo,
+    repAddUploadInfoMysql
   } from '../../api'
 
   const BASE_URL = '/api'
@@ -259,13 +260,16 @@
         }
         return message.messageBox('确认上传吗~')
       },
-      uploadSuccess (success) {
-        if (success.code === -1) {
-          message.errorMessage('上传成功~' + success.msg)
-          this.$set(this.icon_list, this.icon_list.length, {'isIcon': true, 'id': this.id,})
-        } else {
+      //上传成功~ 后  后台请求数据
+      async uploadSuccess (success) {
+        console.log(success)
+        if (success.code === 200) {
           message.successMessage(success.msg)
+          const result =await repAddUploadInfoMysql(success.data)
           this.$set(this.icon_list, this.icon_list.length, {'isIcon': false, 'id': this.id,})
+        } else {
+          message.errorMessage(success.msg)
+          this.$set(this.icon_list, this.icon_list.length, {'isIcon': true, 'id': this.id,})
         }
       },
       //付款类型
