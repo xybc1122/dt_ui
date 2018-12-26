@@ -1,71 +1,80 @@
 <template>
-  <div style="margin-left: 150px">
-    <div>
-      <el-select style="width: 120px" v-model="uploadFrom.payId" placeholder="付款类型" @change="changeShow" value="">
-        <el-option
-          v-for="item in payOptions"
-          :key="item.value"
-          :label="item.name"
-          :value="item.value">
-        </el-option>
-      </el-select>
-    </div>
-    <div style="margin-top: 20px;" v-if="mShow">
-      <el-radio-group v-model="radioShop" size="mini" @change="changeRadio">
-        <el-radio-button :label="sArr" v-for="(sArr,index) in shopArr" :key="index">{{sArr.shopName}}</el-radio-button>
-      </el-radio-group>
-    </div>
+  <el-form ref="uploadFrom" :model="uploadFrom" label-width="80px">
+    <div style="margin-left: 150px">
+      <div>
+        <el-select style="width: 120px" v-model="uploadFrom.payId" placeholder="付款类型" @change="changeShow" value="">
+          <el-option
+            v-for="item in payOptions"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </div>
+      <div style="margin-top: 20px;" v-if="mShow">
+        <el-radio-group v-model="radioShop" size="mini" @change="changeRadio">
+          <el-radio-button :label="sArr" v-for="(sArr,index) in shopArr" :key="index">{{sArr.shopName}}
+          </el-radio-button>
+        </el-radio-group>
+      </div>
+      <div v-for="(i,index) in listFile" :key="index">
+        {{i.name}}
+      </div>
+      <div>
+        <el-button @click="uploadFiles">确认上传</el-button>
+      </div>
 
-    <div v-if="mShow">
-      <el-select v-model="uploadFrom.seId" placeholder="请选择" @change="changeSelect" value="">
-        <el-option
-          v-for="item in siteOptions"
-          :key="item.siteId"
-          :label="item.siteName"
-          :value="item.siteId">
-        </el-option>
-      </el-select>
-    </div>
-    <div style="width: 400px">
-      <el-upload
-        class="upload-demo"
-        :action="url"
-        drag
-        :on-progress="onProgressFile"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :on-success="uploadSuccess"
-        :onError="uploadError"
-        :before-remove="beforeRemove"
-        :before-upload="beforeAvatarUpload"
-        :data="uploadFrom"
-        multiple
-        :limit="20"
-        :on-exceed="handleExceed"
-        :file-list="fileList" v-if="isFileUp">
-        <div class="el-upload__text">将{{shopName}}店铺---{{siteName}}站点---文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">只能上传.csv格式文件/不能超过100MB</div>
-      </el-upload>
-      <div style="margin-top: 10px">
-        <div class="icons" v-for="(ic,index) in icon_list" :key="ic.id">
+      <div v-if="mShow">
+        <el-select v-model="uploadFrom.seId" placeholder="请选择" @change="changeSelect" value="">
+          <el-option
+            v-for="item in siteOptions"
+            :key="item.siteId"
+            :label="item.siteName"
+            :value="item.siteId">
+          </el-option>
+        </el-select>
+      </div>
+      <div style="width: 400px">
+        <el-upload
+          class="upload-demo"
+          action="xx"
+          drag
+          :on-progress="onProgressFile"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :onError="uploadError"
+          :before-remove="beforeRemove"
+          :before-upload="beforeAvatarUpload"
+          multiple
+          :limit="20"
+          :on-exceed="handleExceed"
+          :file-list="fileListInfo" v-if="isFileUp">
+          <div class="el-upload__text">将{{shopName}}店铺---{{siteName}}站点---文件拖到此处，或<em>点击上传</em></div>
+          <div class="el-upload__tip" slot="tip">只能上传.csv格式文件/不能超过100MB</div>
+        </el-upload>
+        <div style="margin-top: 10px">
+          <div class="icons" v-for="(ic,index) in icon_list" :key="ic.id">
           <span v-if="ic.isIcon" @click="download(ic)">
              <i class="el-icon-caret-bottom"></i>
           </span>
+          </div>
         </div>
       </div>
-    </div>
 
-  </div>
+    </div>
+  </el-form>
 </template>
 
 <script>
   import message from '../../utils/Message'
+  import axios from 'axios'
   import {
     repGetShopInfo,
     repGetShopIdSiteInfo,
     repGetUserUploadInfo,
     repDelUploadInfo,
-    repAddUploadInfoMysql
+    repAddUploadInfoMysql,
+    bulkUpload
   } from '../../api'
 
   const BASE_URL = '/api'
@@ -84,7 +93,9 @@
         shopName: '',//店铺名称
         siteName: '',//站点名称
         isFileUp: false, //点击站点 显示上传功能
-        fileList: [],//
+        fileListInfo: [],//
+        listFile: [],
+        param: new FormData(),//fromData
         url: BASE_URL + '/upload/file', //上传的 api  接口
         radioShop: '',//店铺 model
         shopArr: [], //店铺集合
@@ -114,7 +125,7 @@
       },
       //下拉时获取 通过value=siteId  查询对应的对象 获取 label
       async changeSelect (value) {
-        this.fileList = []
+        this.fileListInfo = []
         this.icon_list = []
         let obj = {}
         obj = this.siteOptions.find((item) => {
@@ -134,19 +145,17 @@
                 'id': uploadInfo.id,
                 'data': uploadInfo.name
               })
-              this.fileList.push(uploadInfo)
+              this.fileListInfo.push(uploadInfo)
             } else {
               this.$set(this.icon_list, this.icon_list.length, {'isIcon': false, 'id': uploadInfo.id})
-              this.fileList.push(uploadInfo)
+              this.fileListInfo.push(uploadInfo)
             }
           }
         }
       },
-
       //文件上传时的钩子
       onProgressFile (event, file, fileList) {
         // console.log(file)
-
       },
       //文件列表移除文件时的钩子
       handleRemove (file, fileList) {
@@ -192,6 +201,7 @@
       },
       //上传校验
       beforeAvatarUpload (file) {
+        console.log(file)
         let fileNames = []
         let index = file.name.lastIndexOf('.')
         let fileShopNameDt = file.name.indexOf('电兔')
@@ -259,27 +269,52 @@
           message.errorMessage('文件不能超过100MB')
           return false
         }
-        return message.messageBox('确认上传吗~')
+        this.param.append('files', file, file.name)
+        this.listFile.push(file)
+        return false
       },
-      //上传成功~ 后  后台请求数据
-      async uploadSuccess (success) {
-        console.log(success)
-        const result =await repAddUploadInfoMysql(success.data)
-        console.log(result)
-        if (result.code === 200 && result.data === false) {
-          message.errorMessage(success.msg)
-          this.$set(this.icon_list, this.icon_list.length, {'isIcon': true, 'id': success.data.id,})
-          console.log(this.fileList)
-          //获取后台文件id，并赋值渲染给fileList指定下标的文件
-          // const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
-          // this.$set(this.fileList, this.fileList.length-1, {'id': resultUploadInfo[resultUploadInfo.data.length-1].data.id,})
-        } else {
-          message.successMessage(success.msg)
 
-          this.$set(this.icon_list, this.icon_list.length, {'isIcon': false, 'id': success.data.id,})
-          console.log(this.fileList)
+      //批量上传
+      async uploadFiles () {
+        this.param.append('sId', this.uploadFrom.sId)
+        this.param.append('seId', this.uploadFrom.seId)
+        this.param.append('payId', this.uploadFrom.payId)
+        let config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          contentType: false,
+          processData: false
         }
+        axios.post(this.url, this.param, config).then((result) => {
+          //上传成功~
+          console.log(result)
+          let uploadSuccessList = result.data.data
+          if (uploadSuccessList.length > 0) {
+            const uploadList = {uploadSuccessList}
+            const resultAdd = repAddUploadInfoMysql(uploadList)
+            resultAdd.then((result) => {
+              console.log(result)
+            })
+          }
+        })
       },
+      // //上传成功~ 后  后台请求数据
+      // async uploadSuccess (success) {
+      //   console.log(success)
+      //   const result = await repAddUploadInfoMysql(success.data)
+      //   console.log(result)
+      //   if (result.code === 200 && result.data === false) {
+      //     message.errorMessage(success.msg)
+      //     this.$set(this.icon_list, this.icon_list.length, {'isIcon': true, 'id': success.data.id,})
+      //     //获取后台文件id，并赋值给fileList指定下标的文件
+      //     // const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
+      //     // this.$set(this.fileList, this.fileList.length-1, {'id': resultUploadInfo[resultUploadInfo.data.length-1].data.id,})
+      //   } else {
+      //     message.successMessage(success.msg)
+      //     this.$set(this.icon_list, this.icon_list.length, {'isIcon': false, 'id': success.data.id,})
+      //   }
+      // },
       //付款类型
       async changeShow (value) {
         //const resultSite = await repGetShopIdSiteInfo(this.uploadFrom.sId) 获取付款信息
