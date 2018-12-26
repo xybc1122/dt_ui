@@ -36,7 +36,7 @@
                 <span><i :class="sMenu.icon ? sMenu.icon : 'el-icon-loading'"></i>
                 </span> {{sMenu.name}}
               </template>
-              <el-menu-item :index="ssMenu.url+'//'+ssMenu.menuId"
+              <el-menu-item :index="ssMenu.url+'/'+ssMenu.menuId"
                             v-for="(ssMenu,indexSuns) in sMenu.childMenus" :key="indexSuns" style="background-color: #FDFDFD">
                 <span><i :class="ssMenu.icon"></i></span>
                 {{ssMenu.name}}
@@ -52,7 +52,7 @@
           <span>{{menu.name}}</span>
         </el-menu-item>
       </el-menu>
-      <el-button v-bind:icon="aa" @click="bt"  class=" none bt"></el-button>
+      <el-button :icon="aa" @click="bt"  class=" none bt"></el-button>
     </el-aside>
     <div class="none">
 

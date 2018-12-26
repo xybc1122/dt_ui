@@ -11,7 +11,7 @@ import Region from '../views/Region/Region'
 import Site from '../views/Site/Site'
 import Currency from '../views/Currency/Currency'
 import Upload from '../views/Upload/UploadFile'
-import Customs from '../views/Customs/Customs'
+import Customs from '../views/Customs-clearance/Customs-clearance'
 Vue.use(Router)
 
 
@@ -61,7 +61,7 @@ export default new Router({
           component: Upload
         },
         {
-          path: '/index/Customs/:id',
+          path: '/index/Customs-clearance/:id',
           component: Customs
         },
       ]
