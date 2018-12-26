@@ -17,12 +17,16 @@
           </el-radio-button>
         </el-radio-group>
       </div>
-      <div v-for="(i,index) in listFile" :key="index">
-        {{i.name}}
+      <div class="ces" style="float: right;" >
+        <div v-for="(i,index) in listFile" :key="index">
+
+          {{i.name}}<el-button icon="el-icon-close" style="margin-left: 10px" type="info" size="mini" circle @click="del(index)"></el-button>
+        </div>
+        <el-button v-if="listFile.length!==0" @click="uploadFiles"style="margin-right: 544px">确认上传</el-button>
+
       </div>
-      <div>
-        <el-button @click="uploadFiles">确认上传</el-button>
-      </div>
+
+
 
       <div v-if="mShow">
         <el-select v-model="uploadFrom.seId" placeholder="请选择" @change="changeSelect" value="">
@@ -152,6 +156,11 @@
             }
           }
         }
+      },
+      //删除
+      del(index){
+
+        this.listFile.splice(index,1)
       },
       //文件上传时的钩子
       onProgressFile (event, file, fileList) {
@@ -331,6 +340,7 @@
   }
 </script>
 <style lang="scss">
+
   .icons {
     margin-top: 5px;
     height: 26px;
@@ -351,6 +361,9 @@
 
   .el-icon-circle-check {
     color: #67C23A;
+  }
+  .el-button--mini.is-circle:hover{
+    background-color: #F56C6C;
   }
 </style>
 
