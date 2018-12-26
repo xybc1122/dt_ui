@@ -11,7 +11,10 @@ import Region from '../views/Region/Region'
 import Site from '../views/Site/Site'
 import Currency from '../views/Currency/Currency'
 import Upload from '../views/Upload/UploadFile'
-import Customs from '../views/Customs-clearance/Customs-clearance'
+import Clearance from '../views/Customs-clearance/Customs-clearance'
+import Declaration from '../views/Customs-declaration/Customs-declaration'
+import Err from '../views/Err/Err'
+import Freight from '../views/Freight/Freight'
 Vue.use(Router)
 
 
@@ -62,7 +65,19 @@ export default new Router({
         },
         {
           path: '/index/Customs-clearance/:id',
-          component: Customs
+          component: Clearance
+        },
+        {
+          path:'/index/Customs-declaration/:id',
+          component:Declaration
+        },
+        {
+         path:'/index/Err/:id',
+         component:Err
+        },
+        {
+          path:'/index/Freight/:id',
+          component:Freight
         },
       ]
     },

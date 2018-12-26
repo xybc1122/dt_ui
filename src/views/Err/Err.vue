@@ -1,5 +1,5 @@
 <template>
-  <!--货运类型-->
+  <!--异常类型-->
   <div>
     <!--table表格显示-->
     <div id="roleTable">
@@ -31,7 +31,7 @@
         新增
       </el-button>
     </div>
-
+    <ErrAdd></ErrAdd>
   </div>
 
 </template>
@@ -40,7 +40,8 @@
   import CompanyAdd from '../../components/CompanyItem/CompanyAdd'
   import CompanyUp from '../../components/CompanyItem/CompanyUp'
   import utils from '../../utils/PageUtils'
-  import PubSub_com from 'pubsub-js'
+  import ErrAdd from '../../components/Err/ErrAdd'
+  import PubSub_Err from 'pubsub-js'
   //公司
   export default {
     data () {
@@ -50,7 +51,7 @@
         tableTitle: [],//表头信息
         tableData: [],//表信息
         multipleSelection: [],//更新按钮数组收集
-        saveFormValue_com: false,//新增隐藏form
+        FormValue_Err: false,//新增隐藏form
         role: {
           currentPage: 1,//当前页
           total_size: 0,//总的页
@@ -59,7 +60,7 @@
       }
     },
     components:{
-
+      ErrAdd
     },
     async mounted () {
       // //查询获得table表的 头信息
@@ -166,9 +167,9 @@
         }
       },
       saveUserForm () {
-        this.saveFormValue_com = true
+        this.FormValue_Err = true
         //发布搜索消息
-        PubSub_com.publish('saveFormValue_com', this.saveFormValue_com)
+        PubSub_Err.publish('saveFormValue_Err', this.FormValue_Err)
       },
       //点击修改的时候 获得 Checkbox中 的属性
       upUserForm () {

@@ -269,11 +269,13 @@
         if (result.code === 200 && result.data === false) {
           message.errorMessage(success.msg)
           this.$set(this.icon_list, this.icon_list.length, {'isIcon': true, 'id': success.data.id,})
-          //获取后台文件id，并赋值给fileList指定下标的文件
+          console.log(this.fileList)
+          //获取后台文件id，并赋值渲染给fileList指定下标的文件
           // const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
           // this.$set(this.fileList, this.fileList.length-1, {'id': resultUploadInfo[resultUploadInfo.data.length-1].data.id,})
         } else {
           message.successMessage(success.msg)
+
           this.$set(this.icon_list, this.icon_list.length, {'isIcon': false, 'id': success.data.id,})
           console.log(this.fileList)
         }
