@@ -15,6 +15,7 @@ import Clearance from '../views/Customs-clearance/Customs-clearance'
 import Declaration from '../views/Customs-declaration/Customs-declaration'
 import Err from '../views/Err/Err'
 import Freight from '../views/Freight/Freight'
+import CprUpload from '../views/Upload/CprUploadFile'
 Vue.use(Router)
 
 
@@ -78,6 +79,10 @@ export default new Router({
         {
           path:'/index/Freight/:id',
           component:Freight
+        },
+        {
+          path:'/index/cpr-upload/:id',
+          component:CprUpload
         },
       ]
     },
