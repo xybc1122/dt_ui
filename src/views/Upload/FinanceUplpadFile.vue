@@ -21,8 +21,9 @@
         <div v-for="(i,index) in listFile" :key="index">
 
           {{i.name}}<el-button icon="el-icon-close" style="margin-left: 10px" type="info" size="mini" circle @click="del(index)"></el-button>
+          <el-progress v-if="upload_bt" :percentage="uploadPercent"></el-progress>
         </div>
-        <el-button v-if="listFile.length!==0" @click="uploadFiles"style="margin-right: 544px">确认上传</el-button>
+        <el-button v-if="bt_show" @click="uploadFiles"style="margin-right: 544px" :disabled="disabled">确认上传</el-button>
 
       </div>
 
@@ -85,6 +86,10 @@
   export default {
     data () {
       return {
+        upload_bt:false,//进度条隐藏
+        uploadPercent:0,//进度条数值
+        disabled:false,//按钮状态
+        bt_show:false,//默认上传按钮隐藏
         mShow: false,//付款方式
         payOptions: [{name: '标准订单', value: '1'}, {name: '发票支付', value: '2'}],//付款类型
         //id: '',//上传文件的ID
@@ -164,7 +169,18 @@
       },
       //文件上传时的钩子
       onProgressFile (event, file, fileList) {
-        // console.log(file)
+        console.log("**文件上传时**")
+        console.log(event)
+        //注，批量上传还需要绑定id
+        if(event.lengthComputable){
+          var percent =Math.floor(event.loaded / event.total * 100)
+          if(percent>100){
+            percent=100
+          }
+          this.uploadPercent=percent
+        }
+        console.log(file)
+        console.log("**文件上传时**")
       },
       //文件列表移除文件时的钩子
       handleRemove (file, fileList) {
@@ -279,12 +295,16 @@
           return false
         }
         this.param.append('files', file, file.name)
+        //重复文件名判断
         this.listFile.push(file)
+        this.bt_show=true
+        this.disabled=true
         return false
       },
 
       //批量上传
       async uploadFiles () {
+        this.upload_bt = true
         this.param.append('sId', this.uploadFrom.sId)
         this.param.append('seId', this.uploadFrom.seId)
         this.param.append('payId', this.uploadFrom.payId)
@@ -295,6 +315,7 @@
           contentType: false,
           processData: false
         }
+        //进度条读取状态
         axios.post(this.url, this.param, config).then((result) => {
           //上传成功~
           console.log(result)
@@ -303,9 +324,25 @@
             const uploadList = {uploadSuccessList}
             const resultAdd = repAddUploadInfoMysql(uploadList)
             resultAdd.then((result) => {
+              console.log("上传成功后返回的数据")
               console.log(result)
+              console.log(uploadList)
+              if(result.code===200 && result.data === false){
+                message.errorMessage(result.data.msg)
+                this.icon_list.push({'isIcon': true,})
+              }else{
+                message.errorMessage(result.data.msg)
+                this.icon_list.push({'isIcon': false,})
+              }
+              //this.icon_list.push({'isIcon': true})
+              //返回的数据展示在文件记录中
             })
           }
+          //this.listFile=[] 根据回调的id判断清空数据
+          this.disabled=false
+          for (let key of this.param.keys()){
+            this.param.delete(key);
+          };
         })
       },
       // //上传成功~ 后  后台请求数据
