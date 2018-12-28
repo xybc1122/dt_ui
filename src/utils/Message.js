@@ -22,7 +22,8 @@ export default {
     })
   },
   messageBox (msg) {
-    return MessageBox(msg, '提示', {
+    return MessageBox(msg, '提示',
+      {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
