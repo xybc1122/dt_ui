@@ -316,8 +316,6 @@
             const uploadList = {uploadSuccessList}
             const resultAdd = repAddUploadInfoMysql(uploadList)
             resultAdd.then((resultReturn) => {
-                // console.log('上传成功后返回的数据')
-                //console.log(resultReturn.data)
                 for (let i = 0; i < resultReturn.data.length; i++) {
                   let messagesResult = resultReturn.data[i]
                   if (messagesResult.code === 200) {
