@@ -17,16 +17,21 @@
           </el-radio-button>
         </el-radio-group>
       </div>
-      <div class="ces" style="float: right;" >
-        <div v-for="(i,index) in listFile" :key="index">
-
-          {{i.name}}<el-button icon="el-icon-close" style="margin-left: 10px" type="info" size="mini" circle @click="del(index)"></el-button>
-          <el-progress v-if="upload_bt" :percentage="uploadPercent"></el-progress>
+      <div class="ces" style="float: right;">
+        <div>
+          <el-tag
+            v-for="i in newListFile"
+            :key="i.name"
+            closable
+            type="info"
+            @close="handleClose(i)">
+            >
+            {{i.name}}
+          </el-tag>
         </div>
-        <el-button v-if="bt_show" @click="uploadFiles"style="margin-right: 544px" :disabled="disabled">确认上传</el-button>
-
+        <el-button v-if="bt_show" round @click="uploadFiles" :disabled="disabled" type="primary" size="mini">确认上传<i
+          class="el-icon-upload el-icon--right"></i></el-button>
       </div>
-
 
 
       <div v-if="mShow">
@@ -44,7 +49,6 @@
           class="upload-demo"
           action="xx"
           drag
-          :on-progress="onProgressFile"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
           :onError="uploadError"
@@ -86,10 +90,10 @@
   export default {
     data () {
       return {
-        upload_bt:false,//进度条隐藏
-        uploadPercent:0,//进度条数值
-        disabled:false,//按钮状态
-        bt_show:false,//默认上传按钮隐藏
+        upload_bt: false,//进度条隐藏
+        uploadPercent: 0,//进度条数值
+        disabled: true,//按钮状态
+        bt_show: false,//默认上传按钮隐藏
         mShow: false,//付款方式
         payOptions: [{name: '标准订单', value: '1'}, {name: '发票支付', value: '2'}],//付款类型
         //id: '',//上传文件的ID
@@ -103,7 +107,8 @@
         siteName: '',//站点名称
         isFileUp: false, //点击站点 显示上传功能
         fileListInfo: [],//
-        listFile: [],
+        newListFile: [],
+        oldListFile: [],
         param: new FormData(),//fromData
         url: BASE_URL + '/upload/file', //上传的 api  接口
         radioShop: '',//店铺 model
@@ -143,7 +148,7 @@
         this.siteName = obj.siteName
         this.isFileUp = true
         const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
-        console.log(resultUploadInfo)
+        //console.log(resultUploadInfo)
         if (resultUploadInfo.code === 200) {
           for (let i = 0; i < resultUploadInfo.data.length; i++) {
             let uploadInfo = resultUploadInfo.data[i]
@@ -163,24 +168,8 @@
         }
       },
       //删除
-      del(index){
-
-        this.listFile.splice(index,1)
-      },
-      //文件上传时的钩子
-      onProgressFile (event, file, fileList) {
-        console.log("**文件上传时**")
-        console.log(event)
-        //注，批量上传还需要绑定id
-        if(event.lengthComputable){
-          var percent =Math.floor(event.loaded / event.total * 100)
-          if(percent>100){
-            percent=100
-          }
-          this.uploadPercent=percent
-        }
-        console.log(file)
-        console.log("**文件上传时**")
+      del (index) {
+        this.newListFile.splice(index, 1)
       },
       //文件列表移除文件时的钩子
       handleRemove (file, fileList) {
@@ -226,7 +215,6 @@
       },
       //上传校验
       beforeAvatarUpload (file) {
-        console.log(file)
         let fileNames = []
         let index = file.name.lastIndexOf('.')
         let fileShopNameDt = file.name.indexOf('电兔')
@@ -294,17 +282,21 @@
           message.errorMessage('文件不能超过100MB')
           return false
         }
-        this.param.append('files', file, file.name)
-        //重复文件名判断
-        this.listFile.push(file)
-        this.bt_show=true
-        this.disabled=true
+        //如果长度为为0 代表是空的时候 进来
+        this.newListFile.push(file)
+        this.disabled = false
+        this.bt_show = true
         return false
       },
 
       //批量上传
       async uploadFiles () {
+        this.disabled = true //禁止
         this.upload_bt = true
+        for (let i = 0; i < this.newListFile.length; i++) {
+          let file = this.newListFile[i]
+          this.param.append('files', file, file.name)
+        }
         this.param.append('sId', this.uploadFrom.sId)
         this.param.append('seId', this.uploadFrom.seId)
         this.param.append('payId', this.uploadFrom.payId)
@@ -318,32 +310,43 @@
         //进度条读取状态
         axios.post(this.url, this.param, config).then((result) => {
           //上传成功~
-          console.log(result)
+          //console.log(result)
           let uploadSuccessList = result.data.data
           if (uploadSuccessList.length > 0) {
             const uploadList = {uploadSuccessList}
             const resultAdd = repAddUploadInfoMysql(uploadList)
-            resultAdd.then((result) => {
-              console.log("上传成功后返回的数据")
-              console.log(result)
-              console.log(uploadList)
-              if(result.code===200 && result.data === false){
-                message.errorMessage(result.data.msg)
-                this.icon_list.push({'isIcon': true,})
-              }else{
-                message.errorMessage(result.data.msg)
-                this.icon_list.push({'isIcon': false,})
+            resultAdd.then((resultReturn) => {
+                // console.log('上传成功后返回的数据')
+                //console.log(resultReturn.data)
+                for (let i = 0; i < resultReturn.data.length; i++) {
+                  let messagesResult = resultReturn.data[i]
+                  if (messagesResult.code === 200) {
+                    if (messagesResult.data === false) {
+                      message.successMessage(messagesResult.msg)
+                      this.icon_list.push({'isIcon': true,})
+                      this.newListFile.splice(this.newListFile.indexOf(i), 1)
+                      continue
+                    }
+                    message.successMessage(messagesResult.msg)
+                    this.icon_list.push({'isIcon': false,})
+                    this.newListFile.splice(this.newListFile.indexOf(i), 1)
+                  } else {
+                    message.errorMessage(messagesResult.msg)
+                  }
+                }
               }
-              //this.icon_list.push({'isIcon': true})
-              //返回的数据展示在文件记录中
-            })
+            )
           }
-          //this.listFile=[] 根据回调的id判断清空数据
-          this.disabled=false
-          for (let key of this.param.keys()){
-            this.param.delete(key);
-          };
+          this.param = new FormData()
         })
+      },
+      //tag删除
+      handleClose (tag) {
+        console.log(tag)
+        this.newListFile.splice(this.newListFile.indexOf(tag), 1)
+        if (this.newListFile.length === 0) {
+          this.bt_show = false
+        }
       },
       // //上传成功~ 后  后台请求数据
       // async uploadSuccess (success) {
@@ -368,11 +371,13 @@
         //   this.payOptions = resultSite.data 付款类型
         // }
         this.mShow = true
-      },
+      }
+      ,
       // 上传错误
       uploadError (response, file, fileList) {
         message.errorMessage(response.message)
-      },
+      }
+      ,
     }
   }
 </script>
@@ -399,7 +404,8 @@
   .el-icon-circle-check {
     color: #67C23A;
   }
-  .el-button--mini.is-circle:hover{
+
+  .el-button--mini.is-circle:hover {
     background-color: #F56C6C;
   }
 </style>

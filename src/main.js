@@ -47,7 +47,8 @@ import {
   Transfer,
   Tree,
   Card,
-  Upload
+  Upload,
+  Progress
 } from 'element-ui'
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)
@@ -90,7 +91,7 @@ Vue.component(Transfer.name, Transfer)
 Vue.component(Tree.name, Tree)
 Vue.component(Card.name, Card)
 Vue.component(Upload.name, Upload)
-
+Vue.component(Progress.name, Progress)
 
 // 设置Cookie
 Vue.prototype.setCookie = function (c_name, value, expiredays) {
