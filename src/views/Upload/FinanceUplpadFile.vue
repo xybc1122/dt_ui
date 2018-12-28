@@ -23,7 +23,7 @@
           {{i.name}}<el-button icon="el-icon-close" style="margin-left: 10px" type="info" size="mini" circle @click="del(index)"></el-button>
           <el-progress v-if="upload_bt" :percentage="uploadPercent"></el-progress>
         </div>
-        <el-button v-if="bt_show" @click="uploadFiles"style="margin-right: 544px" :disabled="disabled">确认上传</el-button>
+        <el-button v-if="bt_show" @click="uploadFiles"style="margin-right: 544px" >确认上传</el-button>
 
       </div>
 
