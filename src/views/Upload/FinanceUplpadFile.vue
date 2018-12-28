@@ -346,28 +346,8 @@
           this.bt_show = false
         }
       },
-      // //上传成功~ 后  后台请求数据
-      // async uploadSuccess (success) {
-      //   console.log(success)
-      //   const result = await repAddUploadInfoMysql(success.data)
-      //   console.log(result)
-      //   if (result.code === 200 && result.data === false) {
-      //     message.errorMessage(success.msg)
-      //     this.$set(this.icon_list, this.icon_list.length, {'isIcon': true, 'id': success.data.id,})
-      //     //获取后台文件id，并赋值给fileList指定下标的文件
-      //     // const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
-      //     // this.$set(this.fileList, this.fileList.length-1, {'id': resultUploadInfo[resultUploadInfo.data.length-1].data.id,})
-      //   } else {
-      //     message.successMessage(success.msg)
-      //     this.$set(this.icon_list, this.icon_list.length, {'isIcon': false, 'id': success.data.id,})
-      //   }
-      // },
       //付款类型
       async changeShow (value) {
-        //const resultSite = await repGetShopIdSiteInfo(this.uploadFrom.sId) 获取付款信息
-        // if (resultSite.code === 200) {
-        //   this.payOptions = resultSite.data 付款类型
-        // }
         this.mShow = true
       }
       ,
