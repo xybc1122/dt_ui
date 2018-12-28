@@ -19,6 +19,8 @@
     data(){
       return{
         currencyUp_Form:false,
+        tableTitle:[],//表头信息
+        currency:[],//币别所有信息
         currency_upForm:{
 
         },
@@ -28,6 +30,20 @@
       }
     },
     async mounted(){
+      //查询获得table表的 头信息
+      const resultHead = await
+        repHead(this.$route.params.id)
+      if (resultHead.code === 200) {
+        // console.log(resultHead.data)
+        this.tableTitle = resultHead.data
+      }
+      //获得店铺信息
+      const resultGetCurrency = await repGetCurrencyInfo()
+      console.log(resultGetCurrency)
+      if (resultGetCurrency.code === 200) {
+        this.currency = resultGetCurrency.data
+      }
+
       PubSubcurr_Up.subscribe('CurrencyUp',(msg,multipleSelection_cur_Up)=>{
         const multipleSelection_Up = multipleSelection_cur_Up
         if (multipleSelection_Up.length <= 0) {
