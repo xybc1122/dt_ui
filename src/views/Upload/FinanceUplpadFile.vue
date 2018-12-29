@@ -318,9 +318,7 @@
             resultAdd.then((resultReturn) => {
                 for (let i = 0; i < resultReturn.data.length; i++) {
                   let messagesResult = resultReturn.data[i]
-                  console.log(messagesResult)
                   if (messagesResult.code === 200) {
-                    debugger
                     if (messagesResult.data.status === 2) {
                       message.successMessage(messagesResult.msg)
                       this.newListFile.splice(this.newListFile.indexOf(i), 1)
