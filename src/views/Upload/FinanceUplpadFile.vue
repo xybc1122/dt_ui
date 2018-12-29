@@ -17,21 +17,6 @@
           </el-radio-button>
         </el-radio-group>
       </div>
-      <div class="ces" style="float: right;">
-        <div>
-          <el-tag
-            v-for="i in newListFile"
-            :key="i.name"
-            closable
-            type="info"
-            @close="handleClose(i)">
-            >
-            {{i.name}}
-          </el-tag>
-        </div>
-        <el-button v-if="bt_show" round @click="uploadFiles" :disabled="disabled" type="primary" size="mini">确认上传<i
-          class="el-icon-upload el-icon--right"></i></el-button>
-      </div>
 
 
       <div v-if="mShow">
@@ -44,7 +29,8 @@
           </el-option>
         </el-select>
       </div>
-      <div style="width: 400px">
+
+      <div style="width: 400px;float: left;">
         <el-upload
           class="upload-demo"
           action="xx"
@@ -62,13 +48,34 @@
           <div class="el-upload__tip" slot="tip">只能上传.csv格式文件/不能超过100MB</div>
         </el-upload>
         <div style="margin-top: 10px">
-          <div class="icons" v-for="(ic,index) in icon_list" :key="ic.id">
+          <div class="icons" v-for="(ic,index) in icon_list" :key="ic.id" style="height: 25px">
           <span v-if="ic.isIcon" @click="download(ic)">
              <i class="el-icon-caret-bottom"></i>
           </span>
           </div>
         </div>
       </div>
+      <div class="ces" style="float: left">
+        <div>
+          <el-tag
+            style="display: block"
+            v-for="i in newListFile"
+            :key="i.name"
+            closable
+            type="info"
+            @close="handleClose(i)">
+            {{i.name}}
+          </el-tag>
+        </div>
+        <el-button v-if="bt_show"
+                   round
+                   @click="uploadFiles"
+                   :disabled="disabled"
+                   type="primary"
+                   size="mini" style="margin-left: 103px;float: right">确认上传<i
+          class="el-icon-upload el-icon--right"></i></el-button>
+      </div>
+
 
     </div>
   </el-form>
@@ -77,6 +84,7 @@
 <script>
   import message from '../../utils/Message'
   import axios from 'axios'
+  import checkUtils from '../../utils/CheckUtils'
   import {
     repGetShopInfo,
     repGetShopIdSiteInfo,
@@ -106,8 +114,8 @@
         shopName: '',//店铺名称
         siteName: '',//站点名称
         isFileUp: false, //点击站点 显示上传功能
-        fileListInfo: [],//
-        newListFile: [],
+        fileListInfo: [],//上传完成列表
+        newListFile: [],//上传中列表
         oldListFile: [],
         param: new FormData(),//fromData
         url: BASE_URL + '/upload/file', //上传的 api  接口
@@ -126,6 +134,9 @@
     },
     methods: {
       async changeRadio (value) {
+        this.newListFile = []
+        this.disabled = true
+        this.bt_show = false
         this.shopName = value.shopName
         this.uploadFrom.sId = value.shopId
         this.icon_list = []
@@ -139,6 +150,7 @@
       },
       //下拉时获取 通过value=siteId  查询对应的对象 获取 label
       async changeSelect (value) {
+
         this.fileListInfo = []
         this.icon_list = []
         let obj = {}
@@ -148,7 +160,7 @@
         this.siteName = obj.siteName
         this.isFileUp = true
         const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
-        console.log(resultUploadInfo)
+        //console.log(resultUploadInfo)
         if (resultUploadInfo.code === 200) {
           for (let i = 0; i < resultUploadInfo.data.length; i++) {
             let uploadInfo = resultUploadInfo.data[i]
@@ -167,10 +179,6 @@
           }
         }
       },
-      //删除
-      del (index) {
-        this.newListFile.splice(index, 1)
-      },
       //文件列表移除文件时的钩子
       handleRemove (file, fileList) {
         console.log('handleRemove')
@@ -178,6 +186,7 @@
       //点击文件的时候
       handlePreview (file) {
         console.log(file)
+        console.log(this.icon_list)
         console.log('点击查看信息')
       },
       handleExceed (files, fileList) {
@@ -186,8 +195,7 @@
       //删除文件之前的钩子，参数为上传的文件和文件列表，若返回 false 或者返回 Promise 且被 reject，则停止上传。
       beforeRemove (file, fileList) {
         if (file.status !== 'ready') {
-          const delFileInfo = message.messageBox(`确定移除 ${ file.name }？`)
-          delFileInfo.then(i => {
+          if (confirm(`确定移除 ${ file.name }？`)) {
             //点击确定
             const resultDelInfo = repDelUploadInfo(file.id)
             resultDelInfo.then(result => {
@@ -200,75 +208,40 @@
                   }
                 }
                 message.successMessage('删除成功~')
+                return true
               } else {
                 message.errorMessage('删除失败~')
+                return false
               }
             })
-          }).catch(() => {
-            //点击取消
-          })
+          }else {
+            return false
+          }
         }
       },
       //点击下载
       download (file) {
         console.log(file)
+
       },
       //上传校验
       beforeAvatarUpload (file) {
         let fileNames = []
         let index = file.name.lastIndexOf('.')
-        let fileShopNameDt = file.name.indexOf('电兔')
-        //宏名
-        let fileShopNameHm = file.name.indexOf('宏名')
-        //诚夕
-        let fileShopNameCx = file.name.indexOf('诚夕')
-        //店铺文件判断
-        if (fileShopNameDt === -1 && this.uploadFrom.sId === 1) {
-          message.errorMessage('不是电兔的文件/请注意操作~')
-          return false
-        } else if (fileShopNameHm === -1 && this.uploadFrom.sId === 2) {
-          message.errorMessage('不是宏名的文件/请注意操作~')
-          return false
-        } else if (fileShopNameCx === -1 && this.uploadFrom.sId === 3) {
-          message.errorMessage('不是诚夕的文件/请注意操作~')
-          return false
-        }
-        //站点文件判断
-        if (file.name.indexOf('美国') === -1 && this.uploadFrom.seId === 1) {
-          message.errorMessage('不是美国站的文件~')
-          return false
-        } else if (file.name.indexOf('加拿大') === -1 && this.uploadFrom.seId === 2) {
-          message.errorMessage('不是加拿大站的文件~')
-          return false
-        } else if (file.name.indexOf('澳大利亚') === -1 && this.uploadFrom.seId === 3) {
-          message.errorMessage('不是澳大利亚站的文件~')
-          return false
-        }
-        else if (file.name.indexOf('英国') === -1 && this.uploadFrom.seId === 4) {
-          message.errorMessage('不是英国站的文件~')
-          return false
-        }
-        else if (file.name.indexOf('德国') === -1 && this.uploadFrom.seId === 5) {
-          message.errorMessage('不是德国站的文件~')
-          return false
-        }
-        else if (file.name.indexOf('法国') === -1 && this.uploadFrom.seId === 6) {
-          message.errorMessage('不是法国站的文件~')
-          return false
-        } else if (file.name.indexOf('意大利') === -1 && this.uploadFrom.seId === 7) {
-          message.errorMessage('不是意大利站的文件~')
-          return false
-        } else if (file.name.indexOf('西班牙') === -1 && this.uploadFrom.seId === 8) {
-          message.errorMessage('不是西班牙站的文件~')
-          return false
-        } else if (file.name.indexOf('日本') === -1 && this.uploadFrom.seId === 9) {
-          message.errorMessage('不是日本站的文件~')
-          return false
-        } else if (file.name.indexOf('墨西哥') === -1 && this.uploadFrom.seId === 10) {
-          message.errorMessage('不是墨西哥站的文件~')
-          return false
+        //重复文件名
+        if (this.newListFile.length !== 0) {
+          for (let i = 0; i < this.newListFile.length; i++) {
+            if (this.newListFile[i].name === file.name) {
+              message.errorMessage('上传文件重复')
+              return false
+            }
+          }
         }
 
+        const isFlg = checkUtils.checkFileInfo(file, this.uploadFrom)
+        if (!isFlg) {
+          return isFlg
+        }
         fileNames = file.name.substring(index + 1)
         const csv = fileNames === 'csv'
         if (csv) {
@@ -284,7 +257,9 @@
         }
         //如果长度为为0 代表是空的时候 进来
         this.newListFile.push(file)
+
         this.disabled = false
+
         this.bt_show = true
         return false
       },
@@ -331,11 +306,12 @@
                     message.successMessage(messagesResult.msg)
                     this.newListFile.splice(this.newListFile.indexOf(i), 1)
                     this.fileListInfo.push(messagesResult.data)
-                    this.icon_list.push({'isIcon': false})
+                    this.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
                   } else {
+                    this.newListFile.splice(this.newListFile.indexOf(i), 1)
                     message.errorMessage(messagesResult.msg)
                     this.fileListInfo.push(messagesResult.data)
-                    this.icon_list.push({'isIcon': false})
+                    this.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
                   }
                 }
               }
@@ -346,7 +322,6 @@
       },
       //tag删除
       handleClose (tag) {
-        console.log(tag)
         this.newListFile.splice(this.newListFile.indexOf(tag), 1)
         if (this.newListFile.length === 0) {
           this.bt_show = false
