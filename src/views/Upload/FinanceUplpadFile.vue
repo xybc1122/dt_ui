@@ -148,7 +148,7 @@
         this.siteName = obj.siteName
         this.isFileUp = true
         const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
-        //console.log(resultUploadInfo)
+        console.log(resultUploadInfo)
         if (resultUploadInfo.code === 200) {
           for (let i = 0; i < resultUploadInfo.data.length; i++) {
             let uploadInfo = resultUploadInfo.data[i]
@@ -322,20 +322,24 @@
                   let messagesResult = resultReturn.data[i]
                   console.log(messagesResult)
                   if (messagesResult.code === 200) {
-                    if (messagesResult.data === false) {
+                    debugger
+                    if (messagesResult.data.status === 2) {
                       message.successMessage(messagesResult.msg)
-                      this.icon_list.push({'isIcon': true,})
                       this.newListFile.splice(this.newListFile.indexOf(i), 1)
-                      this.fileListInfo.push(messagesResult)
+                      //触发记录
+                      this.fileListInfo.push(messagesResult.data)
+                      this.icon_list.push({'isIcon': true, 'id': messagesResult.data.id})
+                      console.log(this.fileListInfo)
                       continue
                     }
                     message.successMessage(messagesResult.msg)
-                    this.icon_list.push({'isIcon': false,})
                     this.newListFile.splice(this.newListFile.indexOf(i), 1)
-                    this.fileListInfo.push(messagesResult)
+                    this.fileListInfo.push(messagesResult.data)
+                    this.icon_list.push({'isIcon': false})
                   } else {
                     message.errorMessage(messagesResult.msg)
-                    this.fileListInfo.push(messagesResult)
+                    this.fileListInfo.push(messagesResult.data)
+                    this.icon_list.push({'isIcon': false})
                   }
                 }
               }
@@ -360,8 +364,7 @@
       // 上传错误
       uploadError (response, file, fileList) {
         message.errorMessage(response.message)
-      }
-      ,
+      },
     }
   }
 </script>
