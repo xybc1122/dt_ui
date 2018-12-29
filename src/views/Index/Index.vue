@@ -7,8 +7,8 @@
     </div>
     <el-container style="margin-top: 55px">
       <Aside/>
-      <el-container>
-        <el-main>
+      <el-container >
+        <el-main style="position: fixed;">
           <!--缓存路由组件-->
           <keep-alive>
             <router-view></router-view>

@@ -1,17 +1,8 @@
 <template>
   <el-form ref="uploadFrom" :model="uploadFrom" label-width="80px">
     <div style="margin-left: 150px">
-      <div>
-        <el-select style="width: 120px" v-model="uploadFrom.payId" placeholder="付款类型" @change="changeShow" value="">
-          <el-option
-            v-for="item in payOptions"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </div>
-      <div style="margin-top: 20px;" v-if="mShow">
+
+      <div style="margin-top: 20px;">
         <el-radio-group v-model="radioShop" size="mini" @change="changeRadio">
           <el-radio-button :label="sArr" v-for="(sArr,index) in shopArr" :key="index">{{sArr.shopName}}
           </el-radio-button>
@@ -19,7 +10,7 @@
       </div>
 
 
-      <div v-if="mShow">
+      <div >
         <el-select v-model="uploadFrom.seId" placeholder="请选择" @change="changeSelect" value="">
           <el-option
             v-for="item in siteOptions"
@@ -327,11 +318,7 @@
           this.bt_show = false
         }
       },
-      //付款类型
-      async changeShow (value) {
-        this.mShow = true
-      }
-      ,
+
       // 上传错误
       uploadError (response, file, fileList) {
         message.errorMessage(response.message)
