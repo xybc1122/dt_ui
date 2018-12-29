@@ -147,25 +147,7 @@
         })
         this.siteName = obj.siteName
         this.isFileUp = true
-        const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
-        //console.log(resultUploadInfo)
-        if (resultUploadInfo.code === 200) {
-          for (let i = 0; i < resultUploadInfo.data.length; i++) {
-            let uploadInfo = resultUploadInfo.data[i]
-            //2代表 有些sku没有的 可以重新下载
-            if (uploadInfo.status === 2) {
-              this.$set(this.icon_list, this.icon_list.length, {
-                'isIcon': true,
-                'id': uploadInfo.id,
-                'data': uploadInfo.name
-              })
-              this.fileListInfo.push(uploadInfo)
-            } else {
-              this.$set(this.icon_list, this.icon_list.length, {'isIcon': false, 'id': uploadInfo.id})
-              this.fileListInfo.push(uploadInfo)
-            }
-          }
-        }
+        this.uploadRecordMethod()
       },
       //删除
       del (index) {
@@ -290,7 +272,7 @@
       },
 
       //批量上传
-      async uploadFiles () {
+      async uploadFiles (){
         this.disabled = true //禁止
         this.upload_bt = true
         for (let i = 0; i < this.newListFile.length; i++) {
@@ -321,12 +303,11 @@
                   if (messagesResult.code === 200) {
                     if (messagesResult.data === false) {
                       message.successMessage(messagesResult.msg)
-                      this.icon_list.push({'isIcon': true,})
                       this.newListFile.splice(this.newListFile.indexOf(i), 1)
+                      //触发记录
                       continue
                     }
                     message.successMessage(messagesResult.msg)
-                    this.icon_list.push({'isIcon': false,})
                     this.newListFile.splice(this.newListFile.indexOf(i), 1)
                   } else {
                     message.errorMessage(messagesResult.msg)
@@ -354,8 +335,29 @@
       // 上传错误
       uploadError (response, file, fileList) {
         message.errorMessage(response.message)
+      },
+      //触发记录
+      async uploadRecordMethod () {
+        const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
+        //console.log(resultUploadInfo)
+        if (resultUploadInfo.code === 200) {
+          for (let i = 0; i < resultUploadInfo.data.length; i++) {
+            let uploadInfo = resultUploadInfo.data[i]
+            //2代表 有些sku没有的 可以重新下载
+            if (uploadInfo.status === 2) {
+              this.$set(this.icon_list, this.icon_list.length, {
+                'isIcon': true,
+                'id': uploadInfo.id,
+                'data': uploadInfo.name
+              })
+              this.fileListInfo.push(uploadInfo)
+            } else {
+              this.$set(this.icon_list, this.icon_list.length, {'isIcon': false, 'id': uploadInfo.id})
+              this.fileListInfo.push(uploadInfo)
+            }
+          }
+        }
       }
-      ,
     }
   }
 </script>
