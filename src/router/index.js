@@ -92,6 +92,40 @@ export default new Router({
           path:'/index/cpr-upload/:id',
           component:CprUpload
         },
+        {
+          path:'/index/Business/:id',
+          component:Business
+        },
+        {
+          path:'/index/Deliver/:id',
+          component:Deliver
+        },
+        {
+          path:'/index/OarUpload/:id',
+          component:OarUpload
+        },
+        {
+          path:'/index/OrderUpload/:id',
+          component:OrderUpload
+        },
+        {
+          path:'/index/Receive/:id',
+          component:Receive
+        },
+        {
+          path:'/index/Return/:id',
+          component:Return
+        },
+        {
+          path:'/index/StrUpload/:id',
+          component:StrUpload
+        },
+        {
+          path:'/index/Terminal/:id',
+          component:Terminal
+        }
+
+
       ]
     },
     {
