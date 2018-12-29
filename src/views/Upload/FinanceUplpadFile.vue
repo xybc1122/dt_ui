@@ -19,7 +19,6 @@
       </div>
 
 
-
       <div v-if="mShow">
         <el-select v-model="uploadFrom.seId" placeholder="请选择" @change="changeSelect" value="">
           <el-option
@@ -65,7 +64,6 @@
             closable
             type="info"
             @close="handleClose(i)">
-            >
             {{i.name}}
           </el-tag>
         </div>
@@ -86,6 +84,7 @@
 <script>
   import message from '../../utils/Message'
   import axios from 'axios'
+  import checkUtils from '../../utils/CheckUtils'
   import {
     repGetShopInfo,
     repGetShopIdSiteInfo,
@@ -135,9 +134,9 @@
     },
     methods: {
       async changeRadio (value) {
-        this.newListFile=[]
-        this.disabled=true
-        this.bt_show=false
+        this.newListFile = []
+        this.disabled = true
+        this.bt_show = false
         this.shopName = value.shopName
         this.uploadFrom.sId = value.shopId
         this.icon_list = []
@@ -161,7 +160,7 @@
         this.siteName = obj.siteName
         this.isFileUp = true
         const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
-        console.log(resultUploadInfo)
+        //console.log(resultUploadInfo)
         if (resultUploadInfo.code === 200) {
           for (let i = 0; i < resultUploadInfo.data.length; i++) {
             let uploadInfo = resultUploadInfo.data[i]
@@ -196,8 +195,7 @@
       //删除文件之前的钩子，参数为上传的文件和文件列表，若返回 false 或者返回 Promise 且被 reject，则停止上传。
       beforeRemove (file, fileList) {
         if (file.status !== 'ready') {
-          const delFileInfo = message.messageBox(`确定移除 ${ file.name }？`)
-          delFileInfo.then(() => {
+          if (confirm(`确定移除 ${ file.name }？`)) {
             //点击确定
             const resultDelInfo = repDelUploadInfo(file.id)
             resultDelInfo.then(result => {
@@ -210,13 +208,15 @@
                   }
                 }
                 message.successMessage('删除成功~')
+                return true
               } else {
                 message.errorMessage('删除失败~')
+                return false
               }
             })
-          }).catch(() => {
-            //点击取消
-          })
+          }else {
+            return false
+          }
         }
       },
       //点击下载
@@ -228,65 +228,20 @@
       beforeAvatarUpload (file) {
         let fileNames = []
         let index = file.name.lastIndexOf('.')
-        let fileShopNameDt = file.name.indexOf('电兔')
-        //宏名
-        let fileShopNameHm = file.name.indexOf('宏名')
-        //诚夕
-        let fileShopNameCx = file.name.indexOf('诚夕')
         //重复文件名
-        for(let i=0;i<this.newListFile.length;i++){
-          if(this.newListFile[i].name===file.name){
-            message.errorMessage('上传文件重复')
-            return false
+        if (this.newListFile.length !== 0) {
+          for (let i = 0; i < this.newListFile.length; i++) {
+            if (this.newListFile[i].name === file.name) {
+              message.errorMessage('上传文件重复')
+              return false
+            }
           }
         }
-        //店铺文件判断
-        if (fileShopNameDt === -1 && this.uploadFrom.sId === 1) {
-          message.errorMessage('不是电兔的文件/请注意操作~')
-          return false
-        } else if (fileShopNameHm === -1 && this.uploadFrom.sId === 2) {
-          message.errorMessage('不是宏名的文件/请注意操作~')
-          return false
-        } else if (fileShopNameCx === -1 && this.uploadFrom.sId === 3) {
-          message.errorMessage('不是诚夕的文件/请注意操作~')
-          return false
-        }
-        //站点文件判断
-        if (file.name.indexOf('美国') === -1 && this.uploadFrom.seId === 1) {
-          message.errorMessage('不是美国站的文件~')
-          return false
-        } else if (file.name.indexOf('加拿大') === -1 && this.uploadFrom.seId === 2) {
-          message.errorMessage('不是加拿大站的文件~')
-          return false
-        } else if (file.name.indexOf('澳大利亚') === -1 && this.uploadFrom.seId === 3) {
-          message.errorMessage('不是澳大利亚站的文件~')
-          return false
-        }
-        else if (file.name.indexOf('英国') === -1 && this.uploadFrom.seId === 4) {
-          message.errorMessage('不是英国站的文件~')
-          return false
-        }
-        else if (file.name.indexOf('德国') === -1 && this.uploadFrom.seId === 5) {
-          message.errorMessage('不是德国站的文件~')
-          return false
-        }
-        else if (file.name.indexOf('法国') === -1 && this.uploadFrom.seId === 6) {
-          message.errorMessage('不是法国站的文件~')
-          return false
-        } else if (file.name.indexOf('意大利') === -1 && this.uploadFrom.seId === 7) {
-          message.errorMessage('不是意大利站的文件~')
-          return false
-        } else if (file.name.indexOf('西班牙') === -1 && this.uploadFrom.seId === 8) {
-          message.errorMessage('不是西班牙站的文件~')
-          return false
-        } else if (file.name.indexOf('日本') === -1 && this.uploadFrom.seId === 9) {
-          message.errorMessage('不是日本站的文件~')
-          return false
-        } else if (file.name.indexOf('墨西哥') === -1 && this.uploadFrom.seId === 10) {
-          message.errorMessage('不是墨西哥站的文件~')
-          return false
-        }
 
+        const isFlg = checkUtils.checkFileInfo(file, this.uploadFrom)
+        if (!isFlg) {
+          return isFlg
+        }
         fileNames = file.name.substring(index + 1)
         const csv = fileNames === 'csv'
         if (csv) {
@@ -338,10 +293,7 @@
             resultAdd.then((resultReturn) => {
                 for (let i = 0; i < resultReturn.data.length; i++) {
                   let messagesResult = resultReturn.data[i]
-
-                  console.log(messagesResult)
                   if (messagesResult.code === 200) {
-                    //debugger
                     if (messagesResult.data.status === 2) {
                       message.successMessage(messagesResult.msg)
                       this.newListFile.splice(this.newListFile.indexOf(i), 1)
@@ -354,12 +306,12 @@
                     message.successMessage(messagesResult.msg)
                     this.newListFile.splice(this.newListFile.indexOf(i), 1)
                     this.fileListInfo.push(messagesResult.data)
-                    this.icon_list.push({'isIcon': false,'id': messagesResult.data.id})
+                    this.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
                   } else {
                     this.newListFile.splice(this.newListFile.indexOf(i), 1)
                     message.errorMessage(messagesResult.msg)
                     this.fileListInfo.push(messagesResult.data)
-                    this.icon_list.push({'isIcon': false,'id': messagesResult.data.id})
+                    this.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
                   }
                 }
               }
@@ -370,7 +322,6 @@
       },
       //tag删除
       handleClose (tag) {
-        console.log(tag)
         this.newListFile.splice(this.newListFile.indexOf(tag), 1)
         if (this.newListFile.length === 0) {
           this.bt_show = false
