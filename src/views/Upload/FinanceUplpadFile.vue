@@ -17,21 +17,7 @@
           </el-radio-button>
         </el-radio-group>
       </div>
-      <div class="ces" style="float: right;">
-        <div>
-          <el-tag
-            v-for="i in newListFile"
-            :key="i.name"
-            closable
-            type="info"
-            @close="handleClose(i)">
-            >
-            {{i.name}}
-          </el-tag>
-        </div>
-        <el-button v-if="bt_show" round @click="uploadFiles" :disabled="disabled" type="primary" size="mini">确认上传<i
-          class="el-icon-upload el-icon--right"></i></el-button>
-      </div>
+
 
 
       <div v-if="mShow">
@@ -44,7 +30,8 @@
           </el-option>
         </el-select>
       </div>
-      <div style="width: 400px">
+
+      <div style="width: 400px;float: left;">
         <el-upload
           class="upload-demo"
           action="xx"
@@ -62,13 +49,35 @@
           <div class="el-upload__tip" slot="tip">只能上传.csv格式文件/不能超过100MB</div>
         </el-upload>
         <div style="margin-top: 10px">
-          <div class="icons" v-for="(ic,index) in icon_list" :key="ic.id">
+          <div class="icons" v-for="(ic,index) in icon_list" :key="ic.id" style="height: 25px">
           <span v-if="ic.isIcon" @click="download(ic)">
              <i class="el-icon-caret-bottom"></i>
           </span>
           </div>
         </div>
       </div>
+      <div class="ces" style="float: left">
+        <div>
+          <el-tag
+            style="display: block"
+            v-for="i in newListFile"
+            :key="i.name"
+            closable
+            type="info"
+            @close="handleClose(i)">
+            >
+            {{i.name}}
+          </el-tag>
+        </div>
+        <el-button v-if="bt_show"
+                   round
+                   @click="uploadFiles"
+                   :disabled="disabled"
+                   type="primary"
+                   size="mini" style="margin-left: 103px;float: right">确认上传<i
+          class="el-icon-upload el-icon--right"></i></el-button>
+      </div>
+
 
     </div>
   </el-form>
@@ -106,8 +115,8 @@
         shopName: '',//店铺名称
         siteName: '',//站点名称
         isFileUp: false, //点击站点 显示上传功能
-        fileListInfo: [],//
-        newListFile: [],
+        fileListInfo: [],//上传完成列表
+        newListFile: [],//上传中列表
         oldListFile: [],
         param: new FormData(),//fromData
         url: BASE_URL + '/upload/file', //上传的 api  接口
@@ -126,6 +135,9 @@
     },
     methods: {
       async changeRadio (value) {
+        this.newListFile=[]
+        this.disabled=true
+        this.bt_show=false
         this.shopName = value.shopName
         this.uploadFrom.sId = value.shopId
         this.icon_list = []
@@ -139,6 +151,7 @@
       },
       //下拉时获取 通过value=siteId  查询对应的对象 获取 label
       async changeSelect (value) {
+
         this.fileListInfo = []
         this.icon_list = []
         let obj = {}
@@ -167,10 +180,6 @@
           }
         }
       },
-      //删除
-      del (index) {
-        this.newListFile.splice(index, 1)
-      },
       //文件列表移除文件时的钩子
       handleRemove (file, fileList) {
         console.log('handleRemove')
@@ -178,6 +187,7 @@
       //点击文件的时候
       handlePreview (file) {
         console.log(file)
+        console.log(this.icon_list)
         console.log('点击查看信息')
       },
       handleExceed (files, fileList) {
@@ -187,7 +197,7 @@
       beforeRemove (file, fileList) {
         if (file.status !== 'ready') {
           const delFileInfo = message.messageBox(`确定移除 ${ file.name }？`)
-          delFileInfo.then(i => {
+          delFileInfo.then(() => {
             //点击确定
             const resultDelInfo = repDelUploadInfo(file.id)
             resultDelInfo.then(result => {
@@ -212,6 +222,7 @@
       //点击下载
       download (file) {
         console.log(file)
+
       },
       //上传校验
       beforeAvatarUpload (file) {
@@ -222,6 +233,13 @@
         let fileShopNameHm = file.name.indexOf('宏名')
         //诚夕
         let fileShopNameCx = file.name.indexOf('诚夕')
+        //重复文件名
+        for(let i=0;i<this.newListFile.length;i++){
+          if(this.newListFile[i].name===file.name){
+            message.errorMessage('上传文件重复')
+            return false
+          }
+        }
         //店铺文件判断
         if (fileShopNameDt === -1 && this.uploadFrom.sId === 1) {
           message.errorMessage('不是电兔的文件/请注意操作~')
@@ -320,9 +338,10 @@
             resultAdd.then((resultReturn) => {
                 for (let i = 0; i < resultReturn.data.length; i++) {
                   let messagesResult = resultReturn.data[i]
+
                   console.log(messagesResult)
                   if (messagesResult.code === 200) {
-                    debugger
+                    //debugger
                     if (messagesResult.data.status === 2) {
                       message.successMessage(messagesResult.msg)
                       this.newListFile.splice(this.newListFile.indexOf(i), 1)
@@ -335,11 +354,12 @@
                     message.successMessage(messagesResult.msg)
                     this.newListFile.splice(this.newListFile.indexOf(i), 1)
                     this.fileListInfo.push(messagesResult.data)
-                    this.icon_list.push({'isIcon': false})
+                    this.icon_list.push({'isIcon': false,'id': messagesResult.data.id})
                   } else {
+                    this.newListFile.splice(this.newListFile.indexOf(i), 1)
                     message.errorMessage(messagesResult.msg)
                     this.fileListInfo.push(messagesResult.data)
-                    this.icon_list.push({'isIcon': false})
+                    this.icon_list.push({'isIcon': false,'id': messagesResult.data.id})
                   }
                 }
               }
