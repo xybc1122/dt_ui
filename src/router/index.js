@@ -16,6 +16,14 @@ import Declaration from '../views/Customs-declaration/Customs-declaration'
 import Err from '../views/Err/Err'
 import Freight from '../views/Freight/Freight'
 import CprUpload from '../views/Upload/CprUploadFile'
+import Business from '../views/Upload/BusinessUploadFile'//业务报告
+import Deliver from '../views/Upload/DeliverUploadFile'//发货通知
+import OarUpload from '../views/Upload/OarUploadFile'//OAR
+import OrderUpload from '../views/Upload/OrderUploadFile'//订单报告
+import Receive from '../views/Upload/ReceiveUploadFile'//接收库存
+import Return from '../views/Upload/ReturnUploadFile'//退货报告
+import StrUpload from '../views/Upload/StrUploadFile'//STR
+import Terminal from '../views/Upload/TerminalUploadFile'//期末库存
 Vue.use(Router)
 
 
