@@ -320,18 +320,22 @@
             resultAdd.then((resultReturn) => {
                 for (let i = 0; i < resultReturn.data.length; i++) {
                   let messagesResult = resultReturn.data[i]
+                  console.log(messagesResult)
                   if (messagesResult.code === 200) {
                     if (messagesResult.data === false) {
                       message.successMessage(messagesResult.msg)
                       this.icon_list.push({'isIcon': true,})
                       this.newListFile.splice(this.newListFile.indexOf(i), 1)
+                      this.fileListInfo.push(messagesResult)
                       continue
                     }
                     message.successMessage(messagesResult.msg)
                     this.icon_list.push({'isIcon': false,})
                     this.newListFile.splice(this.newListFile.indexOf(i), 1)
+                    this.fileListInfo.push(messagesResult)
                   } else {
                     message.errorMessage(messagesResult.msg)
+                    this.fileListInfo.push(messagesResult)
                   }
                 }
               }
