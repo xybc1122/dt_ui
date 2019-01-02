@@ -54,7 +54,7 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="resetForm('addForm')">重置</el-button>
+      <el-button @click="resetForm('addForm')">保存并继续</el-button>
       <el-button @click="saveFormValue = false">取 消</el-button>
       <el-button type="primary" @click="determine('addForm')">确 定</el-button>
     </div>
@@ -272,9 +272,27 @@
           }
         })
       },
-      //重置
+      //保存并继续
       resetForm (formName) {
-        this.$refs[formName].resetFields()
+        this.$refs[formName].validate((valid) => {
+          console.log(this.addForm)
+          if (valid) {
+            const resultSave = repSaveUserInfo(this.addForm)
+            resultSave.then((result) => {
+              console.log(result)
+              if (result.code === 200) {
+                alert('添加确认');
+                message.successMessage(result.msg)
+                PubSub.publish('saveFormValue', this.saveFormValue)
+                this.$refs[formName].resetFields()
+              }
+            })
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+
       }
     }
   }

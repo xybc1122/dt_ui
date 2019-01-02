@@ -54,9 +54,7 @@
       </el-menu>
       <el-button :icon="aa" @click="bt"  class=" none bt"></el-button>
     </el-aside>
-    <div class="none">
 
-    </div>
 
 
   </el-row>
@@ -69,7 +67,7 @@
   export default {
     data () {
       return {
-        width:"217px",
+        width:"200px",
         isCollapse: false,
         isRole: true,
         menuList: [],
@@ -109,14 +107,15 @@
 
 <style lang="scss">
   .bt{
+    float: left;
     position: fixed;
     margin-top: 385px;
     padding-right: 0;
     padding-left: 0;
     background-color: #E9F8FF;
   }
-  #spans{
-
+  .el-submenu__title{
+    height: 66px;
   }
   .none{
     float: left;

@@ -83,6 +83,7 @@
           :total="role.total_size">
         </el-pagination>
       </div>
+      <el-input v-model="input_num" placeholder="请输入冻结列数"></el-input>
     </div>
     <ShopAdd></ShopAdd>
     <ShopUp></ShopUp>
@@ -99,6 +100,7 @@
   export default {
     data () {
       return {
+        input_num:'',//冻结列数
         msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
         tableTitle: [],//表头信息
