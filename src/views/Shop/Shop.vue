@@ -4,10 +4,11 @@
     <div id="roleTable">
       <el-table
         :data="tableData"
-        style="width: 100%"
+        style="width: 500px"
         height="500"
         :span-method="arraySpanMethod"
-        @selection-change="handleSelectionChange">
+        @selection-change="handleSelectionChange"
+        stripe>
         <el-table-column
           type="selection"
           width="55">
@@ -19,10 +20,10 @@
         </el-table-column>
         <template v-for="title in tableTitle">
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='shop_name'" :label="title.headName" prop="shopName" width="100"
-                           sortable fixed></el-table-column>
+                           sortable :fixed="fixed"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='shop_number'" :label="title.headName"
                            prop="shopNumber" width="100"
-                           sortable></el-table-column>
+                           sortable :fixed="fixed2"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='shop_eng'" :label="title.headName"
                            prop="shopEng"
                            width="100"></el-table-column>
@@ -100,6 +101,8 @@
   export default {
     data () {
       return {
+        fixed:true,
+        fixed2:false,
         input_num:'',//冻结列数
         msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
@@ -119,6 +122,15 @@
     components:{
       ShopAdd,
       ShopUp
+    },
+    //手动冻结列......
+    watch:{
+      input_num(val){
+        if(val>0){
+          this.fixed2=true
+          this.input_num=''
+        }
+      }
     },
     async mounted () {
       //查询获得table表的 头信息
@@ -190,13 +202,13 @@
         this.tableData = dataUser.dataLists
         this.role.currentPage = dataUser.current_page
         this.role.total_size = dataUser.total_size
-      }
+      },
     }
   }
 </script>
 
 
-<style>
+<style lang="scss">
   /*表格*/
   #roleTable {
     margin-top: 50px;
@@ -205,5 +217,8 @@
   .el-tooltip__popper {
     max-width: 500px;
     line-height: 180%;
+  }
+  .el-table__row.warning-row {
+    background: oldlace;
   }
 </style>

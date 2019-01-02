@@ -213,6 +213,7 @@
         this.param.append('sId', this.uploadFrom.sId)
         this.param.append('seId', this.uploadFrom.seId)
         this.param.append('payId', this.uploadFrom.payId)
+        this.param.append('menuId', this.$route.params.id)
         let config = {
           headers: {
             'Content-Type': 'multipart/form-data'

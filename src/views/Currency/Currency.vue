@@ -7,7 +7,8 @@
         style="width: 100%"
         height="500"
         :span-method="arraySpanMethod"
-        @selection-change="handleSelectionChange">
+        @selection-change="handleSelectionChange"
+        stripe>
         <el-table-column
           type="selection"
           width="55">
@@ -18,25 +19,25 @@
           fixed>
         </el-table-column>
         <template v-for="title in tableTitle">
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='m_number'" :label="title.headName" prop="currencyNumber" width="100"
+          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='m_number'" :label="title.headName" prop="currencyNumber" width="150"
                            sortable fixed></el-table-column>
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='m_name'" :label="title.headName"
-                           prop="currencyName" width="100"
+                           prop="currencyName" width="150"
                            sortable></el-table-column>
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='m_eng_short'" :label="title.headName"
-                           prop="currencyEngShort" width="100"></el-table-column>
+                           prop="currencyEngShort" width="150"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='principal'" :label="title.headName"
                            prop="principal"
-                           width="100"></el-table-column>
+                           width="150"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='remark'" :label="title.headName"
                            prop="remark"
-                           width="100"></el-table-column>
+                           width="150"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='status_bit'" :label="title.headName"
                            prop="status"
-                           width="100"></el-table-column>
+                           width="150"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='create_user'" :label="title.headName"
                            prop="createIdUser"
-                           width="100"></el-table-column>
+                           width="150"></el-table-column>
           <el-table-column v-if="title.topType==='modify_date'" :label="title.headName" width="180">
             <template slot-scope="scope">
               <i class="el-icon-time"></i>
@@ -45,13 +46,13 @@
           </el-table-column>
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='modify_user'" :label="title.headName"
                            prop="modifyIdUser"
-                           width="100"></el-table-column>
+                           width="150"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='audit_date'" :label="title.headName"
                            prop="auditDate"
-                           width="100"></el-table-column>
+                           width="150"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='audit_id'" :label="title.headName"
                            prop="auditIdUser"
-                           width="100"></el-table-column>
+                           width="150"></el-table-column>
           <el-table-column v-if="title.topType==='create_date'" :label="title.headName" width="180">
             <template slot-scope="scope">
               <i class="el-icon-time"></i>

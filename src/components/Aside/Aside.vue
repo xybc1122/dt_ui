@@ -26,7 +26,7 @@
             <!--判断二级菜单下的子菜单有url的-->
             <el-menu-item-group v-if="sMenu.url" v-for="(sMenu,indexSun) in cMenu.childMenus" :key="indexSun"
                                 style="background-color: #EDEDED">
-              <el-menu-item :index="sMenu.url+'/'+sMenu.menuId"><span><i :class="sMenu.icon"></i></span> {{sMenu.name}}
+              <el-menu-item :index="sMenu.url+'/'+sMenu.menuId"><span><i :class="sMenu.icon? sMenu.icon : 'el-icon-loading'"></i></span> {{sMenu.name}}
               </el-menu-item>
             </el-menu-item-group>
             <!--判断二级菜单下的子菜单没有url的-->
@@ -96,9 +96,11 @@
 
       },
       handleOpen(key, keyPath) {
+        console.log("打开")
         console.log(key, keyPath);
       },
       handleClose(key, keyPath) {
+        console.log("关闭")
         console.log(key, keyPath);
       }
     }
@@ -140,8 +142,12 @@
     width: 200px;
     min-height: 400px;
   }
+  .el-submenu__title *{
+    margin-top: -10px !important;
+  }
   //自定义图标
   .el-submenu [class^=el-icon-]{
+    margin-top: -5px;
     margin-left: -4px;
     margin-right: -5px;
   }
