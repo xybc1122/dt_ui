@@ -10,7 +10,7 @@
       </div>
 
 
-      <div >
+      <div>
         <el-select v-model="uploadFrom.seId" placeholder="请选择" @change="changeSelect" value="">
           <el-option
             v-for="item in siteOptions"
@@ -205,7 +205,7 @@
                 return false
               }
             })
-          }else {
+          } else {
             return false
           }
         }
@@ -219,6 +219,14 @@
       beforeAvatarUpload (file) {
         let fileNames = []
         let index = file.name.lastIndexOf('.')
+        fileNames = file.name.substring(index + 1)
+        const xlsx = fileNames === 'xlsx'
+        const xls = fileNames === 'xls'
+        if (xlsx || xls) {
+        } else {
+          message.errorMessage('只能上传.xlsx/xls格式文件')
+          return false
+        }
         //重复文件名
         if (this.newListFile.length !== 0) {
           for (let i = 0; i < this.newListFile.length; i++) {
@@ -228,18 +236,9 @@
             }
           }
         }
-
         const isFlg = checkUtils.checkFileInfo(file, this.uploadFrom)
         if (!isFlg) {
           return isFlg
-        }
-        fileNames = file.name.substring(index + 1)
-        const csv = fileNames === 'csv'
-        if (csv) {
-
-        } else {
-          message.errorMessage('只能上传.csv格式文件')
-          return false
         }
         const fileSize = file.size / 1024 / 1024 < 100
         if (!fileSize) {
@@ -266,6 +265,7 @@
         this.param.append('sId', this.uploadFrom.sId)
         this.param.append('seId', this.uploadFrom.seId)
         this.param.append('payId', this.uploadFrom.payId)
+        this.param.append('menuId', this.$route.params.id)
         let config = {
           headers: {
             'Content-Type': 'multipart/form-data'
