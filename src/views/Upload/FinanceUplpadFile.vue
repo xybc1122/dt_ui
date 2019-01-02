@@ -286,11 +286,11 @@
         //上传文件
         axios.post(this.url, this.param, config).then((result) => {
           //上传成功~
-          //console.log(result)
           let uploadSuccessList = result.data.data
           if (uploadSuccessList.length > 0) {
             const uploadList = {uploadSuccessList}
             const resultAdd = repAddUploadInfoMysql(uploadList)
+            console.log(resultAdd)
             resultAdd.then((resultReturn) => {
                 for (let i = 0; i < resultReturn.data.length; i++) {
                   let messagesResult = resultReturn.data[i]
@@ -301,7 +301,6 @@
                       //触发记录
                       this.fileListInfo.push(messagesResult.data)
                       this.icon_list.push({'isIcon': true, 'id': messagesResult.data.id})
-                      console.log(this.fileListInfo)
                       continue
                     }
                     message.successMessage(messagesResult.msg)
@@ -309,7 +308,6 @@
                     this.fileListInfo.push(messagesResult.data)
                     this.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
                   } else {
-                    this.newListFile.splice(this.newListFile.indexOf(i), 1)
                     message.errorMessage(messagesResult.msg)
                     this.fileListInfo.push(messagesResult.data)
                     this.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
