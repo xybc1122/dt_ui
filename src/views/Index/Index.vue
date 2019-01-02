@@ -5,10 +5,10 @@
         <Header/>
       </el-header>
     </div>
-    <el-container style="margin-top: 55px">
-      <Aside/>
+    <el-container style="margin-top: 55px;overflow: hidden;height: 858px">
+      <Aside style="overflow-y: auto"/>
       <el-container >
-        <el-main style="position: fixed;">
+        <el-main>
           <!--缓存路由组件-->
           <keep-alive>
             <router-view></router-view>
@@ -16,7 +16,7 @@
           </el-main>
       </el-container>
     </el-container>
-    <el-footer >Footer</el-footer>
+    <el-footer style="height: 65px">Footer</el-footer>
   </el-container>
 </template>
 

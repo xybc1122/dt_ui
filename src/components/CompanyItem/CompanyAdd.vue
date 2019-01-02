@@ -33,7 +33,7 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="resetForm('addForm')">重置</el-button>
+      <el-button @click="resetForm('addForm')">保存并继续</el-button>
       <el-button @click="saveFormValue_com = false">取 消</el-button>
       <el-button type="primary" @click="submitForm('addForm')">确 定</el-button>
     </div>
@@ -113,7 +113,7 @@
     },
     methods: {
       //点击确定
-      determine (formName) {
+      submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           console.log(this.addForm)
           if (valid) {
@@ -132,18 +132,25 @@
           }
         })
       },
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
+      //保存并继续
       resetForm(formName) {
-        this.$refs[formName].resetFields();
+        this.$refs[formName].validate((valid) => {
+          console.log(this.addForm)
+          if (valid) {
+            const resultSave = repSaveUserInfo(this.addForm)
+            resultSave.then((result) => {
+              console.log(result)
+              if (result.code === 200) {
+                message.successMessage(result.msg)
+                PubSubAdd.publish('saveFormValue_com', this.saveFormValue_com)
+                this.$refs[formName].resetFields();
+              }
+            })
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
       }
     }
   }

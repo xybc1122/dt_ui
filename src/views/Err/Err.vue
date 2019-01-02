@@ -8,7 +8,8 @@
         style="width: 100%"
         height="500"
         :span-method="arraySpanMethod"
-        @selection-change="handleSelectionChange">
+        @selection-change="handleSelectionChange"
+        stripe>
         <el-table-column
           type="selection"
           width="55">
