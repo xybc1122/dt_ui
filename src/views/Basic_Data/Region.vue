@@ -91,10 +91,10 @@
   </div>
 </template>
 <script>
-  import {repHead, repGetRegionInfo} from '../../api'
+  import {repHead, repGetRegionInfo} from '../../api/index'
   import utils from '../../utils/PageUtils'
-  import AreaAdd from '../../components/ReginItem/AreaAdd'
-  import AreaUp from '../../components/ReginItem/AreaUp'
+  import AreaAdd from '../../components/Basic_Data_modify/RegionItem/AreaAdd'
+  import AreaUp from '../../components/Basic_Data_modify/RegionItem/AreaUp'
   import PubSub_Area from 'pubsub-js'
   //区域
   export default {

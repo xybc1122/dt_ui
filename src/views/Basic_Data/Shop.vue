@@ -91,10 +91,10 @@
   </div>
 </template>
 <script>
-  import {repHead, repGetShopInfo} from '../../api'
+  import {repHead, repGetShopInfo} from '../../api/index'
   //店铺
-  import ShopAdd from '../../components/ShopItem/ShopAdd'
-  import ShopUp from '../../components/ShopItem/ShopUp'
+  import ShopAdd from '../../components/Basic_Data_modify/ShopItem/ShopAdd'
+  import ShopUp from '../../components/Basic_Data_modify/ShopItem/ShopUp'
   import PubSub_Shop from 'pubsub-js'
   import utils from '../../utils/PageUtils'
 
