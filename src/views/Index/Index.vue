@@ -1,22 +1,21 @@
 <template>
-  <el-container>
-    <div class="navbar navbar-fixed-top">
+  <el-container style="overflow: hidden" :height="height">
+    <div style="height: 100%">
+      <Aside style="overflow-y: auto;"/>
+    </div>
+
+    <el-container style="float: left">
       <el-header>
         <Header/>
       </el-header>
-    </div>
-    <el-container style="margin-top: 55px;overflow: hidden;height: 858px">
-      <Aside style="overflow-y: auto"/>
-      <el-container >
-        <el-main>
-          <!--缓存路由组件-->
-          <keep-alive>
-            <router-view></router-view>
-          </keep-alive>
-          </el-main>
-      </el-container>
+      <el-main>
+        <!--缓存路由组件-->
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
+      </el-main>
+      <el-footer style="height: 65px">Footer</el-footer>
     </el-container>
-    <el-footer style="height: 65px">Footer</el-footer>
   </el-container>
 </template>
 
@@ -29,7 +28,8 @@
   export default {
     data () {
       return {
-        isRole: true
+        height:'',
+        isRole: true,
       }
     },
     async mounted () {
@@ -47,6 +47,7 @@
             path: '/login'
           })
       }
+      this.height=document.body.clientHeight
     },
     components: {
       Header,
@@ -62,6 +63,7 @@
     text-align: center;
     line-height: 60px;
   }
+
 
 
 </style>
