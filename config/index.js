@@ -12,7 +12,15 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': { // 匹配所有以 '/api'开头的请求路径
+<<<<<<< HEAD
         target: 'http://127.0.0.1:9002', // 代理目标的基础路径
+=======
+
+
+        target: 'http://192.168.208.109:9001', // 代理目标的基础路径
+
+
+>>>>>>> 900334baab45ba28ce93452060720634f522700d
         changeOrigin: true, // 支持跨域
         pathRewrite: {// 重写路径: 去掉路径中开头的'/api'
           '^/api': ''

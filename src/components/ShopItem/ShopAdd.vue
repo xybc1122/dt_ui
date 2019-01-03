@@ -67,7 +67,8 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            alert('确认添加');//状态不隐藏，清空表单
+            this.$refs[formName].resetFields();
           } else {
             console.log('error submit!!');
             return false;

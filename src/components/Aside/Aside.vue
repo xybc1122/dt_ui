@@ -26,7 +26,7 @@
             <!--判断二级菜单下的子菜单有url的-->
             <el-menu-item-group v-if="sMenu.url" v-for="(sMenu,indexSun) in cMenu.childMenus" :key="indexSun"
                                 style="background-color: #EDEDED">
-              <el-menu-item :index="sMenu.url+'/'+sMenu.menuId"><span><i :class="sMenu.icon"></i></span> {{sMenu.name}}
+              <el-menu-item :index="sMenu.url+'/'+sMenu.menuId"><span><i :class="sMenu.icon? sMenu.icon : 'el-icon-loading'"></i></span> {{sMenu.name}}
               </el-menu-item>
             </el-menu-item-group>
             <!--判断二级菜单下的子菜单没有url的-->
@@ -54,9 +54,7 @@
       </el-menu>
       <el-button :icon="aa" @click="bt"  class=" none bt"></el-button>
     </el-aside>
-    <div class="none">
 
-    </div>
 
 
   </el-row>
@@ -69,7 +67,7 @@
   export default {
     data () {
       return {
-        width:"217px",
+        width:"200px",
         isCollapse: false,
         isRole: true,
         menuList: [],
@@ -98,9 +96,11 @@
 
       },
       handleOpen(key, keyPath) {
+        console.log("打开")
         console.log(key, keyPath);
       },
       handleClose(key, keyPath) {
+        console.log("关闭")
         console.log(key, keyPath);
       }
     }
@@ -109,14 +109,15 @@
 
 <style lang="scss">
   .bt{
+    float: left;
     position: fixed;
     margin-top: 385px;
     padding-right: 0;
     padding-left: 0;
     background-color: #E9F8FF;
   }
-  #spans{
-
+  .el-submenu__title{
+    height: 66px;
   }
   .none{
     float: left;
@@ -141,8 +142,12 @@
     width: 200px;
     min-height: 400px;
   }
+  .el-submenu__title *{
+    margin-top: -10px !important;
+  }
   //自定义图标
   .el-submenu [class^=el-icon-]{
+    margin-top: -5px;
     margin-left: -4px;
     margin-right: -5px;
   }

@@ -1,13 +1,14 @@
 <template>
   <div>
     <!--table表格显示-->
-    <div id="roleTable">
+    <div id="roleTable" style="width: 1650px">
       <el-table
         :data="tableData"
         style="width: 100%"
         height="500"
         :span-method="arraySpanMethod"
-        @selection-change="handleSelectionChange">
+        @selection-change="handleSelectionChange"
+        stripe>
         <el-table-column
           type="selection"
           width="55">
@@ -88,7 +89,7 @@
 
 </template>
 <script>
-  import {repHead, repGetCompanyInfo} from '../../api'
+  import {repHead, repGetCompanyInfo, repUsers} from '../../api'
   import CompanyAdd from '../../components/CompanyItem/CompanyAdd'
   import CompanyUp from '../../components/CompanyItem/CompanyUp'
   import utils from '../../utils/PageUtils'
