@@ -13,9 +13,9 @@
 </template>
 
 <script>
-  import {repHead, repGetSiteInfo} from '../../api'
+  import {repHead, repGetSiteInfo} from '../../../api/index'
   import PubSub_ShopUp from 'pubsub-js'
-  import message from '../../utils/Message'
+  import message from '../../../utils/Message'
   export default {
     data(){
       return{

@@ -89,9 +89,9 @@
 
 </template>
 <script>
-  import {repHead, repGetCompanyInfo, repUsers} from '../../api'
-  import CompanyAdd from '../../components/CompanyItem/CompanyAdd'
-  import CompanyUp from '../../components/CompanyItem/CompanyUp'
+  import {repHead, repGetCompanyInfo, repUsers} from '../../api/index'
+  import CompanyAdd from '../../components/Basic_Data_modify/CompanyItem/CompanyAdd'
+  import CompanyUp from '../../components/Basic_Data_modify/CompanyItem/CompanyUp'
   import utils from '../../utils/PageUtils'
   import PubSub_com from 'pubsub-js'
 //公司

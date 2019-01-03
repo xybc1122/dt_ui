@@ -1,7 +1,8 @@
 <template>
-  <el-row class="tac" >
-    <el-aside :width="width"class="none">
-      <el-menu :default-active="$router.path" router class="el-menu-vertical-demo none" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+  <el-row class="tac">
+    <el-aside :width="width"class="none" style="height: 100%">
+      <el-menu :default-active="$router.path" router class="el-menu-vertical-demo none"
+               @open="handleOpen" @close="handleClose" :collapse="isCollapse" style="height: 100%">
         <!--判断父菜单没有url的-->
         <el-submenu v-if="!menu.url" :index="index.toString()" v-show="isRole" v-for="(menu,index) in menuList"
                     :key="index" style="background-color: #D4D4D4">
@@ -67,7 +68,7 @@
   export default {
     data () {
       return {
-        width:"200px",
+        width:"220px",
         isCollapse: false,
         isRole: true,
         menuList: [],
@@ -117,7 +118,7 @@
     background-color: #E9F8FF;
   }
   .el-submenu__title{
-    height: 66px;
+    height: 12%;
   }
   .none{
     float: left;
@@ -130,6 +131,7 @@
   }
   //鼠标悬浮样式
   .el-submenu{
+    height: 100/13%;
     .el-submenu__title:hover{
       background-color: #F1F0FF;
     }
@@ -139,7 +141,7 @@
   }
   //分类长宽
   .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: 200px;
+    width: 220px;
     min-height: 400px;
   }
   .el-submenu__title *{

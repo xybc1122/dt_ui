@@ -91,9 +91,9 @@
 </template>
 <script>
   import PubSub_Site from 'pubsub-js'
-  import SiteAdd from '../../components/SiteItem/SiteAdd'
-  import SiteUp from '../../components/SiteItem/SiteUp'
-  import {repHead, repGetSiteInfo} from '../../api'
+  import SiteAdd from '../../components/Basic_Data_modify/SiteItem/SiteAdd'
+  import SiteUp from '../../components/Basic_Data_modify/SiteItem/SiteUp'
+  import {repHead, repGetSiteInfo} from '../../api/index'
   //店铺
 
   export default {

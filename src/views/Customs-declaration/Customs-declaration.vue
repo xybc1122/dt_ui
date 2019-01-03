@@ -38,8 +38,8 @@
 </template>
 <script>
   import {repHead, repGetCompanyInfo} from '../../api'
-  import CompanyAdd from '../../components/CompanyItem/CompanyAdd'
-  import CompanyUp from '../../components/CompanyItem/CompanyUp'
+  import CompanyAdd from '../../components/Basic_Data_modify/CompanyItem/CompanyAdd'
+  import CompanyUp from '../../components/Basic_Data_modify/CompanyItem/CompanyUp'
   import utils from '../../utils/PageUtils'
   import DeclarationAdd from '../../components/Customs-declaration/Declaration'
   import PubSub_Dec from 'pubsub-js'
@@ -175,7 +175,7 @@
       //点击修改的时候 获得 Checkbox中 的属性
       upUserForm () {
         //发布订阅消息 修改
-        PubSub_com.publish('multipleSelection', this.multipleSelection)
+        PubSub_Dec.publish('multipleSelection', this.multipleSelection)
       },
     }
   }

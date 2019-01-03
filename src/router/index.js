@@ -5,11 +5,11 @@ import Login from '../views/Login/Login'
 import AccountManagement from '../views/AccountManagement/AccountManagement'
 import Menu from '../views/Menu/Menu'
 import RoleManagement from '../views/RoleManagement/RoleManagement'
-import Company from '../views/Company/Company'
-import Shop from '../views/Shop/Shop'
-import Region from '../views/Region/Region'
-import Site from '../views/Site/Site'
-import Currency from '../views/Currency/Currency'
+import Company from '../views/Basic_Data/Company'
+import Shop from '../views/Basic_Data/Shop'
+import Region from '../views/Basic_Data/Region'
+import Site from '../views/Basic_Data/Site'
+import Currency from '../views/Basic_Data/Currency'
 import Upload from '../views/Upload/FinanceUplpadFile'
 import Clearance from '../views/Customs-clearance/Customs-clearance'
 import Declaration from '../views/Customs-declaration/Customs-declaration'
@@ -24,6 +24,12 @@ import Receive from '../views/Upload/ReceiveUploadFile'//接收库存
 import Return from '../views/Upload/ReturnUploadFile'//退货报告
 import StrUpload from '../views/Upload/StrUploadFile'//STR
 import Terminal from '../views/Upload/TerminalUploadFile'//期末库存
+import Category from '../views/Basic_Data/Category'//产品类目
+import Exchange from '../views/Basic_Data/Exchange-rate'//汇率
+import Measurement from '../views/Basic_Data/Measurement'//计量单位
+import OPI from '../views/Basic_Data/OPI'//产品信息
+import HL from '../views/Upload/HlUploadFile'//HL
+import Warehouse from '../views/Basic_Data/Warehouse'//仓库
 Vue.use(Router)
 
 
@@ -123,6 +129,30 @@ export default new Router({
         {
           path:'/index/Terminal/:id',
           component:Terminal
+        },
+        {
+          path:'/index/CategoryItem/:id',
+          component:Category
+        },
+        {
+          path:'/index/Exchange/:id',
+          component:Exchange
+        },
+        {
+          path:'/index/Measurement/:id',
+          component:Measurement
+        },
+        {
+          path:'/index/OpiItem/:id',
+          component:OPI
+        },
+        {
+          path:'/index/HL/:id',
+          component:HL
+        },
+        {
+          path:'/index/Warehouse/:id',
+          component:Warehouse
         }
 
 

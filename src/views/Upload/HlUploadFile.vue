@@ -1,7 +1,6 @@
 <template>
   <el-form ref="uploadFrom" :model="uploadFrom" label-width="80px">
     <div style="margin-left: 150px">
-
       <div style="margin-top: 20px;">
         <el-radio-group v-model="radioShop" size="mini" @change="changeRadio">
           <el-radio-button :label="sArr" v-for="(sArr,index) in shopArr" :key="index">{{sArr.shopName}}
@@ -10,7 +9,7 @@
       </div>
 
 
-      <div >
+      <div>
         <el-select v-model="uploadFrom.seId" placeholder="请选择" @change="changeSelect" value="">
           <el-option
             v-for="item in siteOptions"
@@ -93,8 +92,6 @@
         uploadPercent: 0,//进度条数值
         disabled: true,//按钮状态
         bt_show: false,//默认上传按钮隐藏
-        mShow: false,//付款方式
-        payOptions: [{name: '标准订单', value: '1'}, {name: '发票支付', value: '2'}],//付款类型
         //id: '',//上传文件的ID
         icon_list: [],//上传成功后遍历
         uploadFrom: {
@@ -213,12 +210,19 @@
       //点击下载
       download (file) {
         console.log(file)
-
       },
       //上传校验
       beforeAvatarUpload (file) {
         let fileNames = []
         let index = file.name.lastIndexOf('.')
+        fileNames = file.name.substring(index + 1)
+        const xlsx = fileNames === 'xlsx'
+        const xls = fileNames === 'xls'
+        if (xlsx || xls) {
+        } else {
+          message.errorMessage('只能上传.xlsx/xls格式文件')
+          return false
+        }
         //重复文件名
         if (this.newListFile.length !== 0) {
           for (let i = 0; i < this.newListFile.length; i++) {
@@ -228,18 +232,9 @@
             }
           }
         }
-
         const isFlg = checkUtils.checkFileInfo(file, this.uploadFrom)
         if (!isFlg) {
           return isFlg
-        }
-        fileNames = file.name.substring(index + 1)
-        const csv = fileNames === 'csv'
-        if (csv) {
-
-        } else {
-          message.errorMessage('只能上传.csv格式文件')
-          return false
         }
         const fileSize = file.size / 1024 / 1024 < 100
         if (!fileSize) {
@@ -282,6 +277,7 @@
           if (uploadSuccessList.length > 0) {
             const uploadList = {uploadSuccessList}
             const resultAdd = repAddUploadInfoMysql(uploadList)
+            console.log(resultAdd)
             resultAdd.then((resultReturn) => {
                 for (let i = 0; i < resultReturn.data.length; i++) {
                   let messagesResult = resultReturn.data[i]
@@ -319,7 +315,6 @@
           this.bt_show = false
         }
       },
-
       // 上传错误
       uploadError (response, file, fileList) {
         message.errorMessage(response.message)
