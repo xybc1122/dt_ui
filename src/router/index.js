@@ -28,6 +28,8 @@ import Category from '../views/Basic_Data/Category'//产品类目
 import Exchange from '../views/Basic_Data/Exchange-rate'//汇率
 import Measurement from '../views/Basic_Data/Measurement'//计量单位
 import OPI from '../views/Basic_Data/OPI'//产品信息
+import HL from '../views/Upload/HlUploadFile'//HL
+import Warehouse from '../views/Basic_Data/Warehouse'//仓库
 Vue.use(Router)
 
 
@@ -143,6 +145,14 @@ export default new Router({
         {
           path:'/index/OpiItem/:id',
           component:OPI
+        },
+        {
+          path:'/index/HL/:id',
+          component:HL
+        },
+        {
+          path:'/index/Warehouse/:id',
+          component:Warehouse
         }
 
 
