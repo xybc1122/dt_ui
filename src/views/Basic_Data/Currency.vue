@@ -76,9 +76,9 @@
 </template>
 <script>
   import PubSubAdd from 'pubsub-js'
-  import currencyAdd from '../../components/CurrencyItem/CurrencyAdd'
-  import currencyUp from '../../components/CurrencyItem/CurrencyUp'
-  import {repHead, repGetCurrencyInfo} from '../../api'
+  import currencyAdd from '../../components/Basic_Data_modify/CurrencyItem/CurrencyAdd'
+  import currencyUp from '../../components/Basic_Data_modify/CurrencyItem/CurrencyUp'
+  import {repHead, repGetCurrencyInfo} from '../../api/index'
   //店铺
 
   export default {
