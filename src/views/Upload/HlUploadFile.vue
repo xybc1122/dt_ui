@@ -277,6 +277,7 @@
           if (uploadSuccessList.length > 0) {
             const uploadList = {uploadSuccessList}
             const resultAdd = repAddUploadInfoMysql(uploadList)
+            console.log(resultAdd)
             resultAdd.then((resultReturn) => {
                 for (let i = 0; i < resultReturn.data.length; i++) {
                   let messagesResult = resultReturn.data[i]
