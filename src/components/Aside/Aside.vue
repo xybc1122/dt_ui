@@ -7,13 +7,11 @@
         <el-submenu index="2" >
           <template slot="title">{{From.identity}}</template>
           <el-menu-item class="item_li" index="2-1"v-for="(cc,index) in From.data" :key="index"
-                        v-if="cc.name==='权限一'" :command="cc.name">{{cc.name}}</el-menu-item>
+                        v-if="cc.name==='未完成一'" :command="cc.name">{{cc.name}}</el-menu-item>
           <el-menu-item class="item_li" index="2-1"v-for="(cc,index) in From.data" :key="index"
-                        v-if="cc.name==='权限二'" :command="cc.name">{{cc.name}}</el-menu-item>
+                        v-if="cc.name==='未完成二'" :command="cc.name">{{cc.name}}</el-menu-item>
           <el-menu-item class="item_li" index="2-1"v-for="(cc,index) in From.data" :key="index"
-                        v-if="cc.name==='权限三'" :command="cc.name">{{cc.name}}</el-menu-item>
-          <el-menu-item class="item_li" index="/login"v-for="(cc,index) in From.data" :key="index"
-                        v-if="cc.name==='退出'" :command="cc.name">{{cc.name}}</el-menu-item>
+                        v-if="cc.name==='未完成三'" :command="cc.name">{{cc.name}}</el-menu-item>
         </el-submenu>
       </el-menu>
     </h2>
@@ -92,7 +90,7 @@
         From: {
           userName:'',
           identity:'管理员',
-          data:[{name:'权限一'},{name:'权限二'},{name:'权限三'},{name:'退出'}]
+          data:[{name:'未完成一'},{name:'未完成二'},{name:'未完成三'}]
         },
         img_user:'',
         width:"220px",
@@ -111,15 +109,13 @@
     },
     methods: {
       handleOpen(key, keyPath) {
-        console.log("打开")
-        console.log(key, keyPath);
+
       },
       handleClose(key, keyPath) {
-        console.log("关闭")
-        console.log(key, keyPath);
+
       },
       handleSelect(key, keyPath) {
-        console.log(key, keyPath);
+
       }
     }
   }
@@ -216,5 +212,8 @@
   .el-menu-item-group__title{
     padding-top: 0px;
     padding-bottom: 0px;
+  }
+  .el-menu--horizontal>.el-submenu .el-submenu__icon-arrow{
+    display: none;
   }
 </style>
