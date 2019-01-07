@@ -5,8 +5,10 @@ import App from './App'
 import router from './router'
 import store from './store'
 import './fiters' //加载过滤器
+import './assets/icon/iconfont.css'
 
 import {
+  Badge,
   Button,
   Input,
   Container,
@@ -50,6 +52,7 @@ import {
   Upload,
   Progress
 } from 'element-ui'
+Vue.component(Badge.name,Badge)
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)
 Vue.component(Container.name, Container)
