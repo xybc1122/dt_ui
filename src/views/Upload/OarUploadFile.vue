@@ -220,11 +220,10 @@
         let fileNames = []
         let index = file.name.lastIndexOf('.')
         fileNames = file.name.substring(index + 1)
-        const xlsx = fileNames === 'xlsx'
-        const xls = fileNames === 'xls'
-        if (xlsx || xls) {
+        const xls = fileNames === 'txt'
+        if (xls) {
         } else {
-          message.errorMessage('只能上传.xlsx/xls格式文件')
+          message.errorMessage('只能上传.txt格式文件')
           return false
         }
         //重复文件名

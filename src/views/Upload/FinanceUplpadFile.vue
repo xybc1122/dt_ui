@@ -150,7 +150,6 @@
       },
       //下拉时获取 通过value=siteId  查询对应的对象 获取 label
       async changeSelect (value) {
-
         this.fileListInfo = []
         this.icon_list = []
         let obj = {}
@@ -159,7 +158,7 @@
         })
         this.siteName = obj.siteName
         this.isFileUp = true
-        const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
+        const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId, null, this.param.id)
         //console.log(resultUploadInfo)
         if (resultUploadInfo.code === 200) {
           for (let i = 0; i < resultUploadInfo.data.length; i++) {

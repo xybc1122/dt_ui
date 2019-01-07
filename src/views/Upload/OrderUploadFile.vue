@@ -10,13 +10,13 @@
       </div>
 
 
-      <div >
-        <el-select v-model="uploadFrom.seId" placeholder="请选择" @change="changeSelect" value="">
+      <div>
+        <el-select v-model="uploadFrom.areaId" placeholder="请选择" @change="changeSelect" value="">
           <el-option
-            v-for="item in siteOptions"
-            :key="item.siteId"
-            :label="item.siteName"
-            :value="item.siteId">
+            v-for="item in areaOptions"
+            :key="item.areaId"
+            :label="item.areaName"
+            :value="item.areaId">
           </el-option>
         </el-select>
       </div>
@@ -35,7 +35,7 @@
           :limit="20"
           :on-exceed="handleExceed"
           :file-list="fileListInfo" v-if="isFileUp">
-          <div class="el-upload__text">将{{shopName}}店铺---{{siteName}}站点---文件拖到此处，或<em>点击上传</em></div>
+          <div class="el-upload__text">将{{shopName}}店铺---{{areaName}}洲---文件拖到此处，或<em>点击上传</em></div>
           <div class="el-upload__tip" slot="tip">只能上传.csv格式文件/不能超过100MB</div>
         </el-upload>
         <div style="margin-top: 10px">
@@ -78,11 +78,10 @@
   import checkUtils from '../../utils/CheckUtils'
   import {
     repGetShopInfo,
-    repGetShopIdSiteInfo,
     repGetUserUploadInfo,
     repDelUploadInfo,
     repAddUploadInfoMysql,
-    bulkUpload
+    repGetRegionInfo
   } from '../../api'
 
   const BASE_URL = '/api'
@@ -94,16 +93,17 @@
         disabled: true,//按钮状态
         bt_show: false,//默认上传按钮隐藏
         mShow: false,//付款方式
-        payOptions: [{name: '标准订单', value: '1'}, {name: '发票支付', value: '2'}],//付款类型
         //id: '',//上传文件的ID
         icon_list: [],//上传成功后遍历
         uploadFrom: {
           sId: '',//店铺ID
           seId: '',//站点 ID
-          payId: '' //付款类型ID
+          payId: '', //付款类型ID
+          areaId: '',
+          tbId: ''
         },
         shopName: '',//店铺名称
-        siteName: '',//站点名称
+        areaName: '',//站点名称
         isFileUp: false, //点击站点 显示上传功能
         fileListInfo: [],//上传完成列表
         newListFile: [],//上传中列表
@@ -112,7 +112,7 @@
         url: BASE_URL + '/upload/file', //上传的 api  接口
         radioShop: '',//店铺 model
         shopArr: [], //店铺集合
-        siteOptions: [],//站点信息
+        areaOptions: [],//洲信息
         fileName: ''//文件名称
       }
     },
@@ -124,33 +124,30 @@
       }
     },
     methods: {
-      async changeRadio (value) {
-        this.newListFile = []
-        this.disabled = true
-        this.bt_show = false
-        this.shopName = value.shopName
-        this.uploadFrom.sId = value.shopId
-        this.icon_list = []
-        //通过 sId  获得站点信息
-        const resultSite = await repGetShopIdSiteInfo(this.uploadFrom.sId)
-        if (resultSite.code === 200) {
-          this.siteOptions = resultSite.data
+      async changeRadio () {
+        const area = {}
+        const resultArea = await repGetRegionInfo(area)
+        console.log(resultArea)
+        if (resultArea.code === 200) {
+          this.areaOptions = resultArea.data
         }
-        this.uploadFrom.seId = ''
         this.isFileUp = false
       },
       //下拉时获取 通过value=siteId  查询对应的对象 获取 label
       async changeSelect (value) {
-
         this.fileListInfo = []
         this.icon_list = []
         let obj = {}
-        obj = this.siteOptions.find((item) => {
-          return item.siteId === value
+        obj = this.areaOptions.find((item) => {
+          return item.areaId === value
         })
-        this.siteName = obj.siteName
+        this.uploadFrom.sId = this.radioShop.shopId
+        this.uploadFrom.tbId = this.$route.params.id
+        //console.log(obj)
+        this.areaName = obj.areaName
         this.isFileUp = true
-        const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom.sId, this.uploadFrom.seId, this.uploadFrom.payId)
+
+        const resultUploadInfo = await repGetUserUploadInfo(this.uploadFrom)
         //console.log(resultUploadInfo)
         if (resultUploadInfo.code === 200) {
           for (let i = 0; i < resultUploadInfo.data.length; i++) {
@@ -205,7 +202,7 @@
                 return false
               }
             })
-          }else {
+          } else {
             return false
           }
         }

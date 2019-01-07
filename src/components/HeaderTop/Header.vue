@@ -1,38 +1,23 @@
 <template>
-
-  <div>
-    <div class="logo">
-      <img src="./img/logo.png" style="width: 195px"/>
-
+  <div >
+    <img class="img_header" src="./img/logo.png"/>
+    <div style="float: right;margin-top: 10px;margin-left: 50px;margin-right: 20px">
+      <i class="icon_sum iconfont icon_dt-liebiao" @click="a"></i>
+    </div>
+    <div style="float: right;margin-top: 10px" >
+      <i class="icon_sum iconfont icon_dt-tuichu" @click="logout"  style="padding-right: 10px;margin-top: 23px"></i>
+      <span class="quit" style="float: right" @click="logout">
+                注销
+            </span>
     </div>
 
-    <i class="iconfont icon_dt-yuangong" style="color: #ffffff;font-size: 25px"></i>
-    <span style="color: #ffffff ;font-size: 20px">{{userName}}</span>
-    <a class="el-icon-message" style="color: #ffffff"></a>
-    <el-dropdown>
-  <span class="el-dropdown-link" style="color: #ffffff ;font-size: 20px">
-  <i class="el-icon-arrow-down el-icon--right" style="color: #ffffff"></i>
-  </span>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>1</el-dropdown-item>
-        <el-dropdown-item>2</el-dropdown-item>
-        <el-dropdown-item>3</el-dropdown-item>
-        <el-dropdown-item>4</el-dropdown-item>
-        <el-dropdown-item>5</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
-    <el-dropdown>
-  <span class="el-dropdown-link">
-  <i class="iconfont icon_dt-shezhi" style="color: #ffffff"></i>
-  </span>
-      <el-dropdown-menu slot="dropdown">
-        <el-button size="mini">设置</el-button>
-        <p></p>
-        <el-button @click="logout" size="mini">退出</el-button>
-      </el-dropdown-menu>
-    </el-dropdown>
-    <a style="color: #ffffff">帮助</a>
-
+    <el-badge :value="100" :max="99" class="item" style="float: right">
+      <i class="icon_sum iconfont icon_dt-tongzhi" @click="c"></i>
+    </el-badge>
+    <el-badge :value="100" :max="10" class="item" style="float: right">
+      <i class="icon_sum iconfont icon_dt-nitification" @click="d"></i>
+    </el-badge>
+    <p class="login">欢迎来到 XXX 中文管理后台</p>
   </div>
 </template>
 
@@ -40,32 +25,59 @@
   import {repLogout} from '../../api'
 
   export default {
-    data () {
-      return {
-        userName: ''
-      }
-    },
-    methods: {
+    methods:{
       async logout () {
         const result = await repLogout()
         if (result.code === 200) {
           this.$router.replace('/login')
         }
+      },
+      a(){
+        console.log("列表")
+      },
+      c(){
+        console.log("消息提示")
+      },
+      d(){
+        console.log("最新提示")
       }
-    },
-    mounted () {
-      this.userName = this.getCookie('userName')
     }
   }
 </script>
 
-<style >
-  .logo{
+<style lang="scss">
+  .img_header{
     float: left;
+    margin-top: 10px;
   }
-  .el-header{
-    background-color: #EF694A;
-    text-align: center;
-    line-height: 60px;
+  .login{
+    float: right;
+    padding-top: 0px!important;
+    margin-top: 10px!important;
+    margin-right: 50px;
+    color: #888888;
+  }
+  .quit{
+    cursor: pointer;
+    color: #999c9e;
+  }
+  .icon_sum{
+    color: #999c9e;
+    font-size: 25px !important;
+    cursor: pointer;
+  }
+  .el-col-24{
+    width: 64px!important;
+  }
+  .el-badge__content.is-fixed{
+    margin-top: 12px;
+  }
+  .el-icon-message{
+    font-size: 25px;
+  }
+  .item {
+    margin-top: 10px;
+
+    margin-right: 60px;
   }
 </style>
