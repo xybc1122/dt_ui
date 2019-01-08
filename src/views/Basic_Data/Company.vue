@@ -82,6 +82,16 @@
       <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUserForm">
         新增
       </el-button>
+      <div class="block" style="float: right">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :page-sizes="role.page_sizes"
+          :page-size="role.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="role.total">
+        </el-pagination>
+      </div>
     </div>
     <CompanyAdd/>
     <CompanyUp/>
@@ -106,8 +116,9 @@
         saveFormValue_com: false,//新增隐藏form
         role: {
           currentPage: 1,//当前页
-          total_size: 0,//总的页
-          pageSize: 10//显示最大的页
+          pageSize: 5,//显示最大的页
+          page_sizes:[5,10,15,20,25],
+          total:0,
         }
       }
     },
@@ -128,6 +139,7 @@
       console.log(resultGetCompany)
       if (resultGetCompany.code === 200) {
         this.tableData = resultGetCompany.data
+        this.role.total=resultGetCompany.data.length
       }
       //新增成功后收到订阅消息
       PubSub_com.subscribe('saveFormValue_com', (msg, saveFormValue_com) => {

@@ -31,6 +31,9 @@ import OPI from '../views/Basic_Data/OPI'//产品信息
 import HL from '../views/Upload/HlUploadFile'//HL
 import Warehouse from '../views/Basic_Data/Warehouse'//仓库
 import YyFinanceUploadFile from '../views/Upload/YyFinanceUploadFile'//运营财务导入
+import Edition from '../views/System/Edition'//版本信息
+import Company_inf from '../views/System/Company_inf'//公司信息
+import Register from '../views/System/Register'//注册信息
 Vue.use(Router)
 
 
@@ -128,36 +131,48 @@ export default new Router({
           component:StrUpload
         },
         {
-          path:'/index/Terminal/:id',
+          path:'/index/Terminal/:id',//期末库存
           component:Terminal
         },
         {
-          path:'/index/CategoryItem/:id',
+          path:'/index/CategoryItem/:id',//产品类目
           component:Category
         },
         {
-          path:'/index/Exchange/:id',
+          path:'/index/Exchange/:id',//汇率
           component:Exchange
         },
         {
-          path:'/index/Measurement/:id',
+          path:'/index/Measurement/:id',//计量单位
           component:Measurement
         },
         {
-          path:'/index/OpiItem/:id',
+          path:'/index/OpiItem/:id',//OPI
           component:OPI
         },
         {
-          path:'/index/HL/:id',
+          path:'/index/HL/:id',//HL
           component:HL
         },
         {
-          path:'/index/Warehouse/:id',
+          path:'/index/Warehouse/:id',//仓库
           component:Warehouse
         },
         {
           path:'/index/yy-upload/:id',
           component:YyFinanceUploadFile
+        },
+        {
+          path:'/index/Edition/:id',//版本信息
+          component:Edition
+        },
+        {
+          path:'/index/Company_inf/:id',//公司信息
+          component:Company_inf
+        },
+        {
+          path:'/index/Register/:id',//
+          component:Register
         }
       ]
     },

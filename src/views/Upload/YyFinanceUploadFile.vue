@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-left: 150px">
+  <div>
     <!--订单类型选择 -->
     <PaymentType/>
   </div>
