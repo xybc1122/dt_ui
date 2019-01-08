@@ -11,7 +11,7 @@ export const repLoginUser = ({userName, pwd, checked}) => ajax(BASE_URL + `/ajax
   checked
 }, 'POST')
 //获得所有用户信息
-export const repGetUsers = () => ajax(BASE_URL + `/user/getUsers`)
+export const repGetUsers = () => ajax(BASE_URL + '/user/getUsers')
 //获取用户管理信息
 export const repUsers = ({currentPage, pageSize, userName, name, createDate}) =>
   ajax(BASE_URL + `/user/show`, {currentPage, pageSize, userName, name, createDate}, 'POST')
@@ -33,10 +33,10 @@ export const repIndex = () => ajax(BASE_URL + `/menu/index`)
 export const repLogout = () => ajax(BASE_URL + `/logout`)
 
 //查询哪些用户有哪些菜单
-export const repMenu = () => ajax(BASE_URL + '/menu/show')
+export const repMenu = () => ajax(BASE_URL + `/menu/show`)
 
 //通过角色查询菜单列表
-export const repMenuRole = (rid) => ajax(BASE_URL + '/menu/role/menu', {rid})
+export const repMenuRole = (rid) => ajax(BASE_URL + `/menu/role/menu`, {rid})
 
 //通过角色id来获取菜单id
 export const repGetMenus = ({rid, menuIds, menuFlg}) => ajax(BASE_URL + '/rm/upMenus', {rid, menuIds, menuFlg}, 'POST')
@@ -53,15 +53,15 @@ export const repUpUserInfo = ({pwd, accountStatus, uid, pwdStatus, effectiveDate
 export const repSingleUser = () => ajax(BASE_URL + `/user/getUser`)
 
 // 查询一个角色下的所有用户跟 菜单
-export const repGetRoles = ({currentPage, pageSize}) => ajax(BASE_URL + `/role/getRoles`, {
+export const repGetRoles = ({currentPage, pageSize}) => ajax(BASE_URL + '/role/getRoles', {
   currentPage,
   pageSize
 }, 'POST')
 
 //删除一个用户或者多个用户
-export const repDelUserInfo = ({ids}) => ajax(BASE_URL + `/user/delUserInfo`, {ids}, 'POST')
+export const repDelUserInfo = ({ids}) => ajax(BASE_URL + '/user/delUserInfo', {ids}, 'POST')
 //恢复一个用户或者多个用户
-export const repReUserInfo = ({ids}) => ajax(BASE_URL + `/user/reUserInfo`, {ids}, 'POST')
+export const repReUserInfo = ({ids}) => ajax(BASE_URL + '/user/reUserInfo', {ids}, 'POST')
 //获得历史删除用户的信息
 export const repDelHistoryUserInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/user/getDelUser', {
   currentPage,
@@ -75,7 +75,7 @@ export const repGetCompanyInfo = () => ajax(BASE_URL + `/company/findByListCompa
 export const repGetShopInfo = () => ajax(BASE_URL + `/shop/findByListShop`)
 
 //获取区域的所有信息
-export const repGetRegionInfo = ({currentPage, pageSize}) => ajax(BASE_URL + `/reg/findByListRegion`, {
+export const repGetRegionInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/reg/findByListRegion', {
   currentPage,
   pageSize
 }, 'POST')
@@ -84,7 +84,7 @@ export const repGetRegionInfo = ({currentPage, pageSize}) => ajax(BASE_URL + `/r
 export const repGetSiteInfo = () => ajax(BASE_URL + `/site/findByListSite`)
 
 //通过shop id 获取站点信息
-export const repGetShopIdSiteInfo = (sId) => ajax(BASE_URL + '/site/getByShopIdListSite', {sId})
+export const repGetShopIdSiteInfo = (sId) => ajax(BASE_URL + `/site/getByShopIdListSite`, {sId})
 
 //获取币别的所有信息
 export const repGetCurrencyInfo = () => ajax(BASE_URL + `/currency/findByListCurrency`)
@@ -96,7 +96,7 @@ export const repFindRoles = () => ajax(BASE_URL + `/role/findByListRoles`)
 export const repGetStaff = () => ajax(BASE_URL + `/staff/getStaff`)
 
 //获得用户名字是否存在
-export const repGetUserName = (userName) => ajax(BASE_URL + '/user/getUserName', {userName})
+export const repGetUserName = (userName) => ajax(BASE_URL + `/user/getUserName`, {userName})
 
 //新增用户信息
 export const repSaveUserInfo = ({
@@ -119,11 +119,17 @@ export const repAddHeadMenu = ({mId, thIds}) => ajax(BASE_URL + '/hm/saveHeadMen
 //删除菜单关联表头字段
 export const repDelHeadMenu = ({mId, thIds}) => ajax(BASE_URL + '/hm/delTbHeadMenu', {mId, thIds}, 'POST')
 
-//通过uID sID seID 查询用户记录
-export const repGetUserUploadInfo = (sId, seId, payId) => ajax(BASE_URL + '/upload/getInfo', {sId, seId, payId})
+//查询用户记录
+export const repGetUserUploadInfo = ({shopId, siteId, pId, areaId, tbId}) => ajax(BASE_URL + '/upload/getInfo', {
+  shopId,
+  siteId,
+  pId,
+  areaId,
+  tbId
+}, 'POST')
 
 //通过id 删除用户记录信息
-export const repDelUploadInfo = (id) => ajax(BASE_URL + '/upload/delInfo', {id})
+export const repDelUploadInfo = (id) => ajax(BASE_URL + `/upload/delInfo`, {id})
 
 //上传成功后 发送数据给后台读数据
-export const repAddUploadInfoMysql = ({uploadSuccessList}) => ajax(BASE_URL + `/upload/addInfo`, {uploadSuccessList},'POST')
+export const repAddUploadInfoMysql = ({uploadSuccessList}) => ajax(BASE_URL + '/upload/addInfo', {uploadSuccessList}, 'POST')
