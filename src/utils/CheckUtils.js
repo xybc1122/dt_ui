@@ -9,48 +9,48 @@ export default {
     //诚夕
     let fileShopNameCx = file.name.indexOf('诚夕')
     //店铺文件判断
-    if (fileShopNameDt === -1 && uploadFrom.sId === 1) {
+    if (fileShopNameDt === -1 && uploadFrom.shopId === 1) {
       message.errorMessage('不是电兔的文件/请注意操作~')
       return false
-    } else if (fileShopNameHm === -1 && uploadFrom.sId === 2) {
+    } else if (fileShopNameHm === -1 && uploadFrom.shopId === 2) {
       message.errorMessage('不是宏名的文件/请注意操作~')
       return false
-    } else if (fileShopNameCx === -1 && uploadFrom.sId === 3) {
+    } else if (fileShopNameCx === -1 && uploadFrom.shopId === 3) {
       message.errorMessage('不是诚夕的文件/请注意操作~')
       return false
     }
     //站点文件判断
-    if (file.name.indexOf('美国') === -1 && uploadFrom.seId === 1) {
+    if (file.name.indexOf('美国') === -1 && uploadFrom.siteId === 1) {
       message.errorMessage('不是美国站的文件~')
       return false
-    } else if (file.name.indexOf('加拿大') === -1 && uploadFrom.seId === 2) {
+    } else if (file.name.indexOf('加拿大') === -1 && uploadFrom.siteId === 2) {
       message.errorMessage('不是加拿大站的文件~')
       return false
-    } else if (file.name.indexOf('澳大利亚') === -1 && uploadFrom.seId === 3) {
+    } else if (file.name.indexOf('澳大利亚') === -1 && uploadFrom.siteId === 3) {
       message.errorMessage('不是澳大利亚站的文件~')
       return false
     }
-    else if (file.name.indexOf('英国') === -1 && uploadFrom.seId === 4) {
+    else if (file.name.indexOf('英国') === -1 && uploadFrom.siteId === 4) {
       message.errorMessage('不是英国站的文件~')
       return false
     }
-    else if (file.name.indexOf('德国') === -1 && uploadFrom.seId === 5) {
+    else if (file.name.indexOf('德国') === -1 && uploadFrom.siteId === 5) {
       message.errorMessage('不是德国站的文件~')
       return false
     }
-    else if (file.name.indexOf('法国') === -1 && uploadFrom.seId === 6) {
+    else if (file.name.indexOf('法国') === -1 && uploadFrom.siteId === 6) {
       message.errorMessage('不是法国站的文件~')
       return false
-    } else if (file.name.indexOf('意大利') === -1 && uploadFrom.seId === 7) {
+    } else if (file.name.indexOf('意大利') === -1 && uploadFrom.siteId === 7) {
       message.errorMessage('不是意大利站的文件~')
       return false
-    } else if (file.name.indexOf('西班牙') === -1 && uploadFrom.seId === 8) {
+    } else if (file.name.indexOf('西班牙') === -1 && uploadFrom.siteId === 8) {
       message.errorMessage('不是西班牙站的文件~')
       return false
-    } else if (file.name.indexOf('日本') === -1 && uploadFrom.seId === 9) {
+    } else if (file.name.indexOf('日本') === -1 && uploadFrom.siteId === 9) {
       message.errorMessage('不是日本站的文件~')
       return false
-    } else if (file.name.indexOf('墨西哥') === -1 && uploadFrom.seId === 10) {
+    } else if (file.name.indexOf('墨西哥') === -1 && uploadFrom.siteId === 10) {
       message.errorMessage('不是墨西哥站的文件~')
       return false
     }

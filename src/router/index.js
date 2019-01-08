@@ -10,7 +10,7 @@ import Shop from '../views/Basic_Data/Shop'
 import Region from '../views/Basic_Data/Region'
 import Site from '../views/Basic_Data/Site'
 import Currency from '../views/Basic_Data/Currency'
-import Upload from '../views/Upload/FinanceUplpadFile'
+import Upload from '../views/Upload/FinanceUploadFile'
 import Clearance from '../views/Customs-clearance/Customs-clearance'
 import Declaration from '../views/Customs-declaration/Customs-declaration'
 import Err from '../views/Err/Err'
@@ -30,6 +30,7 @@ import Measurement from '../views/Basic_Data/Measurement'//计量单位
 import OPI from '../views/Basic_Data/OPI'//产品信息
 import HL from '../views/Upload/HlUploadFile'//HL
 import Warehouse from '../views/Basic_Data/Warehouse'//仓库
+import YyFinanceUploadFile from '../views/Upload/YyFinanceUploadFile'//运营财务导入
 Vue.use(Router)
 
 
@@ -153,9 +154,11 @@ export default new Router({
         {
           path:'/index/Warehouse/:id',
           component:Warehouse
+        },
+        {
+          path:'/index/yy-upload/:id',
+          component:YyFinanceUploadFile
         }
-
-
       ]
     },
     {
