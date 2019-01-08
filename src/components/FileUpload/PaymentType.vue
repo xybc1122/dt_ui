@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-select style="width: 120px" v-model="ptFrom.pId" placeholder="付款类型" @change="changeShow" value="">
+    <el-select style="width: 120px;margin-left: 150px" v-model="ptFrom.pId" placeholder="付款类型" @change="changeShow" value="">
       <el-option
         v-for="item in payOptions"
         :key="item.value"

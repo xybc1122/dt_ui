@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="width: 400px;float: left;">
+    <div style="width: 400px;float: left;margin-left: 150px">
       <el-upload
         class="upload-demo"
         action="xx"

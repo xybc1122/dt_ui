@@ -4,7 +4,17 @@
 
 <script>
   export default {
-    name: 'Company'
+    data(){
+      return{
+
+      }
+    },
+    methods:{
+
+    },
+    mounted:{
+
+    }
   }
 </script>
 

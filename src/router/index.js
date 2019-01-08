@@ -30,11 +30,10 @@ import Measurement from '../views/Basic_Data/Measurement'//计量单位
 import OPI from '../views/Basic_Data/OPI'//产品信息
 import HL from '../views/Upload/HlUploadFile'//HL
 import Warehouse from '../views/Basic_Data/Warehouse'//仓库
-<<<<<<< HEAD
-import Edition from '../views/System/Edition' //版本信息
-=======
 import YyFinanceUploadFile from '../views/Upload/YyFinanceUploadFile'//运营财务导入
->>>>>>> d3b69c0e442c8f8ae9e5eb283dfc061c6a4c8d9e
+import Edition from '../views/System/Edition'//版本信息
+import Company_inf from '../views/System/Company_inf'//公司信息
+import Register from '../views/System/Register'//注册信息
 Vue.use(Router)
 
 
@@ -162,6 +161,18 @@ export default new Router({
         {
           path:'/index/yy-upload/:id',
           component:YyFinanceUploadFile
+        },
+        {
+          path:'/index/Edition/:id',//版本信息
+          component:Edition
+        },
+        {
+          path:'/index/Company_inf/:id',//公司信息
+          component:Company_inf
+        },
+        {
+          path:'/index/Register/:id',//
+          component:Register
         }
       ]
     },
