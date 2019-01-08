@@ -105,6 +105,7 @@
         axios.post(this.url, this.param, config).then((result) => {
           //上传成功~
           let uploadSuccessList = result.data.data
+          console.log(uploadSuccessList)
           if (uploadSuccessList.length > 0) {
             const uploadList = {uploadSuccessList}
             const resultAdd = repAddUploadInfoMysql(uploadList)

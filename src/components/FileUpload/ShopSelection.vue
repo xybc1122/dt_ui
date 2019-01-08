@@ -126,16 +126,16 @@
         } else if (tbId === '109' || tbId === '110' || tbId === '113') {
           this.fileUp.fileType = '.txt'
         }
-        if (tbId !== '109' || tbId !== '110' || bId !== '113') {
-          obj = this.siteOptions.find((item) => {
-            return item.siteId === value
-          })
-          this.fileUp.siteName = obj.siteName + '站点'
-        } else {
+        if (tbId === '109' || tbId === '110' || bId === '113') {
           obj = this.areaOptions.find((item) => {
             return item.areaId === value
           })
           this.fileUp.areaName = obj.areaName
+        } else {
+          obj = this.siteOptions.find((item) => {
+            return item.siteId === value
+          })
+          this.fileUp.siteName = obj.siteName + '站点'
         }
 
         if (this.ptFrom.pId === undefined) {
