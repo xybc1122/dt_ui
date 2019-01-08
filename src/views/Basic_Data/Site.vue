@@ -84,6 +84,16 @@
       <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="Site_Add">
         新增
       </el-button>
+      <div class="block" style="float: right">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :page-sizes="role.page_sizes"
+          :page-size="role.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="role.total">
+        </el-pagination>
+      </div>
     </div>
     <SiteAdd></SiteAdd>
     <SiteUp></SiteUp>
@@ -107,8 +117,9 @@
         multipleSelection_shop_up: [],
         role: {
           currentPage: 1,//当前页
-          total_size: 0,//总的页
-          pageSize: 10//显示最大的页
+          pageSize: 5,//显示最大的页
+          page_sizes:[5,10,15,20,25],
+          total:0,
         }
       }
     },
@@ -126,6 +137,7 @@
       console.log(resultGetSite)
       if (resultGetSite.code === 200) {
         this.tableData = resultGetSite.data
+        this.role.total=resultGetSite.data.length
       }
     },
     components:{

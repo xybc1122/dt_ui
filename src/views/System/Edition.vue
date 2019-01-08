@@ -77,7 +77,6 @@
                 nIP:'不限并发',//同时访问个数
                 time:'2018/1/12',//过期时间
                 plug_in:'1',
-
                 activeName: 'first',
             };
         },

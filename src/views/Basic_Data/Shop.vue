@@ -113,7 +113,7 @@
         saveShopValue:true,//新增显示
         role: {
           currentPage: 1,//当前页
-          total_size: 10,//总数
+          total_size: 0,//总数
           pageSize: 5,//显示最大的页
           page_size:[5,10,15,20,25],//显示页数
         }
@@ -146,6 +146,7 @@
       console.log(resultGetShop)
       if (resultGetShop.code === 200) {
         this.tableData = resultGetShop.data
+        this.role.total_size=resultGetShop.data.length
         // const data = resultGetShop.data
         //
         // this.role.currentPage = data.current_page

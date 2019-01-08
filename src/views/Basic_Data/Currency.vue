@@ -69,6 +69,16 @@
       <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="CurrencyAdd">
         新增
       </el-button>
+      <div class="block" style="float: right">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :page-sizes="role.page_sizes"
+          :page-size="role.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="role.total">
+        </el-pagination>
+      </div>
     </div>
     <currencyAdd></currencyAdd>
     <currencyUp></currencyUp>
@@ -92,8 +102,9 @@
         multipleSelection_cur_Up: [],
         role: {
           currentPage: 1,//当前页
-          total_size: 0,//总的页
-          pageSize: 10//显示最大的页
+          pageSize: 5,//显示最大的页
+          page_sizes:[5,10,15,20,25],
+          total:0,
         }
       }
     },
@@ -110,6 +121,7 @@
       console.log(resultGetCurrency)
       if (resultGetCurrency.code === 200) {
         this.tableData = resultGetCurrency.data
+        this.role.total=resultGetCurrency.data.length
       }
     },
     components:{

@@ -30,6 +30,7 @@ import Measurement from '../views/Basic_Data/Measurement'//计量单位
 import OPI from '../views/Basic_Data/OPI'//产品信息
 import HL from '../views/Upload/HlUploadFile'//HL
 import Warehouse from '../views/Basic_Data/Warehouse'//仓库
+import Edition from '../views/System/Edition' //版本信息
 Vue.use(Router)
 
 
@@ -127,32 +128,36 @@ export default new Router({
           component:StrUpload
         },
         {
-          path:'/index/Terminal/:id',
+          path:'/index/Terminal/:id',//期末库存
           component:Terminal
         },
         {
-          path:'/index/CategoryItem/:id',
+          path:'/index/CategoryItem/:id',//产品类目
           component:Category
         },
         {
-          path:'/index/Exchange/:id',
+          path:'/index/Exchange/:id',//汇率
           component:Exchange
         },
         {
-          path:'/index/Measurement/:id',
+          path:'/index/Measurement/:id',//计量单位
           component:Measurement
         },
         {
-          path:'/index/OpiItem/:id',
+          path:'/index/OpiItem/:id',//OPI
           component:OPI
         },
         {
-          path:'/index/HL/:id',
+          path:'/index/HL/:id',//HL
           component:HL
         },
         {
-          path:'/index/Warehouse/:id',
+          path:'/index/Warehouse/:id',//仓库
           component:Warehouse
+        },
+        {
+          path:'/index/Edition/:id',//版本信息
+          component:Edition
         }
 
 
