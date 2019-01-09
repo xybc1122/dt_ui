@@ -126,7 +126,7 @@
         } else if (tbId === '109' || tbId === '110' || tbId === '113') {
           this.fileUp.fileType = '.txt'
         }
-        if (tbId === '109' || tbId === '110' || bId === '113') {
+        if (tbId === '109' || tbId === '110' || tbId === '113') {
           obj = this.areaOptions.find((item) => {
             return item.areaId === value
           })
