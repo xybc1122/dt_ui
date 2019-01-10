@@ -41,11 +41,13 @@
         <el-steps :space="200" :active="uploadStatus.count" align-center finish-status="success"
                   v-if="fileUp.newListFile.length >0">
           <el-step :title="uploadStatus.wait"></el-step>
-          <el-step :title="uploadStatus.uploading"></el-step>
+          <el-step :title="uploadStatus.uploading" :description="uploadStatus.errorMsg"></el-step>
           <el-step :title="uploadStatus.dealWith"></el-step>
         </el-steps>
-        <div v-if="uploadStatus.count===3">
-          <el-progress type="circle" :percentage="0"></el-progress>
+        <div v-if="uploadStatus.count===3" v-for="(c,index) in upArr">
+          <el-progress type="circle" :stroke-width="20" :percentage="c.percentage" :status="c.status" :color="c.color">
+          </el-progress>
+          <span v-if="c.status">{{c.msg}}</span>
         </div>
       </div>
       <el-button v-if="fileUp.bt_show"
@@ -69,7 +71,8 @@
 
   import {
     repDelUploadInfo,
-    repAddUploadInfoMysql
+    repAddUploadInfoMysql,
+    repGetUpInfoTime
   } from '../../api'
 
   export default {
@@ -90,8 +93,11 @@
           wait: '等待上传',
           count: 0,
           uploading: '',
-          dealWith: ''
+          dealWith: '',
+          errorMsg: '',
+          data: 0
         },
+        timer: '',
         upArr: [],//上传返回的数据数组
         param: new FormData(),//fromData
         url: BASE_URL + '/upload/file', //上传的 api  接口,
@@ -125,7 +131,7 @@
         axios.post(this.url, this.param, config).then((result) => {
           this.uploadStatus.uploading = '上传中'
           //上传成功~
-          if (result.status === 200) {
+          if (result.data.code === 200) {
             this.uploadStatus.uploading = '上传成功'
             this.uploadStatus.count++
 
@@ -136,6 +142,8 @@
               //console.log(resultAdd)
               this.uploadStatus.dealWith = '数据处理中'
               this.uploadStatus.count++
+              //定时请求
+              this.getTimeCount()
               resultAdd.then((resultReturn) => {
                   if (resultReturn.code === 200) {
                     //上传状态
@@ -163,14 +171,29 @@
                       }
                     }
                   }
+                //定时器关闭
+                clearInterval(this.timer)
                 }
               )
             }
           } else {
             this.uploadStatus.uploading = '上传失败'
+            this.uploadStatus.errorMsg = result.data.msg
           }
           this.param = new FormData()
         })
+      },
+      getTimeCount () {
+        this.timer = setInterval(() => {
+          const resultTime = repGetUpInfoTime()
+          resultTime.then((resultUpInfo) => {
+            if (resultUpInfo.code === 200) {
+              this.upArr = resultUpInfo.data
+              console.log(this.upArr)
+              console.log('正在定时执行')
+            }
+          })
+        }, 2000)
       },
       //点击文件的时候
       handlePreview (file) {
