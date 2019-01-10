@@ -50,7 +50,9 @@ import {
   Tree,
   Card,
   Upload,
-  Progress
+  Progress,
+  Steps,
+  Step
 } from 'element-ui'
 Vue.component(Badge.name,Badge)
 Vue.component(Button.name, Button)
@@ -95,7 +97,8 @@ Vue.component(Tree.name, Tree)
 Vue.component(Card.name, Card)
 Vue.component(Upload.name, Upload)
 Vue.component(Progress.name, Progress)
-
+Vue.component(Steps.name, Steps)
+Vue.component(Step.name, Step)
 // 设置Cookie
 Vue.prototype.setCookie = function (c_name, value, expiredays) {
   var exdate = new Date()

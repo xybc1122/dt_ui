@@ -133,3 +133,7 @@ export const repDelUploadInfo = (id) => ajax(BASE_URL + `/upload/delInfo`, {id})
 
 //上传成功后 发送数据给后台读数据
 export const repAddUploadInfoMysql = ({uploadSuccessList}) => ajax(BASE_URL + '/upload/addInfo', {uploadSuccessList}, 'POST')
+
+//实时请求上传数据 信息
+
+export const repGetUpInfoTime = (redIds) => ajax(BASE_URL + '/upload/timing',{redIds})
