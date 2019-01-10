@@ -31,9 +31,6 @@ import OPI from '../views/Basic_Data/Public_Data/OPI'//产品信息
 import HL from '../views/Upload/HlUploadFile'//HL
 import Warehouse from '../views/Basic_Data/Public_Data/Warehouse'//仓库
 import YyFinanceUploadFile from '../views/Upload/YyFinanceUploadFile'//运营财务导入
-import Edition from '../views/System/Edition'//版本信息
-import Company_inf from '../views/System/Company_inf'//公司信息
-import Register from '../views/System/Register'//注册信息
 import OP_Sales_target from '../views/Operate/Amazon/Sales/Sales_target'//运营管理销售目标
 import OP_Sales_plan from '../views/Operate/Amazon/Sales/Sales_plan'//运营管理销售计划
 import OP_Monthly_cost from '../views/Operate/Amazon/Cost/Monthly_cost'//运营管理月度仓储费
@@ -78,9 +75,39 @@ import Ama_Describe from '../views/Basic_Data/Basic_Operate/Amazon/Describe'//�
 import Ama_Order from '../views/Basic_Data/Basic_Operate/Amazon/Order_processing'//订单处理类
 import Ama_Payment from '../views/Basic_Data/Basic_Operate/Amazon/Payment_type'//付款类型
 import Ama_Type from '../views/Basic_Data/Basic_Operate/Amazon/Type'//亚马逊Type
-import Ama_Warehouse from '../views/Basic_Data/Basic_Operate/Amazon/Warehouse'//亚马逊仓库
+import Ama_Warehouse from '../views/Basic_Data/Basic_Operate/Amazon/Ama_Warehouse'//亚马逊仓库
 import Sup_Delivery from '../views/Basic_Data/Basic_Operate/Supplementary/Delivery'//辅助资料发货方式
 import Sub_Platform from '../views/Basic_Data/Basic_Operate/Supplementary/Platform_type'//辅助资料平台类型
+import User_config from '../views/Storage/User_config'//用户配置
+import Library from '../views/Storage/Library'//库类型
+import Table from '../views/Storage/Table'//表类型
+import Data_Table from '../views/Storage/Data_Table'//数据表
+import Data_View from '../views/Storage/Data_View'//数据视图
+import Stored from '../views/Storage/Stored'//存储过程
+import Table_field from '../views/Storage/Table_field'//表字段
+import Landing_diary from '../views/Storage/Landing_diary'//登陆日志
+import Operation_diary from '../views/Storage/Operation_diary'//操作日志
+import Import_tem from '../views/Storage/Import_template'//导入模板
+import Edition from '../views/System_setup/System_info/Edition'//版本信息
+import Company_inf from '../views/System_setup/System_info/Company_inf'//公司信息
+import Register from '../views/System_setup/System_info/Register'//注册信息
+import Report_week from '../views/Storage/Business_Report_week'//业务报告周
+import Brush_type from '../views/Storage/Brush_type'//刷单类型
+import Department from '../views/Storage/Department'//部门
+import Staff_member from '../views/Storage/Staff_member'//职员
+import Education from '../views/Storage/Education'//学历
+import Staff_type from '../views/Storage/Staff_type'//职员类型
+import Employment_type from '../views/Storage/Employment_type'//雇佣类型
+import Turnover_type from '../views/Storage/Turnover_type'//离职类型
+import Province from '../views/Storage/Province'//省州
+import Regional_city from '../views/Storage/Regional_city'//地区市
+import County_Area from '../views/Storage/County_Area'//县区
+import Province_table from '../views/Storage/Province_table'//省州关联表
+import Menu_header from '../views/Storage/Menu_header'//菜单头部
+import Tariff_rate from '../views/Storage/Tariff_rate'//关税税率
+import Additional_tariff from '../views/Storage/Additional_tariff'//附加税率
+import SKU from '../views/Storage/SKU'//SUK信息表
+import Star_level from '../views/Storage/Star_level'//星级
 Vue.use(Router)
 
 
@@ -208,18 +235,6 @@ export default new Router({
         {
           path:'/index/yy-upload/:id',
           component:YyFinanceUploadFile
-        },
-        {
-          path:'/index/Edition/:id',//版本信息
-          component:Edition
-        },
-        {
-          path:'/index/Company_inf/:id',//公司信息
-          component:Company_inf
-        },
-        {
-          path:'/index/Register/:id',//注册信息
-          component:Register
         },
         {
           path:'/index/OP_Sales_target/:id',//运营管理销售目标
@@ -409,6 +424,127 @@ export default new Router({
           path:'/index/Sub_Platform/:id',//辅助资料平台类型
           component:Sub_Platform
         },
+        {
+          path:'/index/User_config/:id',//用户配置
+          component:User_config
+        },
+        {
+          path:'/index/Library/:id',//库类型
+          component:Library
+        },
+        {
+          path:'/index/Table/:id',//表类型
+          component:Table
+        },
+        {
+          path:'/index/Edition/:id',//版本信息
+          component:Edition
+        },
+        {
+          path:'/index/Company_inf/:id',//公司信息
+          component:Company_inf
+        },
+        {
+          path:'/index/Register/:id',//注册信息
+          component:Register
+        },
+        {
+          path:'/index/Data_Table/:id',//数据表
+          component:Data_Table
+        },
+        {
+          path:'/index/Data_View/:id',//数据视图
+          component:Data_View
+        },
+        {
+          path:'/index/Stored/:id',//存储过程
+          component:Stored
+        },
+        {
+          path:'/index/Table_field/:id',//表字段
+          component:Table_field
+        },
+        {
+          path:'/index/Landing_diary/:id',//登陆日志
+          component:Landing_diary
+        },
+        {
+          path:'/index/Operation_diary/:id',//操作日志
+          component:Operation_diary
+        },
+        {
+          path:'/index/Import_tem/:id',//导入模板
+          component:Import_tem
+        },
+        {
+          path:'/index/Report_week/:id',//业务报告周
+          component:Report_week
+        },
+        {
+          path:'/index/Brush_type/:id',//刷单类型
+          component:Brush_type
+        },
+        {
+          path:'/index/Department/:id',//部门
+          component:Department
+        },
+        {
+          path:'/index/Staff_member/:id',//职员
+          component:Staff_member
+        },
+        {
+          path:'/index/Education/:id',//学历
+          component:Education
+        },
+        {
+          path:'/index/Staff_type/:id',//职员类型
+          component:Staff_type
+        },
+        {
+          path:'/index/Employment_type/:id',//雇佣类型
+          component:Employment_type
+        },
+        {
+          path:'/index/Turnover_type/:id',//离职类型
+          component:Turnover_type
+        },
+        {
+          path:'/index/Province/:id',//省州
+          component:Province
+        },
+        {
+          path:'/index/Regional_city/:id',//地区市
+          component:Regional_city
+        },
+        {
+          path:'/index/County_Area/:id',//县区
+          component:County_Area
+        },
+        {
+          path:'/index/Province_table/:id',//省州关联表
+          component:Province_table
+        },
+        {
+          path:'/index/Menu_header/:id',//菜单头部
+          component:Menu_header
+        },
+        {
+          path:'/index/Tariff_rate/:id',//关税税率
+          component:Tariff_rate
+        },
+        {
+          path:'/index/Additional_tariff/:id',//附加税率
+          component:Additional_tariff
+        },
+        {
+          path:'/index/SKU/:id',//SUK信息表
+          component:SKU
+        },
+        {
+          path:'/index/Star_level/:id',//星级
+          component:Star_level
+        },
+
       ]
     },
     {
