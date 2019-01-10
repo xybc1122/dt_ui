@@ -1,11 +1,11 @@
 <template>
-  <el-container style="overflow: hidden" :height="height">
+  <el-container style="overflow: hidden">
     <div style="height: 100%">
-      <Aside style="overflow-y: auto;"/>
+      <Aside style="overflow-y: auto;height: 1000px;background-color: #293846"/>
     </div>
 
     <el-container style="float: left">
-      <el-header>
+      <el-header style="height: 90px">
         <Header/>
       </el-header>
       <el-main>
@@ -28,26 +28,11 @@
   export default {
     data () {
       return {
-        height:'',
         isRole: true,
       }
     },
     async mounted () {
-      //如果还没登陆访问该页面 先变为false
-      //进来先判断登录了没有如果没有登陆 跳转到登录路由
-      const result = await repIndex()
-      if (result.code === -1) {
-        Message({
-          showClose: true,
-          message: result.msg,
-          type: 'error'
-        })
-        this.$router.replace(
-          {
-            path: '/login'
-          })
-      }
-      this.height=document.body.clientHeight
+
     },
     components: {
       Header,
@@ -63,7 +48,12 @@
     text-align: center;
     line-height: 60px;
   }
+  .el-header {
+    background-color: #e7eaec;
+    color: #333;
 
+    line-height: 60px;
+  }
 
 
 </style>
