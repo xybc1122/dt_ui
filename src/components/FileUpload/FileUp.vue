@@ -33,8 +33,8 @@
           style="display: block"
           v-for="i in fileUp.newListFile"
           :key="i.name"
+          color="#ffffff"
           closable
-          type="info"
           @close="handleClose(i)">
           {{i.name}}
         </el-tag>
@@ -45,9 +45,10 @@
           <el-step :title="uploadStatus.dealWith"></el-step>
         </el-steps>
         <div v-if="uploadStatus.count===3" v-for="(c,index) in upArr">
-          <el-progress type="circle" :stroke-width="20" :percentage="c.percentage" :status="c.status" :color="c.color">
-          </el-progress>
-          <span v-if="c.status">{{c.msg}}</span>
+          <el-progress :text-inside="true" :stroke-width="20" :percentage="c.percentage" :status="c.status"
+                       :color="c.color"></el-progress>
+          <span>{{c.fileName}}----{{c.msg}}</span>
+          <p></p>
         </div>
       </div>
       <el-button v-if="fileUp.bt_show"
@@ -72,7 +73,8 @@
   import {
     repDelUploadInfo,
     repAddUploadInfoMysql,
-    repGetUpInfoTime
+    repGetUpInfoTime,
+    repGetDelUpInfoTime
   } from '../../api'
 
   export default {
@@ -107,13 +109,13 @@
     methods: {
       //批量上传
       async uploadFiles () {
+        this.upArr = []
         this.uploadStatus.wait = '已确认'
         this.uploadStatus.count++
 
         this.fileUp.disabled = true //禁止
         for (let i = 0; i < this.fileUp.newListFile.length; i++) {
           let file = this.fileUp.newListFile[i]
-          console.log(file)
           this.param.append('files', file, file.name)
         }
         this.param.append('sId', this.uploadFrom.shopId)
@@ -151,30 +153,33 @@
                     //上传状态
                     for (let i = 0; i < resultReturn.data.length; i++) {
                       let messagesResult = resultReturn.data[i]
+
                       if (messagesResult.code === 200) {
                         if (messagesResult.data.status === 2) {
-                          message.successMessage(messagesResult.msg)
+                          message.messageNotSuccess(messagesResult.msg,messagesResult.data.name)
                           this.fileUp.newListFile.splice(this.fileUp.newListFile.indexOf(i), 1)
                           //触发记录
                           this.fileUp.fileListInfo.push(messagesResult.data)
                           this.fileUp.icon_list.push({'isIcon': true, 'id': messagesResult.data.id})
                           continue
                         }
-                        //console.log(messagesResult)
-                        message.successMessage(messagesResult.msg)
+                        message.messageNotSuccess(messagesResult.msg,messagesResult.data.name)
                         this.fileUp.newListFile.splice(this.fileUp.newListFile.indexOf(i), 1)
                         this.fileUp.fileListInfo.push(messagesResult.data)
                         this.fileUp.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
                       } else {
-                        console.log(messagesResult)
-                        message.errorMessage(messagesResult.msg)
+                        message.messageNotError(messagesResult.msg,messagesResult.data.name)
                         this.fileUp.fileListInfo.push(messagesResult.data)
                         this.fileUp.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
                       }
                     }
+                    //成功后 5秒结束
+                    setTimeout(() => {
+                      clearInterval(this.timer)
+                      const resultDel = repGetDelUpInfoTime(this.redIds)
+                      console.log(resultDel)
+                    }, 2000)
                   }
-                  //定时器关闭
-                  //clearInterval(this.timer)
                 }
               )
             }
@@ -200,7 +205,7 @@
               console.log('正在定时执行')
             }
           })
-        }, 2000)
+        }, 1000)
       },
       //点击文件的时候
       handlePreview (file) {
@@ -253,6 +258,14 @@
       },
       //上传校验
       beforeAvatarUpload (file) {
+        this.uploadStatus = {
+          wait: '等待上传',
+          count: 0,
+          uploading: '',
+          dealWith: '',
+          errorMsg: '',
+          data: 0
+        }
         let fileNames = []
         let index = file.name.lastIndexOf('.')
         //重复文件名
@@ -299,11 +312,6 @@
           default :
             message.errorMessage('fileType为空~')
             return false
-        }
-        const fileSize = file.size / 1024 / 1024 < 100
-        if (!fileSize) {
-          message.errorMessage('文件不能超过100MB')
-          return false
         }
         //如果长度为为0 代表是空的时候 进来
         this.fileUp.newListFile.push(file)

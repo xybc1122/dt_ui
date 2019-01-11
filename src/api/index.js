@@ -135,5 +135,7 @@ export const repDelUploadInfo = (id) => ajax(BASE_URL + `/upload/delInfo`, {id})
 export const repAddUploadInfoMysql = ({uploadSuccessList}) => ajax(BASE_URL + '/upload/addInfo', {uploadSuccessList}, 'POST')
 
 //实时请求上传数据 信息
+export const repGetUpInfoTime = (redIds) => ajax(BASE_URL + '/upload/timing', {redIds})
 
-export const repGetUpInfoTime = (redIds) => ajax(BASE_URL + '/upload/timing',{redIds})
+//删除上传数据 信息
+export const repGetDelUpInfoTime = (redIds) => ajax(BASE_URL + '/upload/setTimingDel', {redIds})
