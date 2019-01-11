@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="width: 400px;float: left;margin-left: 150px">
+    <div style="width: 400px;float: left;">
       <el-upload
         class="upload-demo"
         action="xx"
@@ -198,6 +198,7 @@
             this.redIds.push(id)
           }
           const resultTime = repGetUpInfoTime(this.redIds)
+          console.log(this.redIds)
           resultTime.then((resultUpInfo) => {
             if (resultUpInfo.code === 200) {
               this.upArr = resultUpInfo.data
