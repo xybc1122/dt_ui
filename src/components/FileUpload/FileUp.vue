@@ -331,6 +331,8 @@
   }
 </script>
 
-<style>
-
+<style lang="scss">
+body{
+  font-family: "宋体";
+}
 </style>
