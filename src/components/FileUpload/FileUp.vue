@@ -73,8 +73,7 @@
   import {
     repDelUploadInfo,
     repAddUploadInfoMysql,
-    repGetUpInfoTime,
-    repGetDelUpInfoTime
+    repGetUpInfoTime
   } from '../../api'
 
   export default {
@@ -156,19 +155,20 @@
 
                       if (messagesResult.code === 200) {
                         if (messagesResult.data.status === 2) {
-                          message.messageNotSuccess(messagesResult.msg,messagesResult.data.name)
+                          message.messageNotSuccess(messagesResult.msg, messagesResult.data.name)
                           this.fileUp.newListFile.splice(this.fileUp.newListFile.indexOf(i), 1)
                           //触发记录
                           this.fileUp.fileListInfo.push(messagesResult.data)
                           this.fileUp.icon_list.push({'isIcon': true, 'id': messagesResult.data.id})
                           continue
                         }
-                        message.messageNotSuccess(messagesResult.msg,messagesResult.data.name)
+                        message.messageNotSuccess(messagesResult.msg, messagesResult.data.name)
                         this.fileUp.newListFile.splice(this.fileUp.newListFile.indexOf(i), 1)
                         this.fileUp.fileListInfo.push(messagesResult.data)
                         this.fileUp.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
                       } else {
-                        message.messageNotError(messagesResult.msg,messagesResult.data.name)
+                        message.messageNotError(messagesResult.msg, messagesResult.data.name)
+                        this.fileUp.newListFile.splice(this.fileUp.newListFile.indexOf(i), 1)
                         this.fileUp.fileListInfo.push(messagesResult.data)
                         this.fileUp.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
                       }
@@ -176,8 +176,6 @@
                     //成功后 5秒结束
                     setTimeout(() => {
                       clearInterval(this.timer)
-                      const resultDel = repGetDelUpInfoTime(this.redIds)
-                      console.log(resultDel)
                     }, 2000)
                   }
                 }
