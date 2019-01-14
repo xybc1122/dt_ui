@@ -87,6 +87,7 @@
     },
     methods: {
       async changeRadio (value) {
+        this.uploadFrom.areaId=''
         this.fileUp.newListFile = []
         this.fileUp.disabled = true
         this.fileUp.bt_show = false
@@ -112,32 +113,30 @@
       },
       //下拉时获取 通过value=siteId  查询对应的对象 获取 label
       async changeSelect (value) {
-
         this.fileUp.fileListInfo = []
         this.fileUp.icon_list = []
         let obj = {}
         //判断 显示的 结尾类型
         let tbId = this.uploadFrom.tbId
         if (tbId === '85' || tbId === '108' || tbId === '104') {
-          this.uploadFrom.areaId = ''
+
           this.fileUp.fileType = '.csv'
         } else if (tbId === '105' || tbId === '107' ||
           tbId === '106' || tbId === '125' ||
           tbId === '114' || tbId === '115') {
-          this.uploadFrom.areaId = ''
+
           this.fileUp.fileType = '.xls/xlsx'
         } else if (tbId === '109' || tbId === '110' || tbId === '113') {
           this.fileUp.fileType = '.txt'
-          this.uploadFrom.areaId = ''
         }
         if (tbId === '109' || tbId === '110' || tbId === '113') {
-          this.uploadFrom.areaId = ''
+
           obj = this.areaOptions.find((item) => {
             return item.areaId === value
           })
           this.fileUp.areaName = obj.areaName
         } else {
-          this.uploadFrom.areaId = ''
+
           obj = this.siteOptions.find((item) => {
             return item.siteId === value
           })
