@@ -19,11 +19,7 @@ module.exports = {
         }
       }
     },
-<<<<<<< HEAD
     host: '127.0.0.1', // can be overwritten by process.env.HOST
-=======
-    host: '192.168.208.123', // can be overwritten by process.env.HOST
->>>>>>> 8631537eef5056fee9f37af9026e373cac832c91
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
