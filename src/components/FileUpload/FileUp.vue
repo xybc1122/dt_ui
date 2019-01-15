@@ -48,10 +48,8 @@
           <el-progress :text-inside="true" :stroke-width="20" :percentage="c.percentage" :status="c.status"
                        :color="c.color"></el-progress>
           <p style="color: #101010;">
-            {{c.fileName}}----
-            <span style="color:#F56C6C; font-family:'楷体'; font-size:20px; font-weight:bold;">{{c.msg}}</span>
+            <span>{{c.fileName}}----{{c.msg}}</span>
           </p>
-          <p></p>
         </div>
       </div>
       <el-button v-if="fileUp.bt_show"
