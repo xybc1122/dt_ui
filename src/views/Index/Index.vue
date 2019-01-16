@@ -11,7 +11,7 @@
       <el-main>
         <!--缓存路由组件-->
         <keep-alive>
-          <router-view></router-view>
+          <router-view style="height: 805px"></router-view>
         </keep-alive>
       </el-main>
       <el-footer style="height: 65px">Footer</el-footer>
@@ -20,8 +20,6 @@
 </template>
 
 <script>
-  import {repIndex} from '../../api'
-  import {Message} from 'element-ui'
   import Header from '../../components/HeaderTop/Header'
   import Aside from '../../components/Aside/Aside'
 

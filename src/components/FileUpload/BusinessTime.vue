@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <div class="block">
+      <div class="block" style="margin-left: 150px">
         <el-date-picker
           v-model="ptFrom.businessTime"
           align="right"
