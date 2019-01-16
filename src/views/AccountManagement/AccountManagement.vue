@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="Account">
     <!--多选输入框选择输入-->
     <div id="printCheck">
       <div class="check1">
@@ -138,6 +138,7 @@
   import UserItemUp from '../../components/UserItem/UserItemUp'
   import UserItemDel from '../../components/UserItem/UserItemDel'
   import PubSub from 'pubsub-js'
+  import loading from '../../utils/loading'
 
   export default {
     data () {
@@ -170,6 +171,7 @@
       UserItemDel
     },
     async mounted () {
+      let loadingInstance = loading.loading_dom('加载中',document.getElementById("Account"))
       //获得用户信息
       const resultSingleUser = await repSingleUser()
       if (resultSingleUser.code === 200) {
@@ -190,6 +192,7 @@
         //赋值 然后显示
         this.pageUser(resultUsers)
       }
+      loadingInstance.close()
       //新增成功后收到订阅消息
       PubSub.subscribe('saveFormValue', (msg, saveFormValue) => {
         if (!saveFormValue) {
