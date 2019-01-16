@@ -101,10 +101,10 @@ export const repGetUserName = (userName) => ajax(BASE_URL + `/user/getUserName`,
 //新增用户信息
 export const repSaveUserInfo = ({
                                   userName, pwd, confirmPwd, checkedPwd, checkedUpPwd,
-                                  checkedUserAlways, checkedPwdAlways, rolesId, staffValue, pwdAlwaysInput, pwdUserDate
+                                  checkedUserAlways, checkedPwdAlways, rolesId, staffValue, pwdAlwaysInput, effectiveDate
                                 }) => ajax(BASE_URL + '/user/saveUserInfo', {
   userName, pwd, confirmPwd, checkedPwd, checkedUpPwd,
-  checkedUserAlways, checkedPwdAlways, rolesId, staffValue, pwdAlwaysInput, pwdUserDate
+  checkedUserAlways, checkedPwdAlways, rolesId, staffValue, pwdAlwaysInput, effectiveDate
 }, 'POST')
 
 //移除角色信息

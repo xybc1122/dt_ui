@@ -49,7 +49,6 @@
     data () {
       return {
         shopArr: [], //店铺集合
-        mShow: false,//付款方式
         uploadFrom: {
           shopId: '',//店铺ID
           siteId: '',//站点 ID

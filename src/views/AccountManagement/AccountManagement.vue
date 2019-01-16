@@ -12,7 +12,7 @@
           </el-option>
         </el-select>
       </div>
-      <div class="check2">
+        <div class="check2">
         <el-input v-show="msgInput===7" v-model="user.userName" placeholder="请输入账号"
                   prefix-icon="el-icon-search"></el-input>
         <el-input v-show="msgInput===8" v-model="user.name" placeholder="请输入姓名"
@@ -21,6 +21,7 @@
           <el-date-picker
             v-model="user.createDate"
             type="datetime"
+            value-format="timestamp"
             placeholder="选择日期时间">
           </el-date-picker>
         </div>

@@ -15,7 +15,7 @@
       <el-checkbox v-model="addForm.checkedPwd" class="box">密码满足复杂度要求</el-checkbox>
       <el-form-item label="员工:" prop="staffValue" class="staff">
         <el-select clearable value="" v-model="addForm.staffValue" style="width: 250px">
-          <el-option v-for="(item,index) in staffStatusOptions" :key="index" :label="item.sName"
+          <el-option v-for="(item,index) in staffStatusOptions" :key="index" :label="item.employeeName"
                      :value="item"></el-option>
         </el-select>
       </el-form-item>
@@ -25,6 +25,7 @@
             style="width: 250px"
             type="datetime"
             :disabled="isUserFlg"
+            value-format="timestamp"
             @change="changeSearchForEffectiveDate" v-model="addForm.effectiveDate">
           </el-date-picker>
           <el-checkbox @change="checkedUser" v-model="addForm.checkedUserAlways" :disabled="isCheFlgUser">用户始终有效
@@ -227,6 +228,7 @@
         resultStaff.then((result) => {
           if (result.code === 200) {
             this.staffStatusOptions = result.data
+            console.log(this.staffStatusOptions)
           }
         })
       })
