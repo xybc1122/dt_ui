@@ -1,11 +1,11 @@
 <template>
   <div>
     <!-- 店铺选择 站点选择 -->
-    <ShopSelection :ptFrom="ptFrom"/>
+    <BusinessTime :ptFrom="ptFrom"/>
   </div>
 </template>
 <script>
-  import ShopSelection from '../../components/FileUpload/ShopSelection'
+  import BusinessTime from '../../components/FileUpload/BusinessTime'
 
   export default {
     data () {
@@ -16,7 +16,7 @@
       }
     },
     components: {
-      ShopSelection
+      BusinessTime
     }
   }
 </script>

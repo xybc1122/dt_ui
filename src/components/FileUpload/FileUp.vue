@@ -123,6 +123,7 @@
         this.param.append('payId', this.uploadFrom.pId)
         this.param.append('menuId', this.uploadFrom.tbId)
         this.param.append('areaId', this.uploadFrom.areaId)
+        this.param.append('businessTime', this.uploadFrom.businessTime.getTime())
         let config = {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -331,7 +332,7 @@
 </script>
 
 <style lang="scss">
-body{
-  font-family: "宋体";
-}
+  body {
+    font-family: "宋体";
+  }
 </style>
