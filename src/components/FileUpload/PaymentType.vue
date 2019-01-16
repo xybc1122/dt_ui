@@ -31,7 +31,7 @@
     },
     methods: {
       //付款类型
-      async changeShow (value) {
+       changeShow (value) {
         this.ptFrom.mShow = true
       }
     }

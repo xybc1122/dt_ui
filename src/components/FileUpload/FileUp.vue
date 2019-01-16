@@ -48,10 +48,8 @@
           <el-progress :text-inside="true" :stroke-width="20" :percentage="c.percentage" :status="c.status"
                        :color="c.color"></el-progress>
           <p style="color: #101010;">
-            {{c.fileName}}----
-            <span style="color:#F56C6C; font-family:'楷体'; font-size:20px; font-weight:bold;">{{c.msg}}</span>
+            <span>{{c.fileName}}----{{c.msg}}</span>
           </p>
-          <p></p>
         </div>
       </div>
       <el-button v-if="fileUp.bt_show"
@@ -125,6 +123,7 @@
         this.param.append('payId', this.uploadFrom.pId)
         this.param.append('menuId', this.uploadFrom.tbId)
         this.param.append('areaId', this.uploadFrom.areaId)
+        this.param.append('businessTime', this.uploadFrom.businessTime.getTime())
         let config = {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -333,7 +332,7 @@
 </script>
 
 <style lang="scss">
-body{
-  font-family: "宋体";
-}
+  body {
+    font-family: "宋体";
+  }
 </style>

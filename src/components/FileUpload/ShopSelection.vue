@@ -1,6 +1,6 @@
 <template>
   <div style="margin-left: 150px">
-    <div style="margin-top: 20px;" v-if="ptFrom.mShow" >
+    <div style="margin-top: 20px;" v-if="ptFrom.mShow">
       <el-radio-group v-model="radioShop" size="mini" @change="changeRadio">
         <el-radio-button :label="sArr" v-for="(sArr,index) in shopArr" :key="index">{{sArr.shopName}}
         </el-radio-button>
@@ -55,7 +55,8 @@
           siteId: '',//站点 ID
           pId: '', //付款类型ID
           areaId: '',
-          tbId: this.$route.params.id
+          tbId: this.$route.params.id,
+          businessTime: '' //业务报告日期
         },
         //组建传递的值
         fileUp: {
@@ -87,14 +88,14 @@
     },
     methods: {
       async changeRadio (value) {
-        this.uploadFrom.areaId=''
+        this.uploadFrom.areaId = ''
         this.fileUp.newListFile = []
         this.fileUp.disabled = true
         this.fileUp.bt_show = false
         this.fileUp.shopName = value.shopName
         this.uploadFrom.shopId = value.shopId
         this.fileUp.icon_list = []
-        //判断 显示的 结尾类型
+        //判断 请求方式
         let tbId = this.uploadFrom.tbId
         if (tbId === '109' || tbId === '110' || tbId === '113') {
           const resultArea = await repGetRegionInfo({})
@@ -113,6 +114,7 @@
       },
       //下拉时获取 通过value=siteId  查询对应的对象 获取 label
       async changeSelect (value) {
+        this.uploadFrom.businessTime = this.ptFrom.businessTime
         this.fileUp.fileListInfo = []
         this.fileUp.icon_list = []
         let obj = {}
@@ -199,7 +201,8 @@
   .el-button--mini.is-circle:hover {
     background-color: #F56C6C;
   }
-  body{
+
+  body {
     font-family: "宋体";
   }
 </style>
