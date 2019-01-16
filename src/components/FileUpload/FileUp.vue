@@ -19,7 +19,7 @@
         </div>
         <div class="el-upload__tip" slot="tip">只能上传{{fileUp.fileType}}格式文件/不能超过100MB</div>
       </el-upload>
-      <div style="margin-top: 10px">
+      <div style="margin-top: 10px" v-if="fileUp.isFileUp">
         <div class="icons" v-for="(ic,index) in fileUp.icon_list" :key="ic.id" style="height: 25px">
       <span v-if="ic.isIcon" @click="download(ic)">
       <i class="el-icon-caret-bottom"></i>
@@ -123,7 +123,7 @@
         this.param.append('payId', this.uploadFrom.pId)
         this.param.append('menuId', this.uploadFrom.tbId)
         this.param.append('areaId', this.uploadFrom.areaId)
-        this.param.append('businessTime', this.uploadFrom.businessTime.getTime())
+        this.param.append('businessTime', this.uploadFrom.businessTime)
         let config = {
           headers: {
             'Content-Type': 'multipart/form-data'
