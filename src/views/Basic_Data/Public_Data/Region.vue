@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="Reg">
     <!--table表格显示-->
     <div id="roleTable">
       <el-table
@@ -96,6 +96,7 @@
   import AreaAdd from '../../../components/Basic_Data_modify/RegionItem/AreaAdd'
   import AreaUp from '../../../components/Basic_Data_modify/RegionItem/AreaUp'
   import PubSub_Area from 'pubsub-js'
+  import loading from '../../../utils/loading'
   //区域
   export default {
     data () {
@@ -117,6 +118,7 @@
       AreaUp
     },
     async mounted () {
+      let loadingInstance = loading.loading_dom('加载中',document.getElementById("Reg"))
       //查询获得table表的 头信息
       const resultHead = await
         repHead(this.$route.params.id)
@@ -134,6 +136,7 @@
         this.currentPage = data.current_page
         this.total_size = data.total_size
       }
+      loadingInstance.close()
     },
     methods: {
       //新增
@@ -197,7 +200,7 @@
 <style>
   /*表格*/
   #roleTable {
-    margin-top: 50px;
+    padding-top: 50px;
   }
 
   .el-tooltip__popper {

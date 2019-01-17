@@ -61,7 +61,7 @@
           </div>
         </el-form-item>
       </template>
-      <el-form-item prop="rolesId" >
+      <el-form-item prop="rolesId"  style="margin-top: 60px">
         <div class="transfer2">
           <el-transfer
             filterable

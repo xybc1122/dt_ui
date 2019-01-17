@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="Shop">
     <!--table表格显示-->
     <div id="roleTable">
       <el-table
@@ -97,6 +97,7 @@
   import ShopUp from '../../../components/Basic_Data_modify/ShopItem/ShopUp'
   import PubSub_Shop from 'pubsub-js'
   import utils from '../../../utils/PageUtils'
+  import loading from '../../../utils/loading'
 
   export default {
     data () {
@@ -133,6 +134,7 @@
       }
     },
     async mounted () {
+      let loadingInstance = loading.loading_dom('加载中',document.getElementById("Shop"))
       //查询获得table表的 头信息
       const resultHead = await
         repHead(this.$route.params.id)
@@ -152,6 +154,7 @@
         // this.role.currentPage = data.current_page
         // this.role.total_size = data.total_size
       }
+      loadingInstance.close()
     },
     methods: {
       //条目数变化
@@ -212,7 +215,7 @@
 <style lang="scss">
   /*表格*/
   #roleTable {
-    margin-top: 50px;
+    padding-top: 50px;
   }
 
   .el-tooltip__popper {

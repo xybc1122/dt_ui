@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="Site">
     <!--table表格显示-->
     <div id="roleTable" style="width: 1650px">
       <el-table
@@ -104,6 +104,7 @@
   import SiteAdd from '../../../components/Basic_Data_modify/SiteItem/SiteAdd'
   import SiteUp from '../../../components/Basic_Data_modify/SiteItem/SiteUp'
   import {repHead, repGetSiteInfo} from '../../../api/index'
+  import loading from '../../../utils/loading'
   //店铺
 
   export default {
@@ -124,6 +125,7 @@
       }
     },
     async mounted () {
+      let loadingInstance = loading.loading_dom('加载中',document.getElementById("Site"))
       //查询获得table表的 头信息
       const resultHead = await
         repHead(this.$route.params.id)
@@ -139,6 +141,7 @@
         this.tableData = resultGetSite.data
         this.role.total=resultGetSite.data.length
       }
+      loadingInstance.close()
     },
     components:{
       SiteAdd,

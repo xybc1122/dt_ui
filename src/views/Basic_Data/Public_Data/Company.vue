@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="Com">
     <!--table表格显示-->
     <div id="roleTable" style="width: 1650px">
       <el-table
@@ -104,6 +104,7 @@
   import CompanyUp from '../../../components/Basic_Data_modify/CompanyItem/CompanyUp'
   import utils from '../../../utils/PageUtils'
   import PubSub_com from 'pubsub-js'
+  import loading from '../../../utils/loading'
 //公司
   export default {
     data () {
@@ -127,6 +128,7 @@
       CompanyUp
     },
     async mounted () {
+      let loadingInstance = loading.loading_dom('加载中',document.getElementById("Com"))
       //查询获得table表的 头信息
       const resultHead = await
         repHead(this.$route.params.id)
@@ -141,6 +143,7 @@
         this.tableData = resultGetCompany.data
         this.role.total=resultGetCompany.data.length
       }
+      loadingInstance.close()
       //新增成功后收到订阅消息
       PubSub_com.subscribe('saveFormValue_com', (msg, saveFormValue_com) => {
         if (!saveFormValue_com) {
@@ -249,7 +252,7 @@
 <style>
   /*表格*/
   #roleTable {
-    margin-top: 50px;
+    padding-top: 50px;
   }
 
   .el-tooltip__popper {

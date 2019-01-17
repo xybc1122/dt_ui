@@ -16,7 +16,7 @@
             <el-button type="primary" @click="Login" size="medium">
               登陆
             </el-button>
-            <!--<el-checkbox v-model="checked">记住我</el-checkbox>-->
+            <el-checkbox v-model="checked" style="padding-left: 20px">自动登陆</el-checkbox>
             <!--<el-button class="quest" type="danger" size="mini" icon="el-icon-question">忘记密码</el-button>-->
           </div>
         </div>
@@ -38,6 +38,15 @@
         passWord: 't',
         isLogin: true, // <!--登录-->
         checked: true
+      }
+    },
+    watch:{
+      checked(val){
+        if(val){
+          console.log("勾选状态")
+        }else{
+          console.log("未勾选状态")
+        }
       }
     },
     async mounted () {

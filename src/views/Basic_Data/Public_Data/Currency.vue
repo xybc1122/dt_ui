@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="Cur">
     <!--table表格显示-->
     <div id="roleTable">
       <el-table
@@ -89,6 +89,8 @@
   import currencyAdd from '../../../components/Basic_Data_modify/CurrencyItem/CurrencyAdd'
   import currencyUp from '../../../components/Basic_Data_modify/CurrencyItem/CurrencyUp'
   import {repHead, repGetCurrencyInfo} from '../../../api/index'
+  import loading from '../../../utils/loading'
+
   //店铺
 
   export default {
@@ -109,6 +111,7 @@
       }
     },
     async mounted () {
+      let loadingInstance = loading.loading_dom('加载中',document.getElementById("Cur"))
       //查询获得table表的 头信息
       const resultHead = await
         repHead(this.$route.params.id)
@@ -123,6 +126,7 @@
         this.tableData = resultGetCurrency.data
         this.role.total=resultGetCurrency.data.length
       }
+      loadingInstance.close()
     },
     components:{
       currencyAdd,
@@ -165,7 +169,7 @@
 <style>
   /*表格*/
   #roleTable {
-    margin-top: 50px;
+    padding-top: 50px;
   }
 
   .el-tooltip__popper {

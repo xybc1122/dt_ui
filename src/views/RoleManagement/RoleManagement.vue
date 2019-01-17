@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="role">
     <!--多选输入框选择输入-->
     <div id="printCheck">
       <div class="check1">
@@ -98,6 +98,7 @@
   import utils from '../../utils/PageUtils'
   import PubSub from 'pubsub-js'
   import RoleItemUp from '../../components/RoleItem/RoleItemUp'
+  import loading from '../../utils/loading'
   //角色管理
   export default {
     data () {
@@ -122,6 +123,7 @@
     },
     async mounted () {
       //查询获得table表的 头信息
+      let loadingInstance = loading.loading_dom('加载中',document.getElementById("role"))
       const resultHead = await
         repHead(this.$route.params.id)
       if (resultHead.code === 200) {
@@ -140,6 +142,7 @@
         this.role.currentPage = dataRole.current_page
         this.role.total_size = dataRole.total_size
       }
+      loadingInstance.close()
     },
     components:{
       RoleItemUp
