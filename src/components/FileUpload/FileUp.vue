@@ -74,7 +74,7 @@
   import {
     repDelUploadInfo,
     repAddUploadInfoMysql,
-    repGetUpInfoTime
+    repGetUpInfoTime,
   } from '../../api'
 
   export default {
@@ -103,7 +103,7 @@
         timer: '',
         upArr: [],//上传返回的数据数组
         param: new FormData(),//fromData
-        url: BASE_URL + '/upload/file', //上传的 api  接口,
+        url: BASE_URL, //上传的 api  接口,
       }
     },
     methods: {
@@ -132,7 +132,7 @@
           processData: false
         }
         //上传文件
-        axios.post(this.url, this.param, config).then((result) => {
+        axios.post(this.url + '/upload/file', this.param, config).then((result) => {
           this.uploadStatus.uploading = '上传中'
           //上传成功~
           if (result.data.code === 200) {
@@ -161,7 +161,10 @@
                           this.fileUp.newListFile.splice(this.fileUp.newListFile.indexOf(i), 1)
                           //触发记录
                           this.fileUp.fileListInfo.push(messagesResult.data)
-                          this.fileUp.icon_list.push({'isIcon': true, 'id': messagesResult.data.id})
+                          this.fileUp.icon_list.push({
+                            'isIcon': true, 'id': messagesResult.data.id,
+                            'filePath': messagesResult.data.filePath
+                          })
                           continue
                         }
                         message.messageNotSuccess(messagesResult.msg, messagesResult.data.name)
@@ -251,7 +254,32 @@
       //点击下载
       download (file) {
         console.log(file)
-
+        let config = {
+          responseType: 'blob'
+        }
+        const path = {
+          filePath: file.filePath
+        }
+        //下载文件
+        axios.post(this.url + '/upload/downloadCommonFile', path, config).then((result) => {
+          if (result.status === 200) {
+            this.downloadFile(result)
+          }
+        })
+      },
+      // 下载文件
+      downloadFile (data) {
+        console.log(data)
+        if (!data) {
+          return
+        }
+        let url = window.URL.createObjectURL(new Blob([data]))
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', 'xxx.txt')
+        document.body.appendChild(link)
+        link.click()
       },
       // 上传错误
       uploadError (response, file, fileList) {
