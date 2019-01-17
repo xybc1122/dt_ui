@@ -20,44 +20,46 @@
           </template>
 
           <!--判断一级菜单下的子菜单有url的-->
-          <el-menu-item-group v-if="cMenu.url" v-for="(cMenu,indexChild) in menu.childMenus" :key="indexChild"
-          >
-            <el-menu-item :index="cMenu.url+'/'+cMenu.menuId"><span><i :class="cMenu.icon"></i></span> {{cMenu.name}}
+          <el-menu-item-group v-if="cMenu.url" v-for="(cMenu,indexChild) in menu.childMenus" :key="indexChild">
+            <el-menu-item :index="cMenu.url+'/'+cMenu.menuId+'/'+cMenu.name"><span><i :class="cMenu.icon"></i></span>
+              {{cMenu.name}}
             </el-menu-item>
           </el-menu-item-group>
+
           <!--判断一级菜单下的子菜单没有url的-->
-          <el-submenu v-if="!cMenu.url" :index="index.toString()+'-'+cMenu.menuId.toString()"
+          <el-submenu v-if="!cMenu.url" :index="index+'-'+cMenu.menuId"
                       v-for="(cMenu,indexChild) in menu.childMenus" :key="indexChild">
             <template slot="title">
                 <span><i :class="cMenu.icon ? cMenu.icon : 'el-icon-loading'"></i>
                 </span> {{cMenu.name}}
             </template>
+
             <!--判断二级菜单下的子菜单有url的-->
-            <el-menu-item-group v-if="sMenu.url" v-for="(sMenu,indexSun) in cMenu.childMenus" :key="indexSun"
-            >
-              <el-menu-item :index="sMenu.url+'/'+sMenu.menuId"><span><i
+            <el-menu-item-group v-if="sMenu.url" v-for="(sMenu,indexSun) in cMenu.childMenus" :key="indexSun">
+              <el-menu-item :index="sMenu.url+'/'+sMenu.menuId+'/'+sMenu.name"><span><i
                 :class="sMenu.icon? sMenu.icon : 'el-icon-loading'"></i></span> {{sMenu.name}}
               </el-menu-item>
             </el-menu-item-group>
+
             <!--判断二级菜单下的子菜单没有url的-->
-            <el-submenu v-if="!sMenu.url" :index="cMenu.menuId.toString()+'/'+sMenu.menuId.toString()"
+            <el-submenu v-if="!sMenu.url" :index="index+'-'+sMenu.menuId"
                         v-for="(sMenu,indexSun) in cMenu.childMenus" :key="indexSun">
               <template slot="title">
                 <span><i :class="sMenu.icon ? sMenu.icon : 'el-icon-loading'"></i>
                 </span> {{sMenu.name}}
               </template>
-              <el-menu-item :index="ssMenu.url+'/'+ssMenu.menuId"
+              <el-menu-item :index="ssMenu.url+'/'+ssMenu.menuId+'/'+ssMenu.name"
                             v-for="(ssMenu,indexSuns) in sMenu.childMenus" :key="indexSuns">
                 <span><i :class="ssMenu.icon"></i></span>
                 {{ssMenu.name}}
               </el-menu-item>
             </el-submenu>
           </el-submenu>
-
         </el-submenu>
+
         <!--判断父菜单有url的-->
-        <el-menu-item v-if="menu.url" :index="menu.url" v-show="isRole" v-for="(menu,index) in menuList" :key="index"
-        >
+        <el-menu-item v-if="menu.url" :index="menu.url+'/'+menu.menuId+'/'+menu.name" v-show="isRole"
+                      v-for="(menu,index) in menuList" :key="index">
           <i :class="menu.icon"></i>
           <span>{{menu.name}}</span>
         </el-menu-item>
@@ -97,7 +99,6 @@
     },
     methods: {
       handleOpen (key, keyPath) {
-
       },
       handleClose (key, keyPath) {
 
