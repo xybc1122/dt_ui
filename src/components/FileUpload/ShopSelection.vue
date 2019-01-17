@@ -157,10 +157,11 @@
             let uploadInfo = resultUploadInfo.data[i]
             //2代表 有些sku没有的 可以重新下载
             if (uploadInfo.status === 2) {
+              console.log(uploadInfo)
               this.$set(this.fileUp.icon_list, this.fileUp.icon_list.length, {
                 'isIcon': true,
                 'id': uploadInfo.id,
-                'data': uploadInfo.name
+                'filePath': uploadInfo.filePath + uploadInfo.name
               })
               this.fileUp.fileListInfo.push(uploadInfo)
             } else {
