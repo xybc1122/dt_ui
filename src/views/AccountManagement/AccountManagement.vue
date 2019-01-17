@@ -12,10 +12,24 @@
           </el-option>
         </el-select>
       </div>
-        <div class="check2">
+      <div class="check2">
         <el-input v-show="msgInput===7" v-model="user.userName" placeholder="请输入账号"
                   prefix-icon="el-icon-search"></el-input>
         <el-input v-show="msgInput===8" v-model="user.name" placeholder="请输入姓名"
+                  prefix-icon="el-icon-search"></el-input>
+        <el-input v-show="msgInput===10" v-model="user.role" placeholder="请输入角色名称"
+                  prefix-icon="el-icon-search"></el-input>
+        <el-input v-show="msgInput===54" v-model="user.pwd" placeholder="修改密码"
+                  prefix-icon="el-icon-search"></el-input>
+        <el-input v-show="msgInput===52" v-model="user.i_pwd" placeholder="请输入密码"
+                  prefix-icon="el-icon-search"></el-input>
+        <el-input v-show="msgInput===53" v-model="user.e_pwd" placeholder="确认密码"
+                  prefix-icon="el-icon-search"></el-input>
+        <el-input v-show="msgInput===14" v-model="user.computer_name" placeholder="请输入计算机名"
+                  prefix-icon="el-icon-search"></el-input>
+        <el-input v-show="msgInput===12" v-model="user.phone_status" placeholder="请输入账号状态"
+                  prefix-icon="el-icon-search"></el-input>
+        <el-input v-show="msgInput===9" v-model="user.phone" placeholder="请输入手机号"
                   prefix-icon="el-icon-search"></el-input>
         <div class="block" v-show="msgInput===11">
           <el-date-picker
@@ -25,6 +39,31 @@
             placeholder="选择日期时间">
           </el-date-picker>
         </div>
+        <div class="block" v-show="msgInput===51">
+          <el-date-picker
+            v-model="user.pwdDate"
+            type="datetime"
+            value-format="timestamp"
+            placeholder="选择密码有效期">
+          </el-date-picker>
+        </div>
+        <div class="block" v-show="msgInput===13">
+          <el-date-picker
+            v-model="user.recent_Landing"
+            type="datetime"
+            value-format="timestamp"
+            placeholder="选择最近登陆时间">
+          </el-date-picker>
+        </div>
+        <div class="block" v-show="msgInput===50">
+          <el-date-picker
+            v-model="user.validity_Period"
+            type="datetime"
+            value-format="timestamp"
+            placeholder="选择用户有效期">
+          </el-date-picker>
+        </div>
+
       </div>
       <div class="check7">
         <el-button type="primary" icon="el-icon-search" @click="searchUser">查询</el-button>
@@ -34,6 +73,16 @@
         <span v-show="user.userName!==''">账号:{{user.userName}}</span>
         <span v-show="user.name!==''">姓名:{{user.name}}</span>
         <span v-show="user.createDate!==''">时间:{{user.createDate}}</span>
+        <span v-show="user.role!==''">角色名称:{{user.role}}</span>
+        <span v-show="user.pwd!==''">修改密码:{{user.pwd}}</span>
+        <span v-show="user.i_pwd!==''">请输入密码:{{user.i_pwd}}</span>
+        <span v-show="user.e_pwd!==''">确认密码:{{user.e_pwd}}</span>
+        <span v-show="user.computer_name!==''">计算机名:{{user.computer_name}}</span>
+        <span v-show="user.phone_status!==''">账号状态:{{user.phone_status}}</span>
+        <span v-show="user.phone!==''">手机号:{{user.phone}}</span>
+        <span v-show="user.pwdDate!==''">密码有效期:{{user.pwdDate}}</span>
+        <span v-show="user.recent_Landing!==''">最近登陆时间:{{user.recent_Landing}}</span>
+        <span v-show="user.validity_Period!==''">用户有效期:{{user.validity_Period}}</span>
       </div>
     </div>
     <!--table表格显示-->
@@ -155,8 +204,18 @@
         user: {
           userName: '',//账号名
           name: '',//用户名
+          role:'',//角色
+          pwd:'',//修改密码
+          i_pwd:'',//输入密码
+          e_pwd:'',//确认密码
+          computer_name:'',//计算机名
+          phone_status:'',//状态
+          phone:'',//手机
           landingTime: '',//登陆时间
           createDate: '',//创建时间
+          pwdDate:'',//密码有效期
+          recent_Landing:'',//最近登陆
+          validity_Period:'',//用户有效期
           accountStatus: '',
           currentPage: 1,//当前页
           total_size: 0,//总的页
@@ -343,6 +402,7 @@
       },
       //获得第一个input框里的id 通过id去判断显示哪个输入框
       getValue (selVal) {
+        console.log(selVal)
         this.msgInput = selVal
       },
 

@@ -3,7 +3,7 @@
     <!--多选输入框选择输入-->
     <div id="printCheck">
       <div class="check1">
-        <el-select v-model="roleValue" clearable placeholder="角色查看" value="">
+        <el-select v-model="roleValue" clearable placeholder="角色查看" value="" @change="getValue2">
           <el-option
             v-for="(item,index) in tableTitle"
             :key="index"
@@ -13,10 +13,24 @@
         </el-select>
       </div>
       <div class="check2">
+        <el-input v-show="msgInput===16" v-model="role.owner" placeholder="请输入角色拥有者"
+                  prefix-icon="el-icon-search"></el-input>
+        <el-input v-show="msgInput===17" v-model="role.owner_menu" placeholder="请输入拥有的菜单"
+                  prefix-icon="el-icon-search"></el-input>
+        <el-input v-show="msgInput===10" v-model="role.role_name" placeholder="请输入角色名称"
+                  prefix-icon="el-icon-search"></el-input>
+        <el-input v-show="msgInput===55" v-model="role.header_Field" placeholder="请输入拥有的表头字段"
+                  prefix-icon="el-icon-search"></el-input>
       </div>
       <div class="check7">
         <el-button type="primary" icon="el-icon-search">查询</el-button>
         <el-button type="primary">重置</el-button>
+      </div>
+      <div>
+        <span v-show="role.owner!==''">拥有者:{{role.owner}}</span>
+        <span v-show="role.owner_menu!==''">拥有者菜单:{{role.owner_menu}}</span>
+        <span v-show="role.role_name!==''">角色名称:{{role.role_name}}</span>
+        <span v-show="role.header_Field!==''">表头字段:{{role.header_Field}}</span>
       </div>
     </div>
     <!--table表格显示-->
@@ -103,6 +117,7 @@
   export default {
     data () {
       return {
+        msgInput: '',//下拉id
         rName: '', //角色名称
         tableTitle: [],//表头信息
         menuTableTitle: {},//菜单查询到的表头信息
@@ -110,6 +125,10 @@
         roleValue: '', //下拉框的model
         roleSelection: [],
         role: {
+          owner:'',//角色拥有者
+          owner_menu:'',//角色菜单
+          role_name:'',//角色名称
+          header_Field:'',//表头字段
           currentPage: 1,//当前页
           total_size: 0,//总的页
           pageSize: 10//显示最大的页
@@ -188,6 +207,9 @@
             this.menuTableTitle = ''
           }
         }
+      },
+      getValue2 (selVal) {
+        this.msgInput = selVal
       },
       async handleClick (row) {
         const rid = row.rId

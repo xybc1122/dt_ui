@@ -1,6 +1,6 @@
 <template>
   <div style="margin-left: 150px">
-    <div style="margin-top: 20px;" v-if="ptFrom.mShow">
+    <div style="padding-top: 20px;" v-if="ptFrom.mShow">
       <el-radio-group v-model="radioShop" size="mini" @change="changeRadio">
         <el-radio-button :label="sArr" v-for="(sArr,index) in shopArr" :key="index">{{sArr.shopName}}
         </el-radio-button>
