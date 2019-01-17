@@ -49,7 +49,7 @@
         this.menuHeadFrom.ids = []
         this.menuHeadUpVisible = true
         this.menuHeadFrom.menuId = row.menuId
-        const resultHeads = repFindByHeads()
+        const resultHeads = repFindByHeads(this.menuHeadFrom.menuId)
         resultHeads.then((result) => {
           if (result.code === 200) {
             const generateData = _ => {
@@ -87,7 +87,7 @@
         const menuHead = {mId, thIds}
         if (direction === 'left') {
           const resultDel = repDelHeadMenu(menuHead)
-          if(resultDel.code===200){
+          if (resultDel.code === 200) {
             console.log('移除成功~')
           }
         } else {

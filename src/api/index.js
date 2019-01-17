@@ -22,10 +22,10 @@ export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
 //通过menuIds查询table头List集合
 export const repGetHead = ({menuIds}) => ajax(BASE_URL + '/getByHead', {menuIds}, 'POST')
 
-//通过一个mid查询table头信息
+//通过一个mid查询 这个节点获取这个菜单拥有的头信息
 export const repShowByHead = (mId) => ajax(BASE_URL + `/showByHead`, {mId})
-//获取所有表头的信息
-export const repFindByHeads = () => ajax(BASE_URL + '/findHeads')
+//通过一个mid查询 一个菜单下面有哪些头字段
+export const repFindByHeads = (mId) => ajax(BASE_URL + '/findHeads', {mId})
 //访问index页面
 export const repIndex = () => ajax(BASE_URL + `/menu/index`)
 

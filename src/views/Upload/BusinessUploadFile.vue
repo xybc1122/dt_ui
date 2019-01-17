@@ -1,5 +1,6 @@
 <template>
   <div>
+    <span>{{this.$route.params.name}}</span>
     <!-- 店铺选择 站点选择 -->
     <BusinessTime :ptFrom="ptFrom"/>
   </div>

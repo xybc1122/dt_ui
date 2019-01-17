@@ -1,5 +1,6 @@
 <template>
   <div style="margin-left: 150px">
+    <span>{{this.$route.params.name}}</span>
     <!--订单类型选择 -->
     <PaymentType/>
   </div>
