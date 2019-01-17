@@ -54,10 +54,10 @@
           fixed>
         </el-table-column>
         <template v-for="(title ,index) in tableTitle">
-          <el-table-column v-if="title.topType==='rName'" :label="title.headName" prop="rName" width="700"
+          <el-table-column v-if="title.topType==='rName'" :label="title.headName" prop="rName"
                            sortable ></el-table-column>
           <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='role_holder'" :label="title.headName"
-                           prop="userName" width="700"
+                           prop="userName"
                            sortable ></el-table-column>
         </template>
         <el-table-column

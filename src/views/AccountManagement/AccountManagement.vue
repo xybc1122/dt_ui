@@ -104,13 +104,13 @@
           fixed>
         </el-table-column>
         <template v-for="title  in tableTitle">
-          <el-table-column width="150" v-if="title.topType==='uName'" sortable fixed :label="title.headName"
+          <el-table-column  v-if="title.topType==='uName'" sortable fixed :label="title.headName"
                            prop="userName"></el-table-column>
-          <el-table-column width="150" v-if="title.topType==='name'" sortable fixed :label="title.headName"
+          <el-table-column  v-if="title.topType==='name'" sortable fixed :label="title.headName"
                            prop="name"></el-table-column>
-          <el-table-column width="150" v-if="title.topType==='phone'" :label="title.headName"
+          <el-table-column  v-if="title.topType==='phone'" :label="title.headName"
                            prop="mobilePhone"></el-table-column>
-          <el-table-column v-if="title.topType==='rName'" :label="title.headName" fixed prop="rName" width="150"
+          <el-table-column v-if="title.topType==='rName'" :label="title.headName" fixed prop="rName"
                            :show-overflow-tooltip="true">
           </el-table-column>
           <el-table-column v-if="title.topType==='create_date'" :label="title.headName" width="180">

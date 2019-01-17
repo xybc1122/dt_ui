@@ -5,7 +5,9 @@
       :visible.sync="roleUpVisible"
       @close='closeDialog'
       width="850px">
-      <el-form :model="roleFrom" ref="roleFrom" label-width="80px">
+      <el-button @click="User_info">按钮1</el-button>
+      <el-button @click="User_menu">按钮1</el-button>
+      <el-form v-if="user_Info" :model="roleFrom" ref="roleFrom" label-width="80px">
         <el-form-item style="width: 350px">
           <el-tag>{{roleFrom.rName}}</el-tag>
         </el-form-item>
@@ -25,7 +27,7 @@
           </div>
         </el-form-item>
       </el-form>
-      <div id="role_up_from" style="float: right">
+      <div  v-if="user_Menu" id="role_up_from" style="float: right">
         <el-tree
           show-checkbox
           :data="menuDateList"
@@ -73,6 +75,8 @@
   export default {
     data () {
       return {
+        user_Info:true,
+        user_Menu:false,
         isViewMenu: true,//查看菜单
         menuHedaFlg: false,//table框的隐藏跟显示
         menuFlg: true,//选择删除 还是添加
@@ -262,6 +266,24 @@
           }
         })
         this.noUrlCheckedKeys = noUrlMenuList
+      },
+      async User_info(){
+        if(this.user_Info){
+          this.user_Menu=false
+          return
+        }else{
+          this.user_Info=true
+        }
+
+      },
+      async User_menu(){
+        if(this.user_Menu){
+          this.user_Info=false
+          return
+        }else{
+          this.user_Menu=true
+        }
+
       }
     }
   }
