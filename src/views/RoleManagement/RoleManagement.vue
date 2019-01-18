@@ -23,14 +23,14 @@
                   prefix-icon="el-icon-search"></el-input>
       </div>
       <div class="check7">
-        <el-button type="primary" icon="el-icon-search">查询</el-button>
-        <el-button type="primary">重置</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="searchUser">查询</el-button>
+        <el-button type="primary" @click="reset()">重置</el-button>
       </div>
-      <div>
-        <span v-show="role.owner!==''">拥有者:{{role.owner}}</span>
-        <span v-show="role.owner_menu!==''">拥有者菜单:{{role.owner_menu}}</span>
-        <span v-show="role.role_name!==''">角色名称:{{role.role_name}}</span>
-        <span v-show="role.header_Field!==''">表头字段:{{role.header_Field}}</span>
+      <div style="padding-top: 30px;">
+        <el-tag style="padding-left: 10px" v-show="role.owner!==''" closable @close="owner()">拥有者:{{role.owner}}</el-tag>
+        <el-tag v-show="role.owner_menu!==''" closable @close="owner_menu()">拥有者菜单:{{role.owner_menu}}</el-tag>
+        <el-tag v-show="role.role_name!==''" closable @close="role_name()">角色名称:{{role.role_name}}</el-tag>
+        <el-tag v-show="role.header_Field!==''" closable @close="header_Field()">表头字段:{{role.header_Field}}</el-tag>
       </div>
     </div>
     <!--table表格显示-->
@@ -108,7 +108,7 @@
   </div>
 </template>
 <script>
-  import {repHead, repGetRoles, repShowByHead, repMenuRole} from '../../api'
+  import {repHead, repGetRoles, repShowByHead, repMenuRole, repUsers} from '../../api'
   import utils from '../../utils/PageUtils'
   import PubSub from 'pubsub-js'
   import RoleItemUp from '../../components/RoleItem/RoleItemUp'
@@ -207,6 +207,33 @@
             this.menuTableTitle = ''
           }
         }
+      },
+      //点击查询获得输入框的value
+      async searchUser () {
+        const resultUsers = await repUsers(this.user)
+        if (resultUsers.code === 200) {
+          //赋值 然后显示
+          this.pageUser(resultUsers)
+        }
+      },
+      //重置
+      reset () {
+        this.role.owner = ''
+        this.role.owner_menu = ''
+        this.role.role_name = ''
+        this.role.header_Field = ''
+      },
+      async owner(){
+        this.role.owner = ''
+      },
+      async owner_menu(){
+        this.role.owner_menu = ''
+      },
+      async role_name(){
+        this.role.role_name = ''
+      },
+      async header_Field(){
+        this.role.header_Field = ''
       },
       getValue2 (selVal) {
         this.msgInput = selVal

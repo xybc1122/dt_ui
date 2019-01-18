@@ -369,10 +369,6 @@
 </script>
 
 <style lang="scss">
-  //用户
-  .el-form-item.un {
-    float: left;
-  }
   //密码修改
   .el-form-item.pwd3{
     font-family: "宋体";
@@ -408,6 +404,7 @@
   }
   //自定义添加转移
   .transfer2 {
+    margin-top: 50px;
     .el-transfer {
       .el-transfer__buttons {
         width: 150px;

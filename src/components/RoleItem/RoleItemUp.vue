@@ -5,8 +5,10 @@
       :visible.sync="roleUpVisible"
       @close='closeDialog'
       width="850px">
-      <el-button @click="User_info">{{user_Info ?'角色信息':'显示角色信息'}}</el-button>
-      <el-button @click="User_menu">{{user_Menu ?'菜单信息':'显示菜单信息'}}</el-button>
+      <div style="margin-left: 80px;margin-bottom: 20px">
+        <el-button @click="User_info" style=";float: left">角色信息</el-button>
+        <el-button @click="User_menu" style="margin-left: 0px;border-left: 0px">菜单信息</el-button>
+      </div>
       <el-form v-if="user_Info" :model="roleFrom" ref="roleFrom" label-width="80px">
         <el-form-item style="width: 350px">
           <el-tag>{{roleFrom.rName}}</el-tag>
