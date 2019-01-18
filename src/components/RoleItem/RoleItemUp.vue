@@ -5,8 +5,8 @@
       :visible.sync="roleUpVisible"
       @close='closeDialog'
       width="850px">
-      <el-button @click="User_info">按钮1</el-button>
-      <el-button @click="User_menu">按钮1</el-button>
+      <el-button @click="User_info">{{user_Info ?'角色信息':'显示角色信息'}}</el-button>
+      <el-button @click="User_menu">{{user_Menu ?'菜单信息':'显示菜单信息'}}</el-button>
       <el-form v-if="user_Info" :model="roleFrom" ref="roleFrom" label-width="80px">
         <el-form-item style="width: 350px">
           <el-tag>{{roleFrom.rName}}</el-tag>
@@ -61,6 +61,7 @@
         <el-button @click="roleUpVisible = false">取 消</el-button>
         <el-button type="primary" @click="upMenuRole">确 定</el-button>
       </div>
+
     </el-dialog>
     <MenuHeadItem/>
   </div>
@@ -273,6 +274,7 @@
           return
         }else{
           this.user_Info=true
+          this.user_Menu=false
         }
 
       },
@@ -282,6 +284,7 @@
           return
         }else{
           this.user_Menu=true
+          this.user_Info=false
         }
 
       }
