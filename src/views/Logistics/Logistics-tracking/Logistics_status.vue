@@ -37,6 +37,7 @@
 </template>
 <script>
   import PubSub_Ware from 'pubsub-js'
+  import {repGetLogisticsInfo} from '../../../api'
 
   export default {
     data () {
@@ -58,84 +59,9 @@
 
     },
     async mounted () {
-      // //查询获得table表的 头信息
-      // const resultHead = await
-      //   repHead(this.$route.params.id)
-      // if (resultHead.code === 200) {
-      //   // console.log(resultHead.data)
-      //   this.tableTitle = resultHead.data
-      // }
-      // //获得公司信息信息
-      // const resultGetCompany = await repGetCompanyInfo()
-      // console.log(resultGetCompany)
-      // if (resultGetCompany.code === 200) {
-      //   this.tableData = resultGetCompany.data
-      // }
-      // //新增成功后收到订阅消息
-      // PubSub_com.subscribe('saveFormValue_com', (msg, saveFormValue_com) => {
-      //   if (!saveFormValue_com) {
-      //     var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-      //     const resultUsers = repUsers(userPage)
-      //     resultUsers.then((result) => {
-      //       if (result.code === 200) {
-      //         //赋值 然后显示
-      //         this.pageUser(result)
-      //       }
-      //     })
-      //   }
-      // })
-      // //删除角色成功后收到订阅消息
-      // PubSub_com.subscribe('delRole', (msg, delRole) => {
-      //   if (delRole) {
-      //     var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-      //     const resultUsers = repUsers(userPage)
-      //     resultUsers.then((result) => {
-      //       if (result.code === 200) {
-      //         //赋值 然后显示
-      //         this.pageUser(result)
-      //       }
-      //     })
-      //   }
-      // })
-      // //新增角色成功后收到订阅消息
-      // PubSub_com.subscribe('addRole', (msg, addRole) => {
-      //   if (!addRole) {
-      //     var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-      //     const resultUsers = repUsers(userPage)
-      //     resultUsers.then((result) => {
-      //       if (result.code === 200) {
-      //         //赋值 然后显示
-      //         this.pageUser(result)
-      //       }
-      //     })
-      //   }
-      // })
-      // //更新用户信息功后收到订阅消息
-      // PubSub_com.subscribe('upFormValue', (msg, upFormValue) => {
-      //   if (!upFormValue) {
-      //     var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-      //     const resultUsers = repUsers(userPage)
-      //     resultUsers.then((result) => {
-      //       if (result.code === 200) {
-      //         //赋值 然后显示
-      //         this.pageUser(result)
-      //       }
-      //     })
-      //   }
-      // })
-      // //恢复用户信息后收到订阅消息
-      // PubSub_com.subscribe('isReUser', (msg, isReUser) => {
-      //   if (isReUser) {
-      //     var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-      //     const resultUsers = repUsers(userPage)
-      //     resultUsers.then((result) => {
-      //       if (result.code === 200) {
-      //         //赋值 然后显示
-      //         this.pageUser(result)
-      //       }
-      //     })
-      //   }
-      // })
+
+      const logisticsInfo=await repGetLogisticsInfo()
+      console.log(logisticsInfo)
     },
     methods: {
       //分页

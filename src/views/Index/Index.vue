@@ -1,7 +1,7 @@
 <template>
-  <el-container style="overflow: hidden">
+  <el-container>
     <div style="height: 100%">
-      <Aside style="overflow-y: auto;height: 1000px;background-color: #293846"/>
+      <Aside  style="overflow-y: auto;height: 1000px;background-color: #293846"/>
     </div>
 
     <el-container style="float: left">

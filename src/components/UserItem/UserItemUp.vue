@@ -1,9 +1,13 @@
 <template>
   <!--隐藏修改from表单-->
   <el-dialog title="用户信息修改" :visible.sync="upFormValue" width="800px">
-    <el-form :model="userForm" ref="userForm" :rules="rules" label-width="92px">
-      <template v-for="(title ,index) in tableTitle">
-        <el-form-item v-if="title.topType==='up_pwd'" :label="title.headName" style="width: 350px"class="eee">
+    <div style="margin-left: 80px;margin-bottom: 20px">
+      <el-button @click="User_info" style="margin-left: 0px;border-left: 0px">用户信息</el-button>
+      <el-button @click="User_info2" style=";float: left">角色信息</el-button>
+    </div>
+    <el-form :model="userForm" ref="userForm" :rules="rules" label-width="92px" >
+      <template v-if="user_Info" v-for="(title ,index) in tableTitle" >
+        <el-form-item v-if="title.topType==='up_pwd'" :label="title.headName" style="width: 350px;">
           <el-switch
             @change="switchPwd"
             v-model="isPwd"
@@ -21,13 +25,13 @@
           <el-input clearable style="width: 250px" v-model="userForm.confirmPwd" type="password"></el-input>
           <el-checkbox v-model="userForm.checkedPwd">密码满足复杂度要求</el-checkbox>
         </el-form-item>
-        <el-form-item v-if="title.topType==='uName'" :label="title.headName" style="width: 350px"class="username un">
+        <el-form-item v-if="title.topType==='uName'" :label="title.headName" style="width: 350px"class="user_margin_left ">
           <el-tag>{{userForm.uName}}</el-tag>
         </el-form-item>
-        <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px"class="username un">
+        <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px"class="user_margin_left">
           <el-tag>{{userForm.name}}</el-tag>
         </el-form-item>
-        <el-form-item v-if="title.topType==='phone'" :label="title.headName" style="width: 350px"class="state">
+        <el-form-item v-if="title.topType==='phone'" :label="title.headName" style="width: 350px"class="state user_margin_left">
           <el-tag>{{userForm.uMobilePhone}}</el-tag>
         </el-form-item>
         <el-form-item v-if="title.topType==='account_status'" :label="title.headName" class="state">
@@ -61,7 +65,7 @@
           </div>
         </el-form-item>
       </template>
-      <el-form-item prop="rolesId"  style="margin-top: 60px">
+      <el-form-item v-if="user_Info2" prop="rolesId" >
         <div class="transfer2">
           <el-transfer
             filterable
@@ -77,7 +81,7 @@
         </div>
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
+    <div v-if="user_Info" slot="footer" class="dialog-footer">
       <el-button @click="resetForm('userForm')">重置</el-button>
       <el-button @click="upFormValue = false">取 消</el-button>
       <el-button type="primary" @click="saveUserInfo('userForm')">确 定</el-button>
@@ -148,6 +152,8 @@
         }
       }
       return {
+        user_Info:false,
+        user_Info2:true,
         tableTitle: [],//表头信息
         tableData: [],//表信息
         upFormValue: false,
@@ -348,6 +354,14 @@
           console.log(resultAdd)
         }
       },
+      User_info(){
+        this.user_Info=true;
+        this.user_Info2=false;
+      },
+      User_info2(){
+        this.user_Info2=true;
+        this.user_Info=false
+      },
       //获得 checkedAlways flg如果=true 就禁用input 输入框
       checkedAlways (flg) {
         this.isAlwaysFlg = flg === true
@@ -369,6 +383,11 @@
 </script>
 
 <style lang="scss">
+  .user_margin_left{
+    margin-left: 45px;
+    font-family: "宋体";
+    font-size: 15px;
+  }
   //密码修改
   .el-form-item.pwd3{
     font-family: "宋体";
@@ -404,7 +423,6 @@
   }
   //自定义添加转移
   .transfer2 {
-    margin-top: 50px;
     .el-transfer {
       .el-transfer__buttons {
         width: 150px;

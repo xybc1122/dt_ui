@@ -65,24 +65,15 @@
         </div>
 
       </div>
-      <div class="check7">
+      <div class="check7" style="padding-right: 10px">
         <el-button type="primary" icon="el-icon-search" @click="searchUser">查询</el-button>
         <el-button type="primary" @click="reset">重置</el-button>
       </div>
-      <div>
-        <span v-show="user.userName!==''">账号:{{user.userName}}</span>
-        <span v-show="user.name!==''">姓名:{{user.name}}</span>
-        <span v-show="user.createDate!==''">时间:{{user.createDate}}</span>
-        <span v-show="user.role!==''">角色名称:{{user.role}}</span>
-        <span v-show="user.pwd!==''">修改密码:{{user.pwd}}</span>
-        <span v-show="user.i_pwd!==''">请输入密码:{{user.i_pwd}}</span>
-        <span v-show="user.e_pwd!==''">确认密码:{{user.e_pwd}}</span>
-        <span v-show="user.computer_name!==''">计算机名:{{user.computer_name}}</span>
-        <span v-show="user.phone_status!==''">账号状态:{{user.phone_status}}</span>
-        <span v-show="user.phone!==''">手机号:{{user.phone}}</span>
-        <span v-show="user.pwdDate!==''">密码有效期:{{user.pwdDate}}</span>
-        <span v-show="user.recent_Landing!==''">最近登陆时间:{{user.recent_Landing}}</span>
-        <span v-show="user.validity_Period!==''">用户有效期:{{user.validity_Period}}</span>
+      <div style="padding-top: 30px">
+        <el-tag v-show="user.userName!==''" closable @close="Username()">账号:{{user.userName}}</el-tag>
+        <el-tag v-show="user.name!==''" closable @close="Names()">姓名:{{user.name}}</el-tag>
+        <el-tag v-show="user.role!==''" closable @close="Role()">角色名称:{{user.role}}</el-tag>
+        <el-tag v-show="user.phone!==''" closable @close="Phone()">手机号:{{user.phone}}</el-tag>
       </div>
     </div>
     <!--table表格显示-->
@@ -418,8 +409,20 @@
       reset () {
         this.user.userName = ''
         this.user.name = ''
-        this.user.createDate = ''
-
+        this.user.role = ''
+        this.user.phone=''
+      },
+      Username(){
+        this.user.userName = ''
+      },
+      Names(){
+        this.user.name = ''
+      },
+      Role(){
+        this.user.role = ''
+      },
+      Phone(){
+        this.user.phone=''
       },
       //通用分页节省代码
       pageUser (resultUsers) {

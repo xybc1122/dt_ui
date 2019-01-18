@@ -6,13 +6,11 @@
       @close='closeDialog'
       width="850px">
       <div style="margin-left: 80px;margin-bottom: 20px">
-        <el-button @click="User_info" style=";float: left">角色信息</el-button>
-        <el-button @click="User_menu" style="margin-left: 0px;border-left: 0px">菜单信息</el-button>
+        <el-button @click="Role_info" style=";float: left">角色信息</el-button>
+        <el-button @click="Role_menu" style="margin-left: 0px;border-left: 0px">菜单信息</el-button>
+        <el-input v-model="roleFrom.rName" :disabled="true" class="user_input"></el-input>
       </div>
-      <el-form v-if="user_Info" :model="roleFrom" ref="roleFrom" label-width="80px">
-        <el-form-item style="width: 350px">
-          <el-tag>{{roleFrom.rName}}</el-tag>
-        </el-form-item>
+      <el-form v-if="role_Info" :model="roleFrom" ref="roleFrom" label-width="80px">
         <el-form-item prop="usersId">
           <div>
             <el-transfer
@@ -29,7 +27,7 @@
           </div>
         </el-form-item>
       </el-form>
-      <div  v-if="user_Menu" id="role_up_from" style="float: right">
+      <div  v-if="role_Menu" id="role_up_from" style="float: right">
         <el-tree
           show-checkbox
           :data="menuDateList"
@@ -59,9 +57,9 @@
           </el-table-column>
         </el-table>
       </div>
-      <div slot="footer" class="dialog-footer">
+      <div v-if="role_Menu" slot="footer" class="dialog-footer">
         <el-button @click="roleUpVisible = false">取 消</el-button>
-        <el-button type="primary" @click="upMenuRole">确 定</el-button>
+        <el-button  type="primary" @click="upMenuRole">确 定</el-button>
       </div>
 
     </el-dialog>
@@ -78,8 +76,8 @@
   export default {
     data () {
       return {
-        user_Info:true,
-        user_Menu:false,
+        role_Info:true,
+        role_Menu:false,
         isViewMenu: true,//查看菜单
         menuHedaFlg: false,//table框的隐藏跟显示
         menuFlg: true,//选择删除 还是添加
@@ -270,31 +268,27 @@
         })
         this.noUrlCheckedKeys = noUrlMenuList
       },
-      async User_info(){
-        if(this.user_Info){
-          this.user_Menu=false
-          return
-        }else{
-          this.user_Info=true
-          this.user_Menu=false
-        }
-
+      async Role_info(){
+        this.role_Info=true
+        this.role_Menu=false
       },
-      async User_menu(){
-        if(this.user_Menu){
-          this.user_Info=false
-          return
-        }else{
-          this.user_Menu=true
-          this.user_Info=false
-        }
-
+      async Role_menu(){
+        this.role_Menu=true
+        this.role_Info=false
       }
     }
   }
 </script>
 
 <style lang="scss">
+  .user_input{
+    padding-left: 50px;
+    width: 200px;
+    .el-input__inner{
+      color: #409EFF!important;
+      text-align: center;
+    }
+  }
   .el-tooltip__popper {
     max-width: 500px;
     line-height: 180%;

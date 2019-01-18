@@ -22,12 +22,12 @@
         <el-input v-show="msgInput===55" v-model="role.header_Field" placeholder="请输入拥有的表头字段"
                   prefix-icon="el-icon-search"></el-input>
       </div>
-      <div class="check7">
+      <div class="check7" style="padding-right: 10px">
         <el-button type="primary" icon="el-icon-search" @click="searchUser">查询</el-button>
         <el-button type="primary" @click="reset()">重置</el-button>
       </div>
-      <div style="padding-top: 30px;">
-        <el-tag style="padding-left: 10px" v-show="role.owner!==''" closable @close="owner()">拥有者:{{role.owner}}</el-tag>
+      <div style="padding-top: 30px">
+        <el-tag  v-show="role.owner!==''" closable @close="owner()">拥有者:{{role.owner}}</el-tag>
         <el-tag v-show="role.owner_menu!==''" closable @close="owner_menu()">拥有者菜单:{{role.owner_menu}}</el-tag>
         <el-tag v-show="role.role_name!==''" closable @close="role_name()">角色名称:{{role.role_name}}</el-tag>
         <el-tag v-show="role.header_Field!==''" closable @close="header_Field()">表头字段:{{role.header_Field}}</el-tag>
