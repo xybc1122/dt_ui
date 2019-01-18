@@ -161,7 +161,8 @@
               this.$set(this.fileUp.icon_list, this.fileUp.icon_list.length, {
                 'isIcon': true,
                 'id': uploadInfo.id,
-                'filePath': uploadInfo.filePath + uploadInfo.name
+                'filePath': uploadInfo.filePath + uploadInfo.name,
+                'name': uploadInfo.name
               })
               this.fileUp.fileListInfo.push(uploadInfo)
             } else {

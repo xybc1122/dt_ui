@@ -163,7 +163,8 @@
                           this.fileUp.fileListInfo.push(messagesResult.data)
                           this.fileUp.icon_list.push({
                             'isIcon': true, 'id': messagesResult.data.id,
-                            'filePath': messagesResult.data.filePath
+                            'filePath': messagesResult.data.filePath + messagesResult.data.name,
+                            'name': messagesResult.data.name
                           })
                           continue
                         }
@@ -178,11 +179,11 @@
                         this.fileUp.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
                       }
                     }
-                    //成功后 5秒结束
-                    setTimeout(() => {
-                      clearInterval(this.timer)
-                    }, 2000)
                   }
+                  //成功后 5秒结束
+                  setTimeout(() => {
+                    clearInterval(this.timer)
+                  }, 2000)
                 }
               )
             }
@@ -253,7 +254,6 @@
       },
       //点击下载
       download (file) {
-        console.log(file)
         let config = {
           responseType: 'blob'
         }
@@ -263,21 +263,21 @@
         //下载文件
         axios.post(this.url + '/upload/downloadCommonFile', path, config).then((result) => {
           if (result.status === 200) {
-            this.downloadFile(result)
+            this.downloadFile(result, file.name)
           }
         })
       },
       // 下载文件
-      downloadFile (data) {
+      downloadFile (data, fileName) {
         console.log(data)
         if (!data) {
           return
         }
-        let url = window.URL.createObjectURL(new Blob([data]))
+        let url = window.URL.createObjectURL(data.data)
         let link = document.createElement('a')
         link.style.display = 'none'
         link.href = url
-        link.setAttribute('download', 'xxx.txt')
+        link.setAttribute('download', fileName)
         document.body.appendChild(link)
         link.click()
       },
