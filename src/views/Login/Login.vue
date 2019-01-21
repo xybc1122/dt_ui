@@ -16,9 +16,13 @@
             <el-button type="primary" @click="Login" size="medium">
               登陆
             </el-button>
-            <el-checkbox v-model="checked" style="padding-left: 20px">自动登陆</el-checkbox>
+            <span>
+              <el-checkbox v-model="rememberMe" style="padding-left: 20px">自动登陆</el-checkbox>
+              <p>一周内</p>
+            </span>
             <!--<el-button class="quest" type="danger" size="mini" icon="el-icon-question">忘记密码</el-button>-->
           </div>
+
         </div>
       </div>
     </div>
@@ -37,27 +41,36 @@
         userName: 'tt',
         passWord: 't',
         isLogin: true, // <!--登录-->
-        checked: true
+        rememberMe: false
       }
     },
     watch:{
-      checked(val){
-        if(val){
-          console.log("勾选状态")
-        }else{
-          console.log("未勾选状态")
-        }
-      }
+      // checked(val){
+      //   if(val){
+      //     console.log("勾选状态")
+      //   }else{
+      //     console.log("未勾选状态")
+      //   }
+      // }
     },
     async mounted () {
-
+      const rem= this.getCookie('rememberMe')
+      console.log("----")
+      console.log(rem)
+      console.log("----")
+      // if(rem !== ''){
+      //   this.$router.replace('/index')
+      // }else{
+      //   console.log("未记住")
+      // }
     },
     methods: {
       async Login () {
         let loadingInstance = loading.loading_dom('登陆中','body')
         const userName = this.userName
         const pwd = this.passWord
-        const users = {userName, pwd}
+        const rememberMe=this.rememberMe
+        const users = {userName, pwd, rememberMe}
         login_intercept.intercept(loadingInstance)
         //成功执行后续
         if (userName && pwd) {
@@ -83,7 +96,7 @@
           loadingInstance.close()
         }
         loadingInstance.close()
-      }
+      },
     }
   }
 </script>

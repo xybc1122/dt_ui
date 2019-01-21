@@ -5,10 +5,10 @@ import ajax from './ajax'
 
 const BASE_URL = '/api'
 // 获取用户登陆信息
-export const repLoginUser = ({userName, pwd, checked}) => ajax(BASE_URL + `/ajaxLogin`, {
+export const repLoginUser = ({userName, pwd, rememberMe}) => ajax(BASE_URL + `/ajaxLogin`, {
   userName,
   pwd,
-  checked
+  rememberMe
 }, 'POST')
 //获得所有用户信息
 export const repGetUsers = () => ajax(BASE_URL + '/user/getUsers')
@@ -137,4 +137,5 @@ export const repAddUploadInfoMysql = ({uploadSuccessList}) => ajax(BASE_URL + '/
 //实时请求上传数据 信息
 export const repGetUpInfoTime = (redIds) => ajax(BASE_URL + '/upload/timing', {redIds})
 
+//物流状态查询
 export const repGetLogisticsInfo = ({currentPage,pageSize}) => ajax(BASE_URL + '/logistics/info',{currentPage,pageSize})

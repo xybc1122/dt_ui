@@ -58,26 +58,40 @@
     components:{
 
     },
+    async mounted(){
+
+    },
     methods: {
       //分页
       async handleSizeChange (val) {
         // this.role.pageSize = val
-        // let userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
-        // const resultUsers = await repGetLogisticsInfo(userPage)
+
+        let userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
+        const resultUsers = await repGetLogisticsInfo(userPage)
+        console.log(resultUsers)
         // if (resultUsers.code === 200) {
+        //
         //   //赋值 然后显示
         //   this.pageUser(resultUsers)
         // }
       },
       //val=当前页 分页
       async handleCurrentChange (val) {
-        // let userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
-        // //分页查询 传一个当前页,显示最大的页,一个userInfo对象
-        // const resultUsers = await repGetLogisticsInfo(userPage)
+        let userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
+        //分页查询 传一个当前页,显示最大的页,一个userInfo对象
+        const resultUsers = await repGetLogisticsInfo(userPage)
+        console.log(resultUsers)
         // if (resultUsers.code === 200) {
         //   //赋值 然后显示
         //   this.pageUser(resultUsers)
         // }
+      },
+      //通用分页节省代码
+      pageUser (resultUsers) {
+        const dataUser = resultUsers.data
+        this.tableData = dataUser.dataList
+        this.role.currentPage = dataUser.current_page
+        this.role.total_size = dataUser.total_size
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
       handleSelectionChange (val) {
