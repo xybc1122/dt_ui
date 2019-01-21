@@ -58,19 +58,26 @@
     components:{
 
     },
-    async mounted () {
-
-      const logisticsInfo=await repGetLogisticsInfo()
-      console.log(logisticsInfo)
-    },
     methods: {
       //分页
-      handleSizeChange (val) {
-        console.log(`每页 ${val} 条`)
+      async handleSizeChange (val) {
+        // this.role.pageSize = val
+        // let userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
+        // const resultUsers = await repGetLogisticsInfo(userPage)
+        // if (resultUsers.code === 200) {
+        //   //赋值 然后显示
+        //   this.pageUser(resultUsers)
+        // }
       },
       //val=当前页 分页
-      handleCurrentChange (val) {
-        console.log(`当前页 ${val} 条`)
+      async handleCurrentChange (val) {
+        // let userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
+        // //分页查询 传一个当前页,显示最大的页,一个userInfo对象
+        // const resultUsers = await repGetLogisticsInfo(userPage)
+        // if (resultUsers.code === 200) {
+        //   //赋值 然后显示
+        //   this.pageUser(resultUsers)
+        // }
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
       handleSelectionChange (val) {
@@ -102,7 +109,7 @@
 </script>
 
 
-<style>
+<style lang="scss">
   /*表格*/
   #roleTable {
     margin-top: 50px;

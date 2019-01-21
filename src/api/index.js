@@ -137,4 +137,4 @@ export const repAddUploadInfoMysql = ({uploadSuccessList}) => ajax(BASE_URL + '/
 //实时请求上传数据 信息
 export const repGetUpInfoTime = (redIds) => ajax(BASE_URL + '/upload/timing', {redIds})
 
-export const repGetLogisticsInfo = () => ajax(BASE_URL + '/logistics/info')
+export const repGetLogisticsInfo = ({currentPage,pageSize}) => ajax(BASE_URL + '/logistics/info',{currentPage,pageSize})
