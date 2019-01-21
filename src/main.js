@@ -113,7 +113,9 @@ Vue.prototype.setCookie = function (c_name, value, expiredays) {
 //获取cookie
 Vue.prototype.getCookie = function (c_name) {
   if (document.cookie.length > 0) {
-    var c_start = document.cookie.indexOf(c_name + '=')
+    debugger
+    var c_start = document.cookie.indexOf(c_name)
+    console.log(c_start)
     if (c_start !== -1) {
       c_start = c_start + c_name.length + 1
       var c_end = document.cookie.indexOf(';', c_start)
