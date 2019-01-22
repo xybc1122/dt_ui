@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import {repLoginUser} from '../../api'
+  import {repLoginUser, repIndex} from '../../api'
   import message from '../../utils/Message'
   import login_intercept from '../../utils/login_intercept'
   import loading from '../../utils/loading'
@@ -44,7 +44,7 @@
         rememberMe: false
       }
     },
-    watch:{
+    watch: {
       // checked(val){
       //   if(val){
       //     console.log("勾选状态")
@@ -54,22 +54,19 @@
       // }
     },
     async mounted () {
-      const rem= this.getCookie('rememberMe')
-      console.log("----")
-      console.log(rem)
-      console.log("----")
-      // if(rem !== ''){
-      //   this.$router.replace('/index')
-      // }else{
-      //   console.log("未记住")
-      // }
+      const loginStatus = await repIndex()
+      if (loginStatus.code === 200) {
+        if (loginStatus.msg === 'ok') {
+          this.$router.replace('/index')
+        }
+      }
     },
     methods: {
       async Login () {
-        let loadingInstance = loading.loading_dom('登陆中','body')
+        let loadingInstance = loading.loading_dom('登陆中', 'body')
         const userName = this.userName
         const pwd = this.passWord
-        const rememberMe=this.rememberMe
+        const rememberMe = this.rememberMe
         const users = {userName, pwd, rememberMe}
         login_intercept.intercept(loadingInstance)
         //成功执行后续

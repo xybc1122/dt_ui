@@ -26,8 +26,8 @@ export const repGetHead = ({menuIds}) => ajax(BASE_URL + '/getByHead', {menuIds}
 export const repShowByHead = (mId) => ajax(BASE_URL + `/showByHead`, {mId})
 //通过一个mid查询 一个菜单下面有哪些头字段
 export const repFindByHeads = (mId) => ajax(BASE_URL + '/findHeads', {mId})
-//访问index页面
-export const repIndex = () => ajax(BASE_URL + `/menu/index`)
+//访问index页面测试是否登陆
+export const repIndex = () => ajax(BASE_URL + `/index`)
 
 //注销请求
 export const repLogout = () => ajax(BASE_URL + `/logout`)
@@ -138,4 +138,7 @@ export const repAddUploadInfoMysql = ({uploadSuccessList}) => ajax(BASE_URL + '/
 export const repGetUpInfoTime = (redIds) => ajax(BASE_URL + '/upload/timing', {redIds})
 
 //物流状态查询
-export const repGetLogisticsInfo = ({currentPage,pageSize}) => ajax(BASE_URL + '/logistics/info',{currentPage,pageSize})
+export const repGetLogisticsInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/logistics/info', {
+  currentPage,
+  pageSize
+})
