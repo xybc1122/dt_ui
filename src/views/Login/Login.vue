@@ -55,6 +55,7 @@
     },
     async mounted () {
       const loginStatus = await repIndex()
+      console.log(loginStatus)
       if (loginStatus.code === 200) {
         if (loginStatus.msg === 'ok') {
           this.$router.replace('/index')

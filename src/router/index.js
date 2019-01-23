@@ -17,7 +17,6 @@ import Err from '../views/Err/Err'
 import Freight from '../views/Freight/Freight'
 import CprUpload from '../views/Upload/CprUploadFile'
 import Business from '../views/Upload/BusinessUploadFile'//业务报告
-import Deliver from '../views/Upload/DeliverUploadFile'//发货通知
 import OarUpload from '../views/Upload/OarUploadFile'//OAR
 import OrderUpload from '../views/Upload/OrderUploadFile'//订单报告
 import Receive from '../views/Upload/ReceiveUploadFile'//接收库存
@@ -179,10 +178,6 @@ export default new Router({
         {
           path:'/index/Business/:id/:name',
           component:Business
-        },
-        {
-          path:'/index/Deliver/:id/:name',
-          component:Deliver
         },
         {
           path:'/index/OarUpload/:id/:name',

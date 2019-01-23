@@ -148,7 +148,6 @@
       if (resultHead.code === 200) {
         // console.log(resultHead.data)
         this.tableTitle = resultHead.data
-        console.log(this.tableTitle)
       }
       var rolePage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
       //获得用户信息

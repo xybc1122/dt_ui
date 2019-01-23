@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import {repFindByHeads, repAddHeadMenu, repDelHeadMenu} from '../../../api'
+  import {repFindByHeads, repAddHeadMenu, repDelHeadMenu,repHead} from '../../../api'
 
   export default {
     data () {
@@ -51,6 +51,7 @@
         this.menuHeadFrom.menuId = row.menuId
         const resultHeads = repFindByHeads(this.menuHeadFrom.menuId)
         resultHeads.then((result) => {
+          console.log(result)
           if (result.code === 200) {
             const generateData = _ => {
               const data = []

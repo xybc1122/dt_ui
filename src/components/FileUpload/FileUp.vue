@@ -138,9 +138,7 @@
           if (result.data.code === 200) {
             this.uploadStatus.uploading = '上传成功'
             this.uploadStatus.count++
-
             let uploadSuccessList = result.data.data
-            console.log(uploadSuccessList)
             if (uploadSuccessList.length > 0) {
               const uploadList = {uploadSuccessList}
               const resultAdd = repAddUploadInfoMysql(uploadList)
@@ -154,7 +152,6 @@
                     //上传状态
                     for (let i = 0; i < resultReturn.data.length; i++) {
                       let messagesResult = resultReturn.data[i]
-
                       if (messagesResult.code === 200) {
                         if (messagesResult.data.status === 2) {
                           message.messageNotSuccess(messagesResult.msg, messagesResult.data.name)
@@ -163,7 +160,7 @@
                           this.fileUp.fileListInfo.push(messagesResult.data)
                           this.fileUp.icon_list.push({
                             'isIcon': true, 'id': messagesResult.data.id,
-                            'filePath': messagesResult.data.filePath + messagesResult.data.name,
+                            'filePath': messagesResult.data.filePath + messagesResult.data.uuidName,
                             'name': messagesResult.data.name
                           })
                           continue
@@ -254,6 +251,7 @@
       },
       //点击下载
       download (file) {
+        console.log(file)
         let config = {
           responseType: 'blob'
         }
