@@ -43,5 +43,12 @@ export default {
       message: msg,
       duration: 0
     })
+  },
+  messageNotDError (msg, title) {
+    return Notification.error({
+      title: title,
+      message: msg,
+      position: 'top-left'
+    })
   }
 }

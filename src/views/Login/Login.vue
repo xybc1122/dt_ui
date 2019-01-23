@@ -44,28 +44,6 @@
         rememberMe: false
       }
     },
-<<<<<<< HEAD
-    watch: {
-      // checked(val){
-      //   if(val){
-      //     console.log("勾选状态")
-      //   }else{
-      //     console.log("未勾选状态")
-      //   }
-      // }
-    },
-    async mounted () {
-      const loginStatus = await repIndex()
-      console.log(loginStatus)
-      if (loginStatus.code === 200) {
-        if (loginStatus.msg === 'ok') {
-          this.$router.replace('/index')
-        }
-      }
-    },
-=======
-
->>>>>>> c2524784423f40d98984f5edb8b6bd7676a52250
     methods: {
       async Login () {
         let loadingInstance = loading.loading_dom('登陆中', 'body')
@@ -87,13 +65,13 @@
             this.$router.replace('/index')
             loadingInstance.close()
           } else {
-            message.errorMessage(result.msg)
+            message.messageNotDError(result.msg,"登陆失败")
             loadingInstance.close()
           }
           loadingInstance.close()
         }
         else {
-          message.errorMessage('账号或密码不能为空~')
+          message.messageNotDError('账号或密码不能为空~',"登陆失败")
           loadingInstance.close()
         }
         loadingInstance.close()
