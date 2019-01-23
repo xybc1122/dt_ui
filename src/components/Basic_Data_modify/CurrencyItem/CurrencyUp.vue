@@ -13,6 +13,7 @@
 
 <script>
   import PubSubcurr_Up from 'pubsub-js'
+  import utils from '../../../utils/PageUtils'
   import message from '../../../utils/Message'
   import {repHead, repGetCurrencyInfo} from '../../../api/index'
   export default {
@@ -23,6 +24,12 @@
         currency:[],//币别所有信息
         currency_upForm:{
 
+        },
+        user: {
+          currentPage: 1,//当前页
+          pageSize: 5,//显示最大的页
+          page_sizes:[5,10,15,20,25],
+          total:0,
         },
         rules:{
 
@@ -38,7 +45,8 @@
         this.tableTitle = resultHead.data
       }
       //获得店铺信息
-      const resultGetCurrency = await repGetCurrencyInfo()
+      var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+      const resultGetCurrency = await repGetCurrencyInfo(userPage)
       console.log(resultGetCurrency)
       if (resultGetCurrency.code === 200) {
         this.currency = resultGetCurrency.data

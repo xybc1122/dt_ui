@@ -127,7 +127,7 @@ Vue.prototype.getCookie = function (c_name) {
 router.beforeEach((to, from, next) => {
   let rep =repIndex()
   rep.then((res)=>{
-    if(to.fullPath === '/login'){
+    if(to.fullPath === '/login' ){
       if (res.code === 200 && res.msg === 'ok') {
         next({path: '/index'})
       }
@@ -150,6 +150,8 @@ router.beforeEach((to, from, next) => {
     }
   })
 })
+
+
 new Vue({
   el: '#app',
   router,

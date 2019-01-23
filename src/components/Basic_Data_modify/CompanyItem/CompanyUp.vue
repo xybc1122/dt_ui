@@ -41,6 +41,7 @@
 
 <script>
   import PubSubUp from 'pubsub-js'
+  import utils from '../../../utils/PageUtils'
   import message from '../../../utils/Message'
   import {
     repHead,
@@ -69,6 +70,12 @@
           up_iphone: '',
           up_it: ''
         },
+        user: {
+          currentPage: 1,//当前页
+          pageSize: 5,//显示最大的页
+          page_sizes:[5,10,15,20,25],
+          total:0,
+        },
         rules: {
           up_id: [
             { required: true, message: '公司编号必填', trigger: 'blur' }
@@ -92,7 +99,8 @@
         console.log(resultHead_com.data)
       }
       //获得公司信息信息
-      const resultGetCompany = await repGetCompanyInfo()
+      var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+      const resultGetCompany = await repGetCompanyInfo(userPage)
       console.log(resultGetCompany)
       if (resultGetCompany.code === 200) {
         this.companys = resultGetCompany.data

@@ -35,7 +35,7 @@
     repGetShopInfo,
     repGetShopIdSiteInfo,
     repGetUserUploadInfo,
-    repGetRegionInfo
+    repGetRegionInfo, repGetShopName
   } from '../../api'
   import FileUp from '../../components/FileUpload/FileUp'
 
@@ -80,7 +80,7 @@
     },
     async mounted () {
       //获取店铺信息
-      const resultShop = await repGetShopInfo()
+      const resultShop = await repGetShopName()
       if (resultShop.code === 200) {
         this.shopArr = resultShop.data
       }

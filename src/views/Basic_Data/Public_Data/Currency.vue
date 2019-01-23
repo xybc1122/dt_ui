@@ -73,10 +73,10 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :page-sizes="role.page_sizes"
-          :page-size="role.pageSize"
+          :page-sizes="user.page_sizes"
+          :page-size="user.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="role.total">
+          :total="user.total">
         </el-pagination>
       </div>
     </div>
@@ -90,6 +90,7 @@
   import currencyUp from '../../../components/Basic_Data_modify/CurrencyItem/CurrencyUp'
   import {repHead, repGetCurrencyInfo} from '../../../api/index'
   import loading from '../../../utils/loading'
+  import utils from '../../../utils/PageUtils'
 
   //店铺
 
@@ -102,7 +103,7 @@
         tableTitle: [],//表头信息
         tableData: [],//表信息
         multipleSelection_cur_Up: [],
-        role: {
+        user: {
           currentPage: 1,//当前页
           pageSize: 5,//显示最大的页
           page_sizes:[5,10,15,20,25],
@@ -120,11 +121,12 @@
         this.tableTitle = resultHead.data
       }
       //获得店铺信息
-      const resultGetCurrency = await repGetCurrencyInfo()
+      var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+      const resultGetCurrency = await repGetCurrencyInfo(userPage)
       console.log(resultGetCurrency)
       if (resultGetCurrency.code === 200) {
-        this.tableData = resultGetCurrency.data
-        this.role.total=resultGetCurrency.data.length
+        this.tableData = resultGetCurrency.data.dataList
+        this.user.total=resultGetCurrency.data.length
       }
       loadingInstance.close()
     },
