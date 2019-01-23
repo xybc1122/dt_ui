@@ -49,6 +49,7 @@
 <script>
   import PubSub_Ware from 'pubsub-js'
   import {repGetLogisticsInfo} from '../../../api'
+  import utils from '../../../utils/PageUtils'
 
   export default {
     data () {
@@ -70,16 +71,18 @@
 
     },
     async mounted(){
-
+      let logPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
+      const resultUsers = await repGetLogisticsInfo(logPage)
+      console.log(resultUsers)
     },
     methods: {
       //分页
       async handleSizeChange (val) {
         this.role.pageSize = val
-
         let userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
         const resultUsers = await repGetLogisticsInfo(userPage)
         console.log(resultUsers)
+
         // if (resultUsers.code === 200) {
         //
         //   //赋值 然后显示
@@ -88,10 +91,10 @@
       },
       //val=当前页 分页
       async handleCurrentChange (val) {
-        let userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
-        //分页查询 传一个当前页,显示最大的页,一个userInfo对象
-        const resultUsers = await repGetLogisticsInfo(userPage)
-        console.log(resultUsers)
+        // let userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
+        // //分页查询 传一个当前页,显示最大的页,一个userInfo对象
+        // const resultUsers = await repGetLogisticsInfo(userPage)
+        // console.log(resultUsers)
         // if (resultUsers.code === 200) {
         //   //赋值 然后显示
         //   this.pageUser(resultUsers)

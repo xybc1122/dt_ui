@@ -44,23 +44,7 @@
         rememberMe: false
       }
     },
-    watch: {
-      // checked(val){
-      //   if(val){
-      //     console.log("勾选状态")
-      //   }else{
-      //     console.log("未勾选状态")
-      //   }
-      // }
-    },
-    async mounted () {
-      const loginStatus = await repIndex()
-      if (loginStatus.code === 200) {
-        if (loginStatus.msg === 'ok') {
-          this.$router.replace('/index')
-        }
-      }
-    },
+
     methods: {
       async Login () {
         let loadingInstance = loading.loading_dom('登陆中', 'body')
@@ -72,7 +56,6 @@
         //成功执行后续
         if (userName && pwd) {
           const result = await repLoginUser(users)
-          console.log(result)
           if (result.code === 200) {
             const uData = result.data
             this.setCookie('token', uData.token, 7)
