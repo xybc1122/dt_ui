@@ -4,7 +4,6 @@
     <div id="roleTable">
       <el-table
         :data="tableData"
-        style="width: 500px"
         height="500"
         :span-method="arraySpanMethod"
         @selection-change="handleSelectionChange"
@@ -143,11 +142,11 @@
         this.tableTitle = resultHead.data
       }
       //获得店铺信息
-      // var regionPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
-      const resultGetShop = await repGetShopInfo()
+      var regionPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
+      const resultGetShop = await repGetShopInfo(regionPage)
       console.log(resultGetShop)
       if (resultGetShop.code === 200) {
-        this.tableData = resultGetShop.data
+        this.tableData = resultGetShop.data.dataList
         this.role.total_size=resultGetShop.data.length
         // const data = resultGetShop.data
         //

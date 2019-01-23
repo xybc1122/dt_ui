@@ -16,6 +16,7 @@
   import {repHead, repGetSiteInfo} from '../../../api/index'
   import PubSub_ShopUp from 'pubsub-js'
   import message from '../../../utils/Message'
+  import utils from '../../../utils/PageUtils'
   export default {
     data(){
       return{
@@ -23,6 +24,12 @@
         tableData:[],//站点信息
         siteForm:{
 
+        },
+        role: {
+          currentPage: 1,//当前页
+          pageSize: 5,//显示最大的页
+          page_sizes:[5,10,15,20,25],
+          total:0,
         },
         rules:{
 
@@ -39,10 +46,11 @@
         this.tableTitle = resultHead.data
       }
       //获得站点信息
-      const resultGetSite = await repGetSiteInfo()
+      var regionPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
+      const resultGetSite = await repGetSiteInfo(regionPage)
       console.log(resultGetSite)
       if (resultGetSite.code === 200) {
-        this.tableData = resultGetSite.data
+        this.tableData = resultGetSite.data.dataList
       }
       PubSub_ShopUp.subscribe('Site_Up',(msg,multipleSelection_shop_up)=>{
         const userSaveSelection_com = multipleSelection_shop_up

@@ -4,7 +4,6 @@
     <div id="roleTable" style="width: 1650px">
       <el-table
         :data="tableData"
-        style="width: 100%"
         height="500"
         :span-method="arraySpanMethod"
         @selection-change="handleSelectionChange"
@@ -105,6 +104,7 @@
   import SiteUp from '../../../components/Basic_Data_modify/SiteItem/SiteUp'
   import {repHead, repGetSiteInfo} from '../../../api/index'
   import loading from '../../../utils/loading'
+  import utils from '../../../utils/PageUtils'
   //店铺
 
   export default {
@@ -135,10 +135,10 @@
         this.tableTitle = resultHead.data
       }
       //获得店铺信息
-      const resultGetSite = await repGetSiteInfo()
-      console.log(resultGetSite)
+      var regionPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
+      const resultGetSite = await repGetSiteInfo(regionPage)
       if (resultGetSite.code === 200) {
-        this.tableData = resultGetSite.data
+        this.tableData = resultGetSite.data.dataList
         this.role.total=resultGetSite.data.length
       }
       loadingInstance.close()
@@ -184,7 +184,7 @@
 <style>
   /*表格*/
   #roleTable {
-    margin-top: 50px;
+
   }
 
   .el-tooltip__popper {

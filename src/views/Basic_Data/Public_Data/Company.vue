@@ -86,10 +86,10 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :page-sizes="role.page_sizes"
-          :page-size="role.pageSize"
+          :page-sizes="user.page_sizes"
+          :page-size="user.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="role.total">
+          :total="user.total">
         </el-pagination>
       </div>
     </div>
@@ -115,7 +115,7 @@
         tableData: [],//表信息
         multipleSelection: [],//更新按钮数组收集
         saveFormValue_com: false,//新增隐藏form
-        role: {
+        user: {
           currentPage: 1,//当前页
           pageSize: 5,//显示最大的页
           page_sizes:[5,10,15,20,25],
@@ -137,18 +137,18 @@
         this.tableTitle = resultHead.data
       }
       //获得公司信息信息
-      const resultGetCompany = await repGetCompanyInfo()
-      console.log(resultGetCompany)
+      var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
+      const resultGetCompany = await repGetCompanyInfo(userPage)
       if (resultGetCompany.code === 200) {
-        this.tableData = resultGetCompany.data
-        this.role.total=resultGetCompany.data.length
+        this.tableData = resultGetCompany.data.dataList
+        this.user.total=resultGetCompany.data.length
       }
       loadingInstance.close()
       //新增成功后收到订阅消息
       PubSub_com.subscribe('saveFormValue_com', (msg, saveFormValue_com) => {
         if (!saveFormValue_com) {
           var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-          const resultUsers = repUsers(userPage)
+          const resultUsers = repGetCompanyInfo(userPage)
           resultUsers.then((result) => {
             if (result.code === 200) {
               //赋值 然后显示
@@ -161,7 +161,7 @@
       PubSub_com.subscribe('delRole', (msg, delRole) => {
         if (delRole) {
           var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-          const resultUsers = repUsers(userPage)
+          const resultUsers = repGetCompanyInfo(userPage)
           resultUsers.then((result) => {
             if (result.code === 200) {
               //赋值 然后显示
@@ -174,7 +174,7 @@
       PubSub_com.subscribe('addRole', (msg, addRole) => {
         if (!addRole) {
           var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-          const resultUsers = repUsers(userPage)
+          const resultUsers = repGetCompanyInfo(userPage)
           resultUsers.then((result) => {
             if (result.code === 200) {
               //赋值 然后显示
@@ -187,7 +187,7 @@
       PubSub_com.subscribe('upFormValue', (msg, upFormValue) => {
         if (!upFormValue) {
           var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-          const resultUsers = repUsers(userPage)
+          const resultUsers = repGetCompanyInfo(userPage)
           resultUsers.then((result) => {
             if (result.code === 200) {
               //赋值 然后显示
@@ -200,7 +200,7 @@
       PubSub_com.subscribe('isReUser', (msg, isReUser) => {
         if (isReUser) {
           var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-          const resultUsers = repUsers(userPage)
+          const resultUsers = repGetCompanyInfo(userPage)
           resultUsers.then((result) => {
             if (result.code === 200) {
               //赋值 然后显示

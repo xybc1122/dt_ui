@@ -71,10 +71,15 @@ export const repDelHistoryUserInfo = ({currentPage, pageSize}) => ajax(BASE_URL 
 }, 'POST')
 
 //获取公司的所有信息
-export const repGetCompanyInfo = () => ajax(BASE_URL + `/company/findByListCompany`)
-
+// export const repGetCompanyInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/company/findByListCompany',{currentPage, pageSize},'POST')
+export const repGetCompanyInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/company/findByListCompany', {
+  currentPage,
+  pageSize
+}, 'POST')
+//获取店铺名字
+export const repGetShopName = () => ajax(BASE_URL + `/shop/getListShopName`)
 //获取店铺的所有信息
-export const repGetShopInfo = () => ajax(BASE_URL + `/shop/findByListShop`)
+export const repGetShopInfo = ({currentPage, pageSize}) => ajax(BASE_URL + `/shop/findByListShop`,{currentPage, pageSize},'POST')
 
 //获取区域的所有信息
 export const repGetRegionInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/reg/findByListRegion', {
@@ -83,13 +88,13 @@ export const repGetRegionInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/r
 }, 'POST')
 
 //获取站点的所有信息
-export const repGetSiteInfo = () => ajax(BASE_URL + `/site/findByListSite`)
+export const repGetSiteInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/site/findByListSite',{currentPage, pageSize},'POST')
 
 //通过shop id 获取站点信息
 export const repGetShopIdSiteInfo = (sId) => ajax(BASE_URL + `/site/getByShopIdListSite`, {sId})
 
 //获取币别的所有信息
-export const repGetCurrencyInfo = () => ajax(BASE_URL + `/currency/findByListCurrency`)
+export const repGetCurrencyInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/currency/findByListCurrency',{currentPage, pageSize},'POST')
 
 //获取所有角色信息
 export const repFindRoles = () => ajax(BASE_URL + `/role/findByListRoles`)
@@ -144,3 +149,5 @@ export const repGetLogisticsInfo = ({currentPage, pageSize}) => ajax(BASE_URL + 
   currentPage,
   pageSize
 },'POST')
+
+
