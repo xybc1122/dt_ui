@@ -31,6 +31,17 @@
       <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUserForm">
         新增
       </el-button>
+      <div class="block" style="display: inline-block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="role.currentPage"
+          :page-sizes="role.page_size"
+          :page-size="role.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="role.total_size">
+        </el-pagination>
+      </div>
     </div>
   </div>
 
@@ -38,6 +49,7 @@
 <script>
   import PubSub_Ware from 'pubsub-js'
   import {repGetLogisticsInfo} from '../../../api'
+  import utils from '../../../utils/PageUtils'
 
   export default {
     data () {
@@ -59,16 +71,18 @@
 
     },
     async mounted(){
-
+      let logPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
+      const resultUsers = await repGetLogisticsInfo(logPage)
+      console.log(resultUsers)
     },
     methods: {
       //分页
       async handleSizeChange (val) {
-        // this.role.pageSize = val
-
+        this.role.pageSize = val
         let userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
         const resultUsers = await repGetLogisticsInfo(userPage)
         console.log(resultUsers)
+
         // if (resultUsers.code === 200) {
         //
         //   //赋值 然后显示
@@ -77,10 +91,10 @@
       },
       //val=当前页 分页
       async handleCurrentChange (val) {
-        let userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
-        //分页查询 传一个当前页,显示最大的页,一个userInfo对象
-        const resultUsers = await repGetLogisticsInfo(userPage)
-        console.log(resultUsers)
+        // let userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
+        // //分页查询 传一个当前页,显示最大的页,一个userInfo对象
+        // const resultUsers = await repGetLogisticsInfo(userPage)
+        // console.log(resultUsers)
         // if (resultUsers.code === 200) {
         //   //赋值 然后显示
         //   this.pageUser(resultUsers)

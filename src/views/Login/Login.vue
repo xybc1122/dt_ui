@@ -44,6 +44,7 @@
         rememberMe: false
       }
     },
+<<<<<<< HEAD
     watch: {
       // checked(val){
       //   if(val){
@@ -62,6 +63,9 @@
         }
       }
     },
+=======
+
+>>>>>>> c2524784423f40d98984f5edb8b6bd7676a52250
     methods: {
       async Login () {
         let loadingInstance = loading.loading_dom('登陆中', 'body')
@@ -73,7 +77,6 @@
         //成功执行后续
         if (userName && pwd) {
           const result = await repLoginUser(users)
-          console.log(result)
           if (result.code === 200) {
             const uData = result.data
             this.setCookie('token', uData.token, 7)

@@ -9,7 +9,6 @@ import './fiters' //加载过滤器
 import login_intercept from './utils/login_intercept'
 import loading from './utils/loading'
 import './assets/icon/iconfont.css'
-
 import {
   Badge,
   Button,
@@ -55,8 +54,10 @@ import {
   Upload,
   Progress,
   Steps,
-  Step
+  Step, Message
 } from 'element-ui'
+import {AxiosInstance as axios} from 'axios'
+import {repIndex} from './api'
 Vue.component(Badge.name,Badge)
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)
@@ -123,8 +124,32 @@ Vue.prototype.getCookie = function (c_name) {
   }
   return ''
 }
-
-
+router.beforeEach((to, from, next) => {
+  let rep =repIndex()
+  rep.then((res)=>{
+    if(to.fullPath === '/login'){
+      if (res.code === 200 && res.msg === 'ok') {
+        next({path: '/index'})
+      }
+    }
+    if (to.matched.some(m => m.meta.showLogin)) {
+      if (res.code === 200 && res.msg === 'ok') {
+        // console.log("检测顺利进入")
+        next()
+      } else if (to.path !== '/') {
+        next({path: '/login'})
+        return Message({
+          showClose: true,
+          message: '检测到您还未登录,请登录后操作！',
+          type: 'error'
+        })
+      }
+    } else {
+      // console.log("无检测进入")
+      next()
+    }
+  })
+})
 new Vue({
   el: '#app',
   router,
@@ -133,5 +158,5 @@ new Vue({
   loading,
   render: h => h(App),
   template: '<App/>'
-
 })
+

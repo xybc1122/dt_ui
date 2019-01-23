@@ -143,4 +143,4 @@ export const repGetUpInfoTime = (redIds) => ajax(BASE_URL + '/upload/timing', {r
 export const repGetLogisticsInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/logistics/info', {
   currentPage,
   pageSize
-})
+},'POST')

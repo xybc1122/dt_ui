@@ -22,6 +22,7 @@
 <script>
   import Header from '../../components/HeaderTop/Header'
   import Aside from '../../components/Aside/Aside'
+  import {repIndex} from '../../api'
 
   export default {
     data () {
