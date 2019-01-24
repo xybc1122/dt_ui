@@ -5,10 +5,10 @@ import App from './App'
 import router from './router'
 import store from './store'
 import focus from './utils/focus'
-import './fiters' //加载过滤器
+import VueResource from 'vue-resource'
 import login_intercept from './utils/login_intercept'
 import loading from './utils/loading'
-import './assets/icon/iconfont.css'
+import './assets/icon/iconfont.css'//
 import {
   Badge,
   Button,
@@ -56,8 +56,8 @@ import {
   Steps,
   Step, Message
 } from 'element-ui'
-import {AxiosInstance as axios} from 'axios'
 import {repIndex} from './api'
+import {AxiosInstance as axios} from 'axios'
 Vue.component(Badge.name,Badge)
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)
@@ -104,6 +104,7 @@ Vue.component(Progress.name, Progress)
 Vue.component(Steps.name, Steps)
 Vue.component(Step.name, Step)
 Vue.use(focus)
+Vue.use(VueResource)
 // 设置Cookie
 Vue.prototype.setCookie = function (c_name, value, expiredays) {
   var exdate = new Date()
@@ -127,7 +128,8 @@ Vue.prototype.getCookie = function (c_name) {
 router.beforeEach((to, from, next) => {
   let rep =repIndex()
   rep.then((res)=>{
-    if(to.fullPath === '/login' ){
+    console.log(res)
+    if(to.fullPath === '/login'){
       if (res.code === 200 && res.msg === 'ok') {
         next({path: '/index'})
       }
@@ -148,10 +150,14 @@ router.beforeEach((to, from, next) => {
       // console.log("无检测进入")
       next()
     }
+  }).catch(()=>{
+    return Message({
+      showClose: true,
+      message: '数据异常，请联系后台管理员！',
+      type: 'error'
+    })
   })
 })
-
-
 new Vue({
   el: '#app',
   router,
