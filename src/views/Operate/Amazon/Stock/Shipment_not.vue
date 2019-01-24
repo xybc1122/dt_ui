@@ -1,6 +1,7 @@
 <template>
   <!--出货通知单-->
   <div>
+    <AddShipment></AddShipment>
     <!--table表格显示-->
     <div id="roleTable">
       <el-table
@@ -31,12 +32,15 @@
       <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUserForm">
         新增
       </el-button>
+
     </div>
+
   </div>
 
 </template>
 <script>
-  import PubSub_Ware from 'pubsub-js'
+  import PubSub_Ship from 'pubsub-js'
+  import AddShipment from '../../../../components/Operate/Amazon/AddShipment'
 
   export default {
     data () {
@@ -46,7 +50,7 @@
         tableTitle: [],//表头信息
         tableData: [],//表信息
         multipleSelection: [],//更新按钮数组收集
-        FormValue_Ware: false,//新增隐藏form
+        FormValue_Ship: false,//新增隐藏form
         role: {
           currentPage: 1,//当前页
           total_size: 0,//总的页
@@ -55,7 +59,7 @@
       }
     },
     components:{
-
+      AddShipment
     },
     async mounted () {
       // //查询获得table表的 头信息
@@ -162,14 +166,15 @@
         }
       },
       saveUserForm () {
-        this.FormValue_Ware = true
+        console.log("123")
+        this.FormValue_Ship = true
         //发布搜索消息
-        PubSub_Ware.publish('saveFormValue_Ware', this.FormValue_Ware)
+        PubSub_Ship.publish('saveFormValue_Ship', this.FormValue_Ship)
       },
       //点击修改的时候 获得 Checkbox中 的属性
       upUserForm () {
         //发布订阅消息 修改
-        PubSub_Ware.publish('multipleSelection', this.multipleSelection)
+        PubSub_Ship.publish('multipleSelection', this.multipleSelection)
       },
     }
   }
