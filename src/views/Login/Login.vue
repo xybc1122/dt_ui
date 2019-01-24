@@ -65,13 +65,13 @@
             this.$router.replace('/index')
             loadingInstance.close()
           } else {
-            message.errorMessage(result.msg)
+            message.messageNotDError(result.msg,"登陆失败")
             loadingInstance.close()
           }
           loadingInstance.close()
         }
         else {
-          message.errorMessage('账号或密码不能为空~')
+          message.messageNotDError('账号或密码不能为空~',"登陆失败")
           loadingInstance.close()
         }
         loadingInstance.close()
