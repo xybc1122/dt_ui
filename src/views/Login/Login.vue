@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import {repLoginUser, repIndex} from '../../api'
+  import {repLoginUser} from '../../api'
   import message from '../../utils/Message'
   import login_intercept from '../../utils/login_intercept'
   import loading from '../../utils/loading'
