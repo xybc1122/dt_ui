@@ -74,7 +74,6 @@
   import {
     repDelUploadInfo,
     repAddUploadInfoMysql,
-    repGetUpInfoTime,
   } from '../../api'
 
   export default {
@@ -91,6 +90,8 @@
     },
     data () {
       return {
+        crr: 0,
+        webSock: null,
         uploadStatus: {
           wait: '等待上传',
           count: 0,
@@ -105,6 +106,8 @@
         param: new FormData(),//fromData
         url: BASE_URL, //上传的 api  接口,
       }
+    },
+    mounted () {
     },
     methods: {
       //批量上传
@@ -146,7 +149,7 @@
               this.uploadStatus.dealWith = '数据处理中'
               this.uploadStatus.count++
               //定时请求
-              this.getTimeCount(uploadSuccessList)
+              this.getTimeCount()
               resultAdd.then((resultReturn) => {
                   if (resultReturn.code === 200) {
                     //上传状态
@@ -176,11 +179,9 @@
                         this.fileUp.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
                       }
                     }
+                    //全部处理完成 清空页面进度数据
+                    this.upArr = []
                   }
-                  //成功后 5秒结束
-                  setTimeout(() => {
-                    clearInterval(this.timer)
-                  }, 2000)
                 }
               )
             }
@@ -191,23 +192,20 @@
           this.param = new FormData()
         })
       },
-      getTimeCount (uploadSuccessList) {
-        this.timer = setInterval(() => {
-          this.redIds = []
-          for (let i = 0; i < uploadSuccessList.length; i++) {
-            const id = uploadSuccessList[i].id
-            this.redIds.push(id)
-          }
-          const resultTime = repGetUpInfoTime(this.redIds)
-          console.log(this.redIds)
-          resultTime.then((resultUpInfo) => {
-            if (resultUpInfo.code === 200) {
-              this.upArr = resultUpInfo.data
-              console.log(this.upArr)
-              console.log('正在定时执行')
-            }
-          })
-        }, 1000)
+      //webSocket处理
+      getTimeCount () {
+        this.webSock = new WebSocket('ws://127.0.0.1:9001/websocket')
+        //打开webSock
+        this.webSock.onopen = () => {
+          console.log('Socket 已打开')
+          //socket.send("这是来自客户端的消息" + location.href + new Date());
+        }
+        //获得消息事件
+        this.webSock.onmessage = (msg) => {
+          var str = msg.data
+          //处理进度
+          this.upArr = eval('(' + str + ')')
+        }
       },
       //点击文件的时候
       handlePreview (file) {

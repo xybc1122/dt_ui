@@ -35,7 +35,7 @@ export const repIndex = () => ajax(BASE_URL + `/index`)
 export const repLogout = () => ajax(BASE_URL + `/logout`)
 
 //查询哪些用户有哪些菜单
-export const repMenu = () => ajax(BASE_URL + `/menu/show`)
+export const repMenu = (type) => ajax(BASE_URL + `/menu/show`, {type})
 
 //通过角色查询菜单列表
 export const repMenuRole = (rid) => ajax(BASE_URL + `/menu/role/menu`, {rid})
@@ -79,7 +79,10 @@ export const repGetCompanyInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/
 //获取店铺名字
 export const repGetShopName = () => ajax(BASE_URL + `/shop/getListShopName`)
 //获取店铺的所有信息
-export const repGetShopInfo = ({currentPage, pageSize}) => ajax(BASE_URL + `/shop/findByListShop`,{currentPage, pageSize},'POST')
+export const repGetShopInfo = ({currentPage, pageSize}) => ajax(BASE_URL + `/shop/findByListShop`, {
+  currentPage,
+  pageSize
+}, 'POST')
 
 //获取区域的所有信息
 export const repGetRegionInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/reg/findByListRegion', {
@@ -88,13 +91,19 @@ export const repGetRegionInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/r
 }, 'POST')
 
 //获取站点的所有信息
-export const repGetSiteInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/site/findByListSite',{currentPage, pageSize},'POST')
+export const repGetSiteInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/site/findByListSite', {
+  currentPage,
+  pageSize
+}, 'POST')
 
 //通过shop id 获取站点信息
 export const repGetShopIdSiteInfo = (sId) => ajax(BASE_URL + `/site/getByShopIdListSite`, {sId})
 
 //获取币别的所有信息
-export const repGetCurrencyInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/currency/findByListCurrency',{currentPage, pageSize},'POST')
+export const repGetCurrencyInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/currency/findByListCurrency', {
+  currentPage,
+  pageSize
+}, 'POST')
 
 //获取所有角色信息
 export const repFindRoles = () => ajax(BASE_URL + `/role/findByListRoles`)
@@ -148,6 +157,6 @@ export const repGetUpInfoTime = (redIds) => ajax(BASE_URL + '/upload/timing', {r
 export const repGetLogisticsInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/logistics/info', {
   currentPage,
   pageSize
-},'POST')
+}, 'POST')
 
 

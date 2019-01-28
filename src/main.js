@@ -54,10 +54,9 @@ import {
   Upload,
   Progress,
   Steps,
-  Step, Message
+  Step, Message,Autocomplete
 } from 'element-ui'
 import {repIndex} from './api'
-import {AxiosInstance as axios} from 'axios'
 Vue.component(Badge.name,Badge)
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)
@@ -103,6 +102,7 @@ Vue.component(Upload.name, Upload)
 Vue.component(Progress.name, Progress)
 Vue.component(Steps.name, Steps)
 Vue.component(Step.name, Step)
+Vue.component(Autocomplete.name, Autocomplete)
 Vue.use(focus)
 Vue.use(VueResource)
 // 设置Cookie
