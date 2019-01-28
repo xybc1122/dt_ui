@@ -45,7 +45,6 @@
           <el-step :title="uploadStatus.dealWith"></el-step>
         </el-steps>
         <div v-if="uploadStatus.count===3" v-for="(c,index) in upArr">
-          {{c}}
           <el-progress :text-inside="true" :stroke-width="20" :percentage="c.percentage" :status="c.status"
                        :color="c.color"></el-progress>
           <p style="color: #101010;">
@@ -75,7 +74,6 @@
   import {
     repDelUploadInfo,
     repAddUploadInfoMysql,
-    repGetUpInfoTime,
   } from '../../api'
 
   export default {
@@ -92,6 +90,7 @@
     },
     data () {
       return {
+        crr: 0,
         webSock: null,
         uploadStatus: {
           wait: '等待上传',
@@ -180,6 +179,8 @@
                         this.fileUp.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
                       }
                     }
+                    //全部处理完成 清空页面进度数据
+                    this.upArr = []
                   }
                 }
               )
@@ -191,19 +192,19 @@
           this.param = new FormData()
         })
       },
+      //webSocket处理
       getTimeCount () {
         this.webSock = new WebSocket('ws://127.0.0.1:9001/websocket')
-        //打开事件
-        this.webSock.onopen = function () {
+        //打开webSock
+        this.webSock.onopen = () => {
           console.log('Socket 已打开')
           //socket.send("这是来自客户端的消息" + location.href + new Date());
         }
         //获得消息事件
-        this.webSock.onmessage = function (msg) {
+        this.webSock.onmessage = (msg) => {
           var str = msg.data
+          //处理进度
           this.upArr = eval('(' + str + ')')
-          console.log(this.upArr)
-          //发现消息进入    开始处理前端触发逻辑
         }
       },
       //点击文件的时候
