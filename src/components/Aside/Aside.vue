@@ -2,12 +2,12 @@
   <div class="test-1">
     <h2 class="user_aside">
       <img class="user_img" src="../HeaderTop/img/pig.jpg"/>
-      <p class="user_name">{{From.userName}}</p>
+      <p class="user_name">{{from.userName}}</p>
     </h2>
     <el-row class="tac">
 
       <el-menu :default-active="$router.path" router class="el-menu-vertical-demo none"
-               @open="handleOpen" @close="handleClose" :collapse="isCollapse" style="height: 100%;border-right: 0px"
+                style="height: 100%;border-right: 0px"
                background-color="#293846"
                text-color="#fff"
                active-text-color="#ffd04b">
@@ -73,54 +73,27 @@
 </template>
 
 <script>
-
+  import PubSub from 'pubsub-js'
   import {repMenu} from '../../api'
 
   export default {
     data () {
       return {
-        From: {
-          userName: '',
-          data: [{name: '未完成一'}, {name: '未完成二'}, {name: '未完成三'}]
+        from: {
+          userName: ''
         },
         img_user: '',
         width: '220px',
-        isCollapse: false,
         isRole: true,
         menuList: [],
       }
     },
-
-    watch: {
-
-      'processData': 'scrollToBottom'
-
-    },
-    scrollToBottom: function () {
-
-
-
-    },
     async mounted () {
-      this.From.userName = this.getCookie('name')
+      this.from.userName = this.getCookie('name')
       const result = await repMenu()
       if (result.code === 200) {
-        console.log(result.data)
+        PubSub.publish('menuList', result.data)
         this.menuList = result.data
-      }
-    },
-    methods: {
-      handleOpen (key, keyPath) {
-        console.log(key)
-
-
-        console.log(key)
-      },
-      handleClose (key, keyPath) {
-
-      },
-      handleSelect (key, keyPath) {
-
       }
     }
   }
@@ -238,18 +211,20 @@
   .el-menu--horizontal > .el-submenu .el-submenu__icon-arrow {
     display: none;
   }
-  .test-1::-webkit-scrollbar {/*滚动条整体样式*/
-    width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
+
+  .test-1::-webkit-scrollbar { /*滚动条整体样式*/
+    width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
     height: 1px;
   }
 
-  .test-1::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+  .test-1::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
     border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     background: #535353;
   }
-  .test-1::-webkit-scrollbar-track {/*滚动条里面轨道*/
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+
+  .test-1::-webkit-scrollbar-track { /*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     background: #2f4050;
   }

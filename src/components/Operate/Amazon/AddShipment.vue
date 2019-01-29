@@ -24,7 +24,7 @@
           </el-menu-item>
         </el-menu-item-group>
         <el-menu-item-group v-else>
-          <!--如果没有url的  :key=indexUrl 一定要跟上面的一样 不然 会出错-->
+          <!--如果没有url的-->
           <el-submenu
             :index="index.toString()+'-'+indexUrl">
             <template slot="title">{{cMenu.name}}
@@ -37,6 +37,7 @@
         </el-menu-item-group>
       </el-submenu>
     </el-menu>
+    <!---->
     <div class="button_top" v-for="(menu,index) in menuHead" :key="index" style="width: 100%;height: 100%;">
       <span v-if="!menu.childMenus">
          <el-button>

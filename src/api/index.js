@@ -37,14 +37,16 @@ export const repLogout = () => ajax(BASE_URL + `/logout`)
 //查询哪些用户有哪些菜单
 export const repMenu = (type) => ajax(BASE_URL + `/menu/show`, {type})
 
+//修改菜单表信息
+export const repUpMenuInfo = ({newMenu, idsMenu}) => ajax(BASE_URL + '/menu/up/menu', {
+  newMenu,
+  idsMenu
+}, 'POST')
 //通过角色查询菜单列表
 export const repMenuRole = (rid) => ajax(BASE_URL + `/menu/role/menu`, {rid})
 
 //通过角色id来获取菜单id
 export const repGetMenus = ({rid, menuIds, menuFlg}) => ajax(BASE_URL + '/rm/upMenus', {rid, menuIds, menuFlg}, 'POST')
-
-//查询菜单信息
-export const repMenuList = () => ajax(BASE_URL + `/menu/findMenuList`)
 
 //更新用户信息
 export const repUpUserInfo = ({pwd, accountStatus, uid, pwdStatus, effectiveDate, uName, checkedUpPwd, checkedPwdAlways, checkedUserAlways}) => ajax(BASE_URL + `/user/upUserInfo`,
