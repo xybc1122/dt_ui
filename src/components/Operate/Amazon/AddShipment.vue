@@ -38,11 +38,19 @@
       </el-submenu>
     </el-menu>
     <div class="button_top" v-for="(menu,index) in menuHead" :key="index" style="width: 100%;height: 100%;">
+      <span v-if="!menu.childMenus">
+         <el-button>
+   {{menu.name}}
+  </el-button>
+      </span>
       <span v-if="menu.childMenus">
-        <el-button @click="hand_user_data(menu)">
-          <!-- 图标-->
-        <p>{{menu.name}}</p>
-      </el-button>
+     <el-dropdown split-button type="primary" @click="hand_user_data(menu)">
+  {{menu.name}}
+  <el-dropdown-menu slot="dropdown">
+    <el-dropdown-item v-for="(cMenu,cIndex) in menu.childMenus"
+                      :key="cIndex">{{cMenu.name}},{{cIndex}}</el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown>
       </span>
     </div>
     <tables ref="table"></tables>
@@ -78,7 +86,7 @@
     },
     mounted () {
       PubSub_Ship.subscribe('saveFormValue_Ship', (msg, FormValue_Ship) => {
-        this.menuHead=[]
+        this.menuHead = []
         this.FormValue_Ship = FormValue_Ship
         const result = repMenu(this.type)
         result.then((resultMenu) => {
@@ -90,12 +98,12 @@
             this.menuList.forEach((item) => {
               if (item.childMenus !== null && item.childMenus.length > 0) {
                 item.childMenus.forEach((cItem) => {
-                  if (cItem.name === '新增'|| cItem.name === '复制'
-                    ||cItem.name === '保存' ||cItem.name === '恢复'||
-                    cItem.name === '打印'||cItem.name === '预览'||cItem.name === '批录'
-                    ||cItem.name === '删除'  ||cItem.name === '添加'  ||cItem.name === '审核'  ||cItem.name === '关闭'
-                    ||cItem.name === '作废'||cItem.name === '第一条'||cItem.name === '前一条'||cItem.name === '后一条'
-                    ||cItem.name === '最后一条'||cItem.name === '邮件'||cItem.name === '消息'||cItem.name === '退出') {
+                  if (cItem.name === '新增' || cItem.name === '复制'
+                    || cItem.name === '保存' || cItem.name === '恢复' ||
+                    cItem.name === '打印' || cItem.name === '预览' || cItem.name === '批录'
+                    || cItem.name === '删除' || cItem.name === '添加' || cItem.name === '审核' || cItem.name === '关闭'
+                    || cItem.name === '作废' || cItem.name === '第一条' || cItem.name === '前一条' || cItem.name === '后一条'
+                    || cItem.name === '最后一条' || cItem.name === '邮件' || cItem.name === '消息' || cItem.name === '退出') {
                     this.menuHead.push(cItem)
                   }
                 })
