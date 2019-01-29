@@ -1,32 +1,28 @@
 <template>
-  <div id="body">
-    <img src="./img/ReportServer.png" width="100%" height="979">
-    <!--登录-->
-    <div class="login-box" v-show="isLogin">
-      <div>
-        <div class="login">
-          <img src="../../components/HeaderTop/img/logo.png"/>
-          <p></p>
-          <el-input v-model="userName" placeholder="用户名" id="userName" maxlength="8"
-                    prefix-icon="iconfont icon_dt-xiaoren"></el-input>
-          <p></p>
-          <el-input v-model="passWord" placeholder="密码" id="pwd" maxlength="15"
-                    prefix-icon="iconfont icon_dt-suo" v-focus type="password" @keyup.enter.native="Login"></el-input>
-          <div class="success">
-            <el-button type="primary" @click="Login" size="medium">
-              登陆
-            </el-button>
-            <span>
-              <el-checkbox v-model="rememberMe" style="padding-left: 20px">自动登陆</el-checkbox>
-              <p>一周内</p>
-            </span>
-            <!--<el-button class="quest" type="danger" size="mini" icon="el-icon-question">忘记密码</el-button>-->
+  <div :style="body_height">
+    <div class="a">
+      <div class="login-box" v-show="isLogin">
+        <div style="width: 390px;margin: 0 auto;">
+          <div class="denglu">
+            <img src="./img/logo.png" >
           </div>
-
+          <p class="denglu_name">用户名</p>
+          <el-input  v-model="userName" placeholder="请输入账号" prefix-icon="iconfont icon_dt-icon_zhanghao" ></el-input>
+          <p class="denglu_pwd" >密码</p>
+          <el-input class="input" v-model="passWord" placeholder="请输入密码" v-focus
+                    prefix-icon="iconfont icon_dt-suo" @keyup.enter.native="Login"></el-input>
+          <div style="margin-top: 60px">
+            <el-button type="primary" @click="Login">登陆</el-button>
+            <div style="text-align: center">
+              <span>一周内</span>
+              <el-checkbox v-model="rememberMe" style="padding-left: 20px">自动登陆</el-checkbox>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -38,13 +34,22 @@
   export default {
     data () {
       return {
+        body_height:{height:''},
         userName: 'tt',
         passWord: 't',
         isLogin: true, // <!--登录-->
         rememberMe: false
       }
     },
+    created(){
+      this.hh()
+    },
     methods: {
+      //获取屏幕尺寸
+      async hh(){
+        let View =this.getViewportSize()
+        this.body_height.height=View.height+'px'
+      },
       async Login () {
         let loadingInstance = loading.loading_dom('登陆中', 'body')
         const userName = this.userName
@@ -80,25 +85,56 @@
   }
 </script>
 
-<style>
-  #body {
-    position: relative;
+<style lang="scss">
+  .a{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    /*background:url(./img/ReportServer.png) no-repeat*/
+  }
+  .login-box{
+    background-color: #ffffff;
+    width: 430px;
+    height: 500px;
+    margin: auto auto ;
+    display: flex;
+    border-radius: 15px!important;
+  }
+  .el-input__inner{
+    width: 390px!important;
+    padding-left: 50px!important;
+    font-size: 25px!important;
+    border-top: 0px!important;
+    border-left: 0px!important;
+    border-right: 0px!important;
   }
 
-  .login-box {
-    width: 300px;
-    height: 400px;
-    position: absolute;
-    top: 25%;
-    left: 70%;
+  .denglu_name{
+    margin-top: 50px;
+    font-size: 14px;
+    width: 390px!important;
   }
-
-  .login {
-    padding-top: 35px;
-    margin: 25px;
+  .denglu_pwd{
+    margin-top: 30px;
+    font-size: 14px;
+    width: 390px!important;
   }
+  .denglu{
+    text-align: center;
+    font-size: 39px;
+  }
+  .icon_dt-icon_zhanghao:before{
+    font-size: 30px;
+  }
+  .icon_dt-suo:before{
+    font-size: 30px;
+  }
+  .el-form-item{
+    width: 390px!important;
+  }
+  .el-button--primary{
+    width: 390px!important;
+    border-radius: 25px!important;
 
-  .success {
-    padding-top: 45px;
   }
 </style>
