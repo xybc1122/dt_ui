@@ -13,11 +13,11 @@
         </el-select>
       </div>
       <div class="check2">
-        <el-input v-show="msgInput===7" v-model="user.userName" placeholder="请输入账号"
+        <el-input v-show="msgInput===7" v-model="user.uName" placeholder="请输入账号"
                   prefix-icon="el-icon-search"></el-input>
         <el-input v-show="msgInput===8" v-model="user.name" placeholder="请输入姓名"
                   prefix-icon="el-icon-search"></el-input>
-        <el-input v-show="msgInput===10" v-model="user.role" placeholder="请输入角色名称"
+        <el-input v-show="msgInput===10" v-model="user.rName" placeholder="请输入角色名称"
                   prefix-icon="el-icon-search"></el-input>
         <el-input v-show="msgInput===54" v-model="user.pwd" placeholder="修改密码"
                   prefix-icon="el-icon-search"></el-input>
@@ -70,9 +70,9 @@
         <el-button type="primary" @click="reset">重置</el-button>
       </div>
       <div style="padding-top: 30px">
-        <el-tag v-show="user.userName!==''" closable @close="Username()">账号:{{user.userName}}</el-tag>
+        <el-tag v-show="user.uName!==''" closable @close="Username()">账号:{{user.uName}}</el-tag>
         <el-tag v-show="user.name!==''" closable @close="Names()">姓名:{{user.name}}</el-tag>
-        <el-tag v-show="user.role!==''" closable @close="Role()">角色名称:{{user.role}}</el-tag>
+        <el-tag v-show="user.rName!==''" closable @close="Role()">角色名称:{{user.rName}}</el-tag>
         <el-tag v-show="user.phone!==''" closable @close="Phone()">手机号:{{user.phone}}</el-tag>
       </div>
     </div>
