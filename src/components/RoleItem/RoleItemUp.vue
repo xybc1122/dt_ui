@@ -8,7 +8,7 @@
       <div style="margin-left: 80px;margin-bottom: 20px">
         <el-button @click="Role_info" style=";float: left">角色信息</el-button>
         <el-button @click="Role_menu" style="margin-left: 0px;border-left: 0px">菜单信息</el-button>
-        <el-input v-model="roleFrom.rName" :disabled="true" class="user_input"></el-input>
+        <el-input v-model="roleFrom.rName" :disabled="true" class="role_input"></el-input>
       </div>
       <el-form v-if="role_Info" :model="roleFrom" ref="roleFrom" label-width="80px">
         <el-form-item prop="usersId">
@@ -70,7 +70,7 @@
 <script>
   import PubSub from 'pubsub-js'
   import message from '../../utils/Message'
-  import {repGetUsers, repMenu, repMenuRole, repGetHead, repGetMenus, repAdRole, repDelRole} from '../../api'
+  import {repGetUsers, repMenu, repMenuRole, repGetHead, repGetMenus, repAdRole} from '../../api'
   import MenuHeadItem from '../../components/RoleItem/MenuHeadItem/MenuHeadItem'
 
   export default {
@@ -281,7 +281,7 @@
 </script>
 
 <style lang="scss">
-  .user_input{
+  .role_input{
     padding-left: 50px;
     width: 200px;
     .el-input__inner{

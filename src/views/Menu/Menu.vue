@@ -1,13 +1,15 @@
 <template>
   <div class="block">
-    <span><el-button type="primary" @click="saveMenuInfo">保存</el-button></span>
-    <el-tree
-      :data="menuList"
-      show-checkbox
-      node-key="menuId"
-      default-expand-all
-      :expand-on-click-node="false"
-      :props="defaultProps">
+    <div class="content">
+      <span><el-button type="primary" @click="saveMenuInfo">保存</el-button></span>
+      <span><el-button type="primary" @click="reset">重置</el-button></span>
+      <el-tree
+        :data="menuList"
+        show-checkbox
+        node-key="menuId"
+        :default-expand-all="false"
+        :expand-on-click-node="false"
+        :props="defaultProps">
       <span class="custom-tree-node" slot-scope="{ node, data }">
         <span>{{ node.label}}</span>
         <span>
@@ -31,36 +33,39 @@
           </el-button>
         </span>
       </span>
-    </el-tree>
-    <el-dialog
-      title="提示"
-      :visible.sync="centerDialogVisible"
-      width="30%"
-      center>
-      <el-input v-model="inputMenu" placeholder="请输入菜单名称"></el-input>
-      <span slot="footer" class="dialog-footer">
+      </el-tree>
+      <el-dialog
+        title="提示"
+        :visible.sync="centerDialogVisible"
+        width="30%"
+        center>
+        <el-input v-model="inputMenu" placeholder="请输入菜单名称"></el-input>
+        <span slot="footer" class="dialog-footer">
     <el-button @click="centerDialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="addMenu">确 定</el-button>
   </span>
-    </el-dialog>
+      </el-dialog>
 
+    </div>
   </div>
 </template>
 
 <script>
-  import {repUpMenuInfo} from '../../api'
+  import storage from '../../utils/storageUtils'
+  import {repUpMenuInfo,repMenu} from '../../api'
   import message from '../../utils/Message'
-  import PubSub from 'pubsub-js'
 
   let id = 1000 //假菜单ID
   export default {
     data () {
       return {
+        userName: '',//读取缓存名字
         addNewMenu: [], //新添加传递到后台的数组
         menuIds: [],
         dataMenu: {}, //点击时获得数据
         inputMenu: '',
         menuList: [],
+        resetMenuList: [],//保留一份重置数据
         centerDialogVisible: false,
         defaultProps: { //转换参数
           children: 'childMenus',
@@ -69,10 +74,11 @@
       }
     },
     mounted () {
-      PubSub.subscribe('menuList', (msg, menuList) => {
-        console.log(menuList)
-        this.menuList = menuList
-      })
+      this.userName = this.getCookie('name')
+      //读取本地缓存
+      const menu = storage.readData(this.userName + 'menu')
+      this.menuList = menu
+      this.resetMenuList = menu
     },
     methods: {
       //添加 菜单
@@ -93,10 +99,16 @@
         }
         this.dataMenu.childMenus.push(newChild)
         //拿到对象
-        const menu = {menuId: id, parentId: this.dataMenu.parentId, name: this.inputMenu}
+        const menu = {parentId: this.dataMenu.menuId, name: this.inputMenu}
         //插入数组
         this.addNewMenu.push(menu)
         this.centerDialogVisible = false
+      },
+      //重置按钮(
+      reset () {
+        //重置缓存数据
+        const resetMenu = storage.readData(this.userName)
+        this.menuList = resetMenu
       },
       //保存按钮
       saveMenuInfo () {
@@ -109,10 +121,24 @@
           const newMenu = this.addNewMenu
           const idsMenu = this.menuIds
           const menu = {newMenu, idsMenu}
-          const result = repUpMenuInfo(menu)
-          console.log(result)
+          const resultMenuInfo = repUpMenuInfo(menu)
+          resultMenuInfo.then((result) => {
+            if (result.code === 200) {
+              message.successMessage('添加菜单成功')
+              //更新成功后-----读取数据库存入缓存
+              const resultMenuInfo = repMenu()
+              resultMenuInfo.then((item) => {
+                if (item.code === 200) {
+                  //写入缓存
+                  console.log('写入缓存')
+                  storage.saveData(this.userName + 'menu', item.data)
+                }
+              })
+            }
+          })
 
         }).catch(() => {
+          this.menuList = this.resetMenuList
           console.log('不保存')
         })
 
@@ -146,6 +172,12 @@
 </script>
 
 <style>
+
+
+  .content {
+    width: 300px;
+  }
+
   .custom-tree-node {
     flex: 1;
     display: flex;

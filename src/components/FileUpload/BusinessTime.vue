@@ -53,7 +53,5 @@
 </script>
 
 <style lang="scss">
-  body {
-    font-family: "宋体";
-  }
+
 </style>

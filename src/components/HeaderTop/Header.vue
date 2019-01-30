@@ -17,7 +17,7 @@
     <el-badge :value="100" :max="10" class="item" style="float: right">
       <i class="icon_sum iconfont icon_dt-nitification" @click="d"></i>
     </el-badge>
-    <p class="login">欢迎来到 XXX 中文管理后台</p>
+    <p class="p-one">欢迎来到 XXX 中文管理后台</p>
   </div>
 </template>
 
@@ -50,7 +50,7 @@
     float: left;
     margin-top: 10px;
   }
-  .login{
+  .p-one{
     float: right;
     padding-top: 0px!important;
     margin-top: 10px!important;

@@ -10,6 +10,10 @@ export default {
   // 同步记录用户信息
   recordUser ({commit}, userInfo) {
     commit(RECEIVE_USER_INFO, {userInfo})
+  },
+  recordMenuList({commit},menuList){
+    commit(RECEIVE_MENU_LIST, {menuList})
   }
+  //获取菜单
 }
 

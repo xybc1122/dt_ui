@@ -226,14 +226,13 @@
       const resultSingleUser = await repSingleUser()
       if (resultSingleUser.code === 200) {
         this.singleUser = resultSingleUser.data
-        const roles = resultSingleUser.data.roles
+        //const roles = resultSingleUser.data.roles
       }
       //查询获得table表的 头信息
       const resultHead = await
         repHead(this.$route.params.id)
       if (resultHead.code === 200) {
         this.tableTitle = resultHead.data
-        console.log(resultHead.data)
       }
       var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
       const resultUsers = await repUsers(userPage)

@@ -2,12 +2,12 @@
   <div class="test-1">
     <h2 class="user_aside">
       <img class="user_img" src="../HeaderTop/img/pig.jpg"/>
-      <p class="user_name">{{from.userName}}</p>
+      <p class="user_name">{{userName}}</p>
     </h2>
     <el-row class="tac">
 
       <el-menu :default-active="$router.path" router class="el-menu-vertical-demo none"
-                style="height: 100%;border-right: 0px"
+               style="height: 100%;border-right: 0px"
                background-color="#293846"
                text-color="#fff"
                active-text-color="#ffd04b">
@@ -73,15 +73,13 @@
 </template>
 
 <script>
-  import PubSub from 'pubsub-js'
-  import {repMenu} from '../../api'
+  import storage from '../../utils/storageUtils'
+  import {repMenu, repCheckMenuToken} from '../../api'
 
   export default {
     data () {
       return {
-        from: {
-          userName: ''
-        },
+        userName: '',
         img_user: '',
         width: '220px',
         isRole: true,
@@ -89,12 +87,35 @@
       }
     },
     async mounted () {
-      this.from.userName = this.getCookie('name')
-      const result = await repMenu()
-      if (result.code === 200) {
-        PubSub.publish('menuList', result.data)
-        this.menuList = result.data
+      this.userName = this.getCookie('name')
+      //传给后台校验接口
+      const resultCheck = await repCheckMenuToken()
+      //如果说是-1 说明数据还没更新
+      if (resultCheck.code === -1) {
+        console.log('没更新')
+        //先试着读下本地缓存
+        const menu = storage.readData(this.userName + 'menu')
+        //如果是 不是0 说明还没缓存 继续走
+        if (menu.length !== 0) {
+          console.log('读缓存')
+          this.menuList = menu
+          return
+        }
+        //读取数据库存入缓存
+        const result = await repMenu()
+        console.log('读数据库')
+        if (result.code === 200) {
+          //写入缓存
+          storage.saveData(this.userName + 'menu', result.data)
+          this.menuList = result.data
+          return
+        }
       }
+      console.log('更新了')
+      //如果更新了
+      console.log('直接读缓存')
+      const result = storage.readData(this.userName + 'menu')
+      this.menuList =result
     }
   }
 </script>

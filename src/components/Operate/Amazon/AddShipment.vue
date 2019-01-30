@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="出库通知单"  :fullscreen="fullscreen" :visible.sync="FormValue_Ship" width="100%" >
+  <el-dialog title="出库通知单"  :fullscreen="fullScreen" :visible.sync="FormValue_Ship" width="100%" >
     <el-menu
       :default-active="$router.path"
       router
@@ -68,7 +68,7 @@
     data () {
       return {
         menuList: [],
-        fullscreen:true,
+        fullScreen:true,
         type: 1, //菜单类型的type
         FormValue_Ship: false,
         editableTabsValue2: '2',

@@ -200,8 +200,4 @@
   .el-button--mini.is-circle:hover {
     background-color: #F56C6C;
   }
-
-  body {
-    font-family: "宋体";
-  }
 </style>

@@ -4,9 +4,11 @@
     <div style="margin-left: 80px;margin-bottom: 20px">
       <el-button @click="User_info" style="margin-left: 0px;border-left: 0px">用户信息</el-button>
       <el-button @click="User_info2" style=";float: left">角色信息</el-button>
+      <span><el-button type="primary" @click="saveRole">保存</el-button></span>
+      <span><el-button type="primary" @click="resetButton(rolesData)">重置</el-button></span>
     </div>
-    <el-form :model="userForm" ref="userForm" :rules="rules" label-width="92px" >
-      <template v-if="user_Info" v-for="(title ,index) in tableTitle" >
+    <el-form :model="userForm" ref="userForm" :rules="rules" label-width="92px">
+      <template v-if="user_Info" v-for="(title ,index) in tableTitle">
         <el-form-item v-if="title.topType==='up_pwd'" :label="title.headName" style="width: 350px;">
           <el-switch
             @change="switchPwd"
@@ -21,17 +23,21 @@
           <el-checkbox v-model="userForm.checkedUpPwd">首次登陆修改密码</el-checkbox>
 
         </el-form-item>
-        <el-form-item v-if="title.topType==='confirmPwd' && isPwd===true" :label="title.headName" prop="confirmPwd" class="pwd3">
+        <el-form-item v-if="title.topType==='confirmPwd' && isPwd===true" :label="title.headName" prop="confirmPwd"
+                      class="pwd3">
           <el-input clearable style="width: 250px" v-model="userForm.confirmPwd" type="password"></el-input>
           <el-checkbox v-model="userForm.checkedPwd">密码满足复杂度要求</el-checkbox>
         </el-form-item>
-        <el-form-item v-if="title.topType==='uName'" :label="title.headName" style="width: 350px"class="user_margin_left ">
+        <el-form-item v-if="title.topType==='uName'" :label="title.headName" style="width: 350px"
+                      class="user_margin_left ">
           <el-tag>{{userForm.uName}}</el-tag>
         </el-form-item>
-        <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px"class="user_margin_left">
+        <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px"
+                      class="user_margin_left">
           <el-tag>{{userForm.name}}</el-tag>
         </el-form-item>
-        <el-form-item v-if="title.topType==='phone'" :label="title.headName" style="width: 350px"class="state user_margin_left">
+        <el-form-item v-if="title.topType==='phone'" :label="title.headName" style="width: 350px"
+                      class="state user_margin_left">
           <el-tag>{{userForm.uMobilePhone}}</el-tag>
         </el-form-item>
         <el-form-item v-if="title.topType==='account_status'" :label="title.headName" class="state">
@@ -65,7 +71,7 @@
           </div>
         </el-form-item>
       </template>
-      <el-form-item v-if="user_Info2" prop="rolesId" >
+      <el-form-item v-if="user_Info2" prop="rolesId">
         <div class="transfer2">
           <el-transfer
             filterable
@@ -96,7 +102,6 @@
     repHead,
     repFindRoles,
     repUpUserInfo,
-    repDelRole,
     repAdRole
   } from '../../api'
   //角色管理
@@ -110,14 +115,14 @@
             callback(new Error('请输入密码'))
           }
           if (this.userForm.checkedPwd === true) {
-          if (!pwd.test(value)) {
-            callback(new Error('密码规则：6-20位字母或数字组合'))
+            if (!pwd.test(value)) {
+              callback(new Error('密码规则：6-20位字母或数字组合'))
+            } else {
+              callback()
+            }
           } else {
             callback()
           }
-        } else {
-          callback()
-        }
         }
       }
       var confirmPwd = (rule, value, callback) => {
@@ -152,14 +157,16 @@
         }
       }
       return {
-        user_Info:false,
-        user_Info2:true,
+        user_Info: false,
+        user_Info2: true,
         tableTitle: [],//表头信息
         tableData: [],//表信息
         upFormValue: false,
         upSelection: [], //更新按钮数组收集
         rolesId: [],//角色id
+        alreadyRid: [],
         rolesData: [],
+        uRId: {},//点击保存的时候处理的数据
         isCheFlgAlways: false,//密码始终有效 判断标识
         isCheFlgUser: false,//用户始终有效 判断标识
         isAlwaysFlg: false,//密码有效期 判断标识
@@ -214,7 +221,6 @@
         repHead(this.$route.params.id)
       if (resultHead.code === 200) {
         this.tableTitle = resultHead.data
-        console.log(resultHead.data)
       }
       //获得传来的标识 显示 隐藏form
       PubSub.subscribe('upSelection', (msg, upSelection) => {
@@ -286,6 +292,7 @@
               this.rolesId = roleStr.map(function (data) {
                 return +data
               })
+              this.alreadyRid = this.rolesId
             }
           }
         })
@@ -333,34 +340,33 @@
       filterMethod (query, item) {
         return item.roles.rName.indexOf(query) > -1
       },
-      //角色框移动信息
-      async transferChange (value, direction, movedKeys) {
-        const rolesId=movedKeys;
+      //重置
+      resetButton () {
+
+      },
+      //角色左右选择
+      async transferChange (value) {
+        const rolesId = value
         const uid = this.userForm.uid
-        const rid = {rolesId, uid}
-        if (direction === 'left') {
-          const resultDel = await repDelRole(rid)
-          console.log(resultDel)
-          if (resultDel.code === 200) {
-            user_role = true
-            PubSub.publish('delRole', user_role)
-          }
-        } else {
-          const resultAdd = await repAdRole(rid)
-          if (resultAdd.code === 200) {
-            user_role = false
-            PubSub.publish('addRole', user_role)
-          }
-          console.log(resultAdd)
-        }
+        this.uRId = {rolesId, uid}
       },
-      User_info(){
-        this.user_Info=true;
-        this.user_Info2=false;
+      //保存
+      saveRole () {
+        //已有的ID
+        console.log(this.alreadyRid)
+
+        console.log(this.uRId)
+        //在这里对rid去重判断发送给前端
+        const resultRole = repAdRole(this.uRId)
+        console.log(resultRole)
       },
-      User_info2(){
-        this.user_Info2=true;
-        this.user_Info=false
+      User_info () {
+        this.user_Info = true
+        this.user_Info2 = false
+      },
+      User_info2 () {
+        this.user_Info2 = true
+        this.user_Info = false
       },
       //获得 checkedAlways flg如果=true 就禁用input 输入框
       checkedAlways (flg) {
@@ -383,23 +389,25 @@
 </script>
 
 <style lang="scss">
-  .user_margin_left{
+  .user_margin_left {
     margin-left: 45px;
     font-family: "宋体";
     font-size: 15px;
   }
+
   //密码修改
-  .el-form-item.pwd3{
+  .el-form-item.pwd3 {
     font-family: "宋体";
     font-size: 15px;
 
-    .el-form-item__content{
-      .el-checkbox{
+    .el-form-item__content {
+      .el-checkbox {
         padding-left: 50px;
         color: #F56C6C;
       }
     }
   }
+
   //有效期
   .el-form-item.date3 {
     .el-form-item__label {
@@ -415,12 +423,14 @@
       }
     }
   }
+
   //账号状态
-  .el-form-item.state{
+  .el-form-item.state {
     float: left;
     font-family: "宋体";
     font-size: 15px;
   }
+
   //自定义添加转移
   .transfer2 {
     .el-transfer {

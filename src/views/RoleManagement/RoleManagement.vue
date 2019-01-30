@@ -146,7 +146,6 @@
       const resultHead = await
         repHead(this.$route.params.id)
       if (resultHead.code === 200) {
-        // console.log(resultHead.data)
         this.tableTitle = resultHead.data
       }
       var rolePage = utils.getUserPage(this.role.currentPage, this.role.pageSize)

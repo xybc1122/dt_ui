@@ -57,6 +57,7 @@ import {
   Step, Message,Autocomplete
 } from 'element-ui'
 import {repIndex} from './api'
+import moment from 'moment'
 Vue.component(Badge.name,Badge)
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)
@@ -157,6 +158,10 @@ router.beforeEach((to, from, next) => {
       type: 'error'
     })
   })
+})
+//时间过滤器
+Vue.filter('date-format',(value,formatStr='YYYY-MM-DD HH:mm:ss')=>{
+  return moment(value).format(formatStr)
 })
 //获取屏幕尺寸
 Vue.prototype.getViewportSize = function(){

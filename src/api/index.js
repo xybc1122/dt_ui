@@ -42,6 +42,8 @@ export const repUpMenuInfo = ({newMenu, idsMenu}) => ajax(BASE_URL + '/menu/up/m
   newMenu,
   idsMenu
 }, 'POST')
+//校验菜单是否已更新接口
+export const repCheckMenuToken = () => ajax(BASE_URL + `/menu/token/menu`)
 //通过角色查询菜单列表
 export const repMenuRole = (rid) => ajax(BASE_URL + `/menu/role/menu`, {rid})
 
@@ -124,9 +126,6 @@ export const repSaveUserInfo = ({
   userName, pwd, confirmPwd, checkedPwd, checkedUpPwd,
   checkedUserAlways, checkedPwdAlways, rolesId, staffValue, pwdAlwaysInput, effectiveDate
 }, 'POST')
-
-//移除角色信息
-export const repDelRole = ({rolesId, uid}) => ajax(BASE_URL + '/ur/delRole', {rolesId, uid}, 'POST')
 
 //新增角色
 export const repAdRole = ({rolesId, uid}) => ajax(BASE_URL + '/ur/addRole', {rolesId, uid}, 'POST')

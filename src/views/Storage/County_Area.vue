@@ -59,7 +59,6 @@
       // const resultHead = await
       //   repHead(this.$route.params.id)
       // if (resultHead.code === 200) {
-      //   // console.log(resultHead.data)
       //   this.tableTitle = resultHead.data
       // }
       // //获得公司信息信息

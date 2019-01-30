@@ -1,21 +1,20 @@
 <template>
   <div :style="body_height">
-    <div class="a">
+    <div class="div-one">
       <div class="login-box" v-show="isLogin">
         <div style="width: 390px;margin: 0 auto;">
-          <div class="denglu">
-            <img src="./img/logo.png" >
+          <div class="login">
+            <img src="./img/logo.png">
           </div>
-          <p class="denglu_name">用户名</p>
+          <p class="login_name">用户名</p>
           <el-input  v-model="userName" class="login_input" placeholder="请输入账号" prefix-icon="iconfont icon_dt-icon_zhanghao" ></el-input>
-          <p class="denglu_pwd" >密码</p>
+          <p class="login_pwd" >密码</p>
           <el-input class="input login_input" v-model="passWord" placeholder="请输入密码" v-focus
                     prefix-icon="iconfont icon_dt-suo" @keyup.enter.native="Login"></el-input>
           <div style="margin-top: 60px">
             <el-button type="primary" class="loading" @click="Login">登陆</el-button>
-            <div style="text-align: center">
-              <span>一周内</span>
-              <el-checkbox v-model="rememberMe" style="padding-left: 20px">自动登陆</el-checkbox>
+            <div style="text-align: center;padding-top: 20px">
+              <el-checkbox v-model="rememberMe" style="padding-left: 20px">自动登陆 <span>(一周内)</span></el-checkbox>
             </div>
           </div>
         </div>
@@ -34,21 +33,21 @@
   export default {
     data () {
       return {
-        body_height:{height:''},
+        body_height: {height: ''},
         userName: 'tt',
         passWord: 't',
         isLogin: true, // <!--登录-->
         rememberMe: false
       }
     },
-    created(){
+    created () {
       this.hh()
     },
     methods: {
       //获取屏幕尺寸
-      async hh(){
-        let View =this.getViewportSize()
-        this.body_height.height=View.height+'px'
+      async hh () {
+        let View = this.getViewportSize()
+        this.body_height.height = View.height + 'px'
       },
       async Login () {
         let loadingInstance = loading.loading_dom('登陆中', 'body')
@@ -64,19 +63,19 @@
             const uData = result.data
             this.setCookie('token', uData.token, 7)
             this.setCookie('name', uData.user.name, 7)
-            // 同步记录用户信息
-            this.$store.dispatch('recordUser', uData)
+            // // 同步记录用户信息
+            // this.$store.dispatch('recordUser', uData)
             // 去个主界面
             this.$router.replace('/index')
             loadingInstance.close()
           } else {
-            message.messageNotDError(result.msg,"登陆失败")
+            message.messageNotDError(result.msg, '登陆失败')
             loadingInstance.close()
           }
           loadingInstance.close()
         }
         else {
-          message.messageNotDError('账号或密码不能为空~',"登陆失败")
+          message.messageNotDError('账号或密码不能为空~', '登陆失败')
           loadingInstance.close()
         }
         loadingInstance.close()
@@ -85,61 +84,58 @@
   }
 </script>
 
-<style scoped lang="scss">
-  .a{
+<style scope lang="scss">
+  .div-one {
     width: 100%;
     height: 100%;
     display: flex;
     /*background:url(./img/ReportServer.png) no-repeat*/
   }
-  .login-box{
+
+  .login-box {
     background-color: #ffffff;
     width: 430px;
     height: 500px;
-    margin: auto auto ;
+    margin: auto auto;
     display: flex;
-    border-radius: 15px!important;
+    border-radius: 15px !important;
   }
+
   //没有边框的样式
-  /*.login_input{*/
-    /*.el-input__inner{*/
-      /*width: 390px!important;*/
-      /*padding-left: 50px!important;*/
-      /*font-size: 25px!important;*/
-      /*border-top: 0px!important;*/
-      /*border-left: 0px!important;*/
-      /*border-right: 0px!important;*/
-    /*}*/
+  .login_input {
+    .el-input__inner {
+      width: 390px !important;
+      padding-left: 50px !important;
+      font-size: 15px !important;
+      border-top: 0px !important;
+      border-left: 0px !important;
+      border-right: 0px !important;
+    }
+  }
 
-  /*}*/
-
-
-  .denglu_name{
+  .login_name {
     margin-top: 50px;
     font-size: 14px;
-    width: 390px!important;
+    width: 390px !important;
   }
-  .denglu_pwd{
+
+  .login_pwd {
     margin-top: 30px;
     font-size: 14px;
-    width: 390px!important;
+    width: 390px !important;
   }
-  .denglu{
+
+  .login {
     text-align: center;
     font-size: 39px;
   }
-  .icon_dt-icon_zhanghao:before{
-    font-size: 30px;
+  .el-form-item {
+    width: 390px !important;
   }
-  .icon_dt-suo:before{
-    font-size: 30px;
-  }
-  .el-form-item{
-    width: 390px!important;
-  }
-  .loading{
-    width: 390px!important;
-    border-radius: 25px!important;
+
+  .loading {
+    width: 390px !important;
+    border-radius: 25px !important;
 
   }
 </style>
