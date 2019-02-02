@@ -265,7 +265,6 @@
               if (result.code === 200) {
                 this.saveFormValue = false
                 message.successMessage(result.msg)
-                PubSub.publish('saveFormValue', this.saveFormValue)
               }
             })
           } else {
@@ -285,7 +284,6 @@
               if (result.code === 200) {
                 alert('添加确认');
                 message.successMessage(result.msg)
-                PubSub.publish('saveFormValue', this.saveFormValue)
                 this.$refs[formName].resetFields()
               }
             })

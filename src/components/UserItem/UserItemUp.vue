@@ -1,11 +1,10 @@
+<!--suppress ALL -->
 <template>
   <!--隐藏修改from表单-->
   <el-dialog title="用户信息修改" :visible.sync="upFormValue" width="800px">
     <div style="margin-left: 80px;margin-bottom: 20px">
       <el-button @click="User_info" style="margin-left: 0px;border-left: 0px">用户信息</el-button>
       <el-button @click="User_info2" style=";float: left">角色信息</el-button>
-      <span><el-button type="primary" @click="saveRole">保存</el-button></span>
-      <span><el-button type="primary" @click="resetButton(rolesData)">重置</el-button></span>
     </div>
     <el-form :model="userForm" ref="userForm" :rules="rules" label-width="92px">
       <template v-if="user_Info" v-for="(title ,index) in tableTitle">
@@ -34,11 +33,11 @@
         </el-form-item>
         <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px"
                       class="user_margin_left">
-          <el-tag>{{userForm.name}}</el-tag>
+          <el-input clearable style="width: 120px" v-model="userForm.name"></el-input>
         </el-form-item>
         <el-form-item v-if="title.topType==='phone'" :label="title.headName" style="width: 350px"
                       class="state user_margin_left">
-          <el-tag>{{userForm.uMobilePhone}}</el-tag>
+          <el-input clearable style="width: 150px" v-model="userForm.uMobilePhone"></el-input>
         </el-form-item>
         <el-form-item v-if="title.topType==='account_status'" :label="title.headName" class="state">
           <el-select v-model="userForm.accountStatus" clearable value="" style="width: 250px">
@@ -79,8 +78,8 @@
             :right-default-checked="rolesId"
             filter-placeholder="请输入角色信息"
             v-model="rolesId"
-            :data="rolesData"
             @change="transferChange"
+            :data="rolesData"
             :titles="['角色信息', '角色信息']"
             :button-texts="['移除', '添加']">
           </el-transfer>
@@ -102,10 +101,9 @@
     repHead,
     repFindRoles,
     repUpUserInfo,
-    repAdRole
+    repAdRole,
+    repDelRole
   } from '../../api'
-  //角色管理
-  var user_role = true
   export default {
     data () {
       var pwd = (rule, value, callback) => {
@@ -164,7 +162,6 @@
         upFormValue: false,
         upSelection: [], //更新按钮数组收集
         rolesId: [],//角色id
-        alreadyRid: [],
         rolesData: [],
         uRId: {},//点击保存的时候处理的数据
         isCheFlgAlways: false,//密码始终有效 判断标识
@@ -292,7 +289,6 @@
               this.rolesId = roleStr.map(function (data) {
                 return +data
               })
-              this.alreadyRid = this.rolesId
             }
           }
         })
@@ -317,8 +313,6 @@
                 message.errorMessage('你没有权限修改数据')
               } else if (result.code === 200) {
                 message.successMessage('更新成功~')
-                this.upFormValue = false
-                PubSub.publish('upFormValue', this.upFormValue)
               } else {
                 message.infoMessage('系统错误~')
               }
@@ -340,25 +334,22 @@
       filterMethod (query, item) {
         return item.roles.rName.indexOf(query) > -1
       },
-      //重置
-      resetButton () {
-
-      },
-      //角色左右选择
-      async transferChange (value) {
-        const rolesId = value
+      //角色框移动信息
+      async transferChange (value, direction, movedKeys) {
         const uid = this.userForm.uid
-        this.uRId = {rolesId, uid}
-      },
-      //保存
-      saveRole () {
-        //已有的ID
-        console.log(this.alreadyRid)
+        const rolesId =movedKeys
+        const rid = {rolesId, uid}
+        if (direction === 'left') {
+          const resultDel = await repDelRole(rid)
+          if (resultDel.code === 200) {
 
-        console.log(this.uRId)
-        //在这里对rid去重判断发送给前端
-        const resultRole = repAdRole(this.uRId)
-        console.log(resultRole)
+          }
+        } else {
+          const resultAdd = await repAdRole(rid)
+          if (resultAdd.code === 200) {
+          }
+          console.log(resultAdd)
+        }
       },
       User_info () {
         this.user_Info = true

@@ -242,71 +242,6 @@
         this.pageUser(resultUsers)
       }
       loadingInstance.close()
-      //新增成功后收到订阅消息
-      PubSub.subscribe('saveFormValue', (msg, saveFormValue) => {
-        if (!saveFormValue) {
-          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-          const resultUsers = repUsers(userPage)
-          resultUsers.then((result) => {
-            if (result.code === 200) {
-              //赋值 然后显示
-              this.pageUser(result)
-            }
-          })
-        }
-      })
-      //删除角色成功后收到订阅消息
-      PubSub.subscribe('delRole', (msg, delRole) => {
-        if (delRole) {
-          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-          const resultUsers = repUsers(userPage)
-          resultUsers.then((result) => {
-            if (result.code === 200) {
-              //赋值 然后显示
-              this.pageUser(result)
-            }
-          })
-        }
-      })
-      //新增角色成功后收到订阅消息
-      PubSub.subscribe('addRole', (msg, addRole) => {
-        if (!addRole) {
-          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-          const resultUsers = repUsers(userPage)
-          resultUsers.then((result) => {
-            if (result.code === 200) {
-              //赋值 然后显示
-              this.pageUser(result)
-            }
-          })
-        }
-      })
-      //更新用户信息功后收到订阅消息
-      PubSub.subscribe('upFormValue', (msg, upFormValue) => {
-        if (!upFormValue) {
-          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-          const resultUsers = repUsers(userPage)
-          resultUsers.then((result) => {
-            if (result.code === 200) {
-              //赋值 然后显示
-              this.pageUser(result)
-            }
-          })
-        }
-      })
-      //恢复用户信息后收到订阅消息
-      PubSub.subscribe('isReUser', (msg, isReUser) => {
-        if (isReUser) {
-          var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-          const resultUsers = repUsers(userPage)
-          resultUsers.then((result) => {
-            if (result.code === 200) {
-              //赋值 然后显示
-              this.pageUser(result)
-            }
-          })
-        }
-      })
     }
     ,
     methods: {
@@ -351,7 +286,6 @@
       },
       //删除历史记录查看
       async delUserForm () {
-
         this.delFormValue = true
         PubSub.publish('delFormValue', this.delFormValue)
       },
