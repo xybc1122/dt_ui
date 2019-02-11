@@ -129,9 +129,6 @@
     text-align: center;
     font-size: 39px;
   }
-  .el-form-item {
-    width: 390px !important;
-  }
 
   .loading {
     width: 390px !important;

@@ -14,23 +14,17 @@
       </div>
       <div class="check2">
         <el-input v-show="msgInput===7" v-model="user.uName" placeholder="请输入账号"
-                  prefix-icon="el-icon-search"></el-input>
+                  prefix-icon="el-icon-search" clearable></el-input>
         <el-input v-show="msgInput===8" v-model="user.name" placeholder="请输入姓名"
-                  prefix-icon="el-icon-search"></el-input>
-        <el-input v-show="msgInput===10" v-model="user.rName" placeholder="请输入角色名称"
-                  prefix-icon="el-icon-search"></el-input>
-        <el-input v-show="msgInput===54" v-model="user.pwd" placeholder="修改密码"
-                  prefix-icon="el-icon-search"></el-input>
-        <el-input v-show="msgInput===52" v-model="user.i_pwd" placeholder="请输入密码"
-                  prefix-icon="el-icon-search"></el-input>
-        <el-input v-show="msgInput===53" v-model="user.e_pwd" placeholder="确认密码"
-                  prefix-icon="el-icon-search"></el-input>
+                  prefix-icon="el-icon-search" clearable></el-input>
+        <el-input v-show="msgInput===10" v-model="user.role" placeholder="请输入角色名称"
+                  prefix-icon="el-icon-search" clearable></el-input>
         <el-input v-show="msgInput===14" v-model="user.computer_name" placeholder="请输入计算机名"
-                  prefix-icon="el-icon-search"></el-input>
+                  prefix-icon="el-icon-search" clearable></el-input>
         <el-input v-show="msgInput===12" v-model="user.phone_status" placeholder="请输入账号状态"
-                  prefix-icon="el-icon-search"></el-input>
+                  prefix-icon="el-icon-search" clearable></el-input>
         <el-input v-show="msgInput===9" v-model="user.phone" placeholder="请输入手机号"
-                  prefix-icon="el-icon-search"></el-input>
+                  prefix-icon="el-icon-search" clearable></el-input>
         <div class="block" v-show="msgInput===11">
           <el-date-picker
             v-model="user.createDate"
@@ -70,10 +64,19 @@
         <el-button type="primary" @click="reset">重置</el-button>
       </div>
       <div style="padding-top: 30px">
-        <el-tag v-show="user.uName!==''" closable @close="Username()">账号:{{user.uName}}</el-tag>
-        <el-tag v-show="user.name!==''" closable @close="Names()">姓名:{{user.name}}</el-tag>
-        <el-tag v-show="user.rName!==''" closable @close="Role()">角色名称:{{user.rName}}</el-tag>
-        <el-tag v-show="user.phone!==''" closable @close="Phone()">手机号:{{user.phone}}</el-tag>
+        <el-tag v-show="user.uName!==''" closable @close="cUserName()">账号:{{user.uName}}</el-tag>
+        <el-tag v-show="user.name!==''" closable @close="cName()">姓名:{{user.name}}</el-tag>
+        <el-tag v-show="user.role!==''" closable @close="cRole()">角色名称:{{user.role}}</el-tag>
+        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
+        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
+        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
+        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
+        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
+        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
+        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
+        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
+        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
+        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
       </div>
     </div>
     <!--table表格显示-->
@@ -95,11 +98,11 @@
           fixed>
         </el-table-column>
         <template v-for="title  in tableTitle">
-          <el-table-column  v-if="title.topType==='uName'" sortable fixed :label="title.headName"
+          <el-table-column v-if="title.topType==='uName'" sortable fixed :label="title.headName"
                            prop="userName"></el-table-column>
-          <el-table-column  v-if="title.topType==='name'" sortable fixed :label="title.headName"
+          <el-table-column v-if="title.topType==='name'" sortable fixed :label="title.headName"
                            prop="name"></el-table-column>
-          <el-table-column  v-if="title.topType==='phone'" :label="title.headName"
+          <el-table-column v-if="title.topType==='phone'" :label="title.headName"
                            prop="mobilePhone"></el-table-column>
           <el-table-column v-if="title.topType==='rName'" :label="title.headName" fixed prop="rName"
                            :show-overflow-tooltip="true">
@@ -193,20 +196,20 @@
         delFormValue: false,//删除历史记录 隐藏form
         singleUser: {},//查询一个单用户信息
         user: {
-          userName: '',//账号名
+          uName: '',//账号名
           name: '',//用户名
-          role:'',//角色
-          pwd:'',//修改密码
-          i_pwd:'',//输入密码
-          e_pwd:'',//确认密码
-          computer_name:'',//计算机名
-          phone_status:'',//状态
-          phone:'',//手机
+          role: '',//角色
+          pwd: '',//修改密码
+          i_pwd: '',//输入密码
+          e_pwd: '',//确认密码
+          computer_name: '',//计算机名
+          phone_status: '',//状态
+          phone: '',//手机
           landingTime: '',//登陆时间
           createDate: '',//创建时间
-          pwdDate:'',//密码有效期
-          recent_Landing:'',//最近登陆
-          validity_Period:'',//用户有效期
+          pwdDate: '',//密码有效期
+          recent_Landing: '',//最近登陆
+          validity_Period: '',//用户有效期
           accountStatus: '',
           currentPage: 1,//当前页
           total_size: 0,//总的页
@@ -221,7 +224,7 @@
       UserItemDel
     },
     async mounted () {
-      let loadingInstance = loading.loading_dom('加载中',document.getElementById("Account"))
+      let loadingInstance = loading.loading_dom('加载中', document.getElementById('Account'))
       //获得用户信息
       const resultSingleUser = await repSingleUser()
       if (resultSingleUser.code === 200) {
@@ -340,22 +343,14 @@
       },
       //重置
       reset () {
-        this.user.userName = ''
+        this.user.uName = ''
         this.user.name = ''
         this.user.role = ''
-        this.user.phone=''
+        this.user.phone = ''
       },
-      Username(){
-        this.user.userName = ''
-      },
-      Names(){
-        this.user.name = ''
-      },
-      Role(){
-        this.user.role = ''
-      },
-      Phone(){
-        this.user.phone=''
+      //关闭 属性重置
+      cUserName () {
+        this.user.uName = ''
       },
       //通用分页节省代码
       pageUser (resultUsers) {

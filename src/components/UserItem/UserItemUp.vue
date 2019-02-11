@@ -3,47 +3,23 @@
   <!--隐藏修改from表单-->
   <el-dialog title="用户信息修改" :visible.sync="upFormValue" width="800px">
     <div style="margin-left: 80px;margin-bottom: 20px">
-      <el-button @click="User_info" style="margin-left: 0px;border-left: 0px">用户信息</el-button>
-      <el-button @click="User_info2" style=";float: left">角色信息</el-button>
+      <el-button @click="userInfo" style="margin-left: 0px;border-left: 0px" :class="{changeColor:uColor}">用户信息
+      </el-button>
+      <el-button @click="roleInfo" style=";float: left" :class="{changeColor:rColor}">角色信息</el-button>
     </div>
     <el-form :model="userForm" ref="userForm" :rules="rules" label-width="92px">
       <template v-if="user_Info" v-for="(title ,index) in tableTitle">
-        <el-form-item v-if="title.topType==='up_pwd'" :label="title.headName" style="width: 350px;">
-          <el-switch
-            @change="switchPwd"
-            v-model="isPwd"
-            active-color="#13ce66"
-            inactive-color="#ff4949">
-          </el-switch>
-
-        </el-form-item>
-        <el-form-item v-if="title.topType==='pwd' && isPwd===true" :label="title.headName" prop="pwd" class="pwd3">
-          <el-input clearable style="width: 250px" v-model="userForm.pwd" type="password" maxlength="20"></el-input>
-          <el-checkbox v-model="userForm.checkedUpPwd">首次登陆修改密码</el-checkbox>
-
-        </el-form-item>
-        <el-form-item v-if="title.topType==='confirmPwd' && isPwd===true" :label="title.headName" prop="confirmPwd"
-                      class="pwd3">
-          <el-input clearable style="width: 250px" v-model="userForm.confirmPwd" type="password"></el-input>
-          <el-checkbox v-model="userForm.checkedPwd">密码满足复杂度要求</el-checkbox>
-        </el-form-item>
         <el-form-item v-if="title.topType==='uName'" :label="title.headName" style="width: 350px"
-                      class="user_margin_left ">
+                      class="user_margin_left" prop="p">
           <el-tag>{{userForm.uName}}</el-tag>
         </el-form-item>
-        <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px"
-                      class="user_margin_left">
-          <el-input clearable style="width: 120px" v-model="userForm.name"></el-input>
-        </el-form-item>
         <el-form-item v-if="title.topType==='phone'" :label="title.headName" style="width: 350px"
-                      class="state user_margin_left">
-          <el-input clearable style="width: 150px" v-model="userForm.uMobilePhone"></el-input>
+                      class="state user_margin_left" prop="uMobilePhone">
+          <el-input clearable style="width:150px" v-model="userForm.uMobilePhone"></el-input>
         </el-form-item>
-        <el-form-item v-if="title.topType==='account_status'" :label="title.headName" class="state">
-          <el-select v-model="userForm.accountStatus" clearable value="" style="width: 250px">
-            <el-option v-for="(item,index) in accountStatusOptions" :key="index" :label="item.name"
-                       :value="item.id"></el-option>
-          </el-select>
+        <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px"
+                      class="user_margin_left" prop="name">
+          <el-input clearable style="width: 150px" v-model="userForm.name"></el-input>
         </el-form-item>
         <el-form-item :label="title.headName" v-if="title.topType==='u_eff_date'" prop="effectiveDate" class="date3">
           <div class="block">
@@ -69,8 +45,39 @@
             </el-checkbox>
           </div>
         </el-form-item>
+
+        <el-form-item v-if="title.topType==='account_status'" :label="title.headName" class="state"
+                      prop="accountStatus">
+          <el-select v-model="userForm.accountStatus" clearable value="" style="width: 250px">
+            <el-option v-for="(item,index) in accountStatusOptions" :key="index" :label="item.name"
+                       :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
       </template>
-      <el-form-item v-if="user_Info2" prop="rolesId">
+      <el-form-item v-if="user_Info" label="密码" style="width: 350px;">
+        <el-switch
+          @change="switchPwd"
+          v-model="isPwd"
+          active-color="#13ce66"
+          inactive-color="#ff4949">
+        </el-switch>
+      </el-form-item>
+      <el-form-item v-if="isPwd" label="新密码" prop="pwd" class="pwd3">
+        <el-input clearable style="width: 250px" v-model="userForm.pwd" type="password" maxlength="20"></el-input>
+        <el-checkbox v-model="userForm.checkedUpPwd">首次登陆修改密码</el-checkbox>
+
+      </el-form-item>
+      <el-form-item v-if="isPwd" label="确认密码" prop="confirmPwd"
+                    class="pwd3">
+        <el-input clearable style="width: 250px" v-model="userForm.confirmPwd" type="password"></el-input>
+        <el-checkbox v-model="userForm.checkedPwd">密码满足复杂度要求</el-checkbox>
+      </el-form-item>
+      <el-form-item v-if="user_Info">
+        <el-button @click="resetForm('userForm')">重置</el-button>
+        <el-button @click="upFormValue = false">取 消</el-button>
+        <el-button type="primary" @click="saveUserInfo('userForm')" :disabled="isButton">确 定</el-button>
+      </el-form-item>
+      <el-form-item v-if="role_info" prop="rolesId">
         <div class="transfer2">
           <el-transfer
             filterable
@@ -86,11 +93,6 @@
         </div>
       </el-form-item>
     </el-form>
-    <div v-if="user_Info" slot="footer" class="dialog-footer">
-      <el-button @click="resetForm('userForm')">重置</el-button>
-      <el-button @click="upFormValue = false">取 消</el-button>
-      <el-button type="primary" @click="saveUserInfo('userForm')">确 定</el-button>
-    </div>
   </el-dialog>
 </template>
 
@@ -104,8 +106,16 @@
     repAdRole,
     repDelRole
   } from '../../api'
+
   export default {
     data () {
+      var name = (rule, value, callback) => {
+        if (value === '' || value === null) {
+          callback(new Error('名字不能为空'))
+        } else {
+          callback()
+        }
+      }
       var pwd = (rule, value, callback) => {
         var pwd = /^[A-Za-z0-9]{6,20}$/
         if (this.isPwd === true) {
@@ -154,9 +164,19 @@
           callback()
         }
       }
+      var uMobilePhone = (rule, value, callback) => {
+        if (!/^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\d{8}$/.test(this.userForm.uMobilePhone)) {
+          callback(new Error('手机格式不正确'))
+        } else {
+          callback()
+        }
+      }
       return {
-        user_Info: false,
-        user_Info2: true,
+        isButton: true, //数据没变化的时候 不能点确定按钮
+        rColor: false, //显示角色信息颜色
+        uColor: false, //显示用户信息颜色
+        user_Info: false,//显示用户页面
+        role_info: true,//显示角色页面
         tableTitle: [],//表头信息
         tableData: [],//表信息
         upFormValue: false,
@@ -169,6 +189,7 @@
         isAlwaysFlg: false,//密码有效期 判断标识
         isUserFlg: false,//用户有效期 判断标识
         isPwd: false,
+        oldUserForm: {},
         userForm: {
           uid: '',//用户id
           uName: '',//账号
@@ -197,6 +218,9 @@
           name: '禁用'
         }],
         rules: {
+          name: [
+            {validator: name, trigger: 'blur'}
+          ],
           pwd: [
             {validator: pwd, trigger: 'blur'}
           ],
@@ -209,7 +233,89 @@
           pwdStatus: [
             {validator: pwdStatus, trigger: 'blur'}
           ],
-        },
+          uMobilePhone: [
+            {validator: uMobilePhone, trigger: 'blur'}
+          ],
+        }
+      }
+    },
+    //监视form表单里发生的变化
+    watch: {
+      //姓名
+      name (newValue, oldValue) {
+        //如果老的值是空的说明没任何改变
+        if (oldValue === '') {
+          return
+        }
+        if (newValue !== this.oldUserForm.name) {
+          this.isButton = false
+          return
+        }
+        this.isButton = true
+      },
+      //手机
+      uMobilePhone (newValue, oldValue) {
+        //如果老的值是空的说明没任何改变
+        if (oldValue === '') {
+          return
+        }
+        if (newValue !== this.oldUserForm.mobilePhone) {
+          this.isButton = false
+          return
+        }
+        this.isButton = true
+      },
+      //状态
+      accountStatus (newValue, oldValue) {
+        //如果老的值是空的说明没任何改变
+        if (oldValue === '') {
+          return
+        }
+        if (newValue !== this.oldUserForm.accountStatus) {
+          this.isButton = false
+          return
+        }
+        this.isButton = true
+      },
+      //密码有效期
+      // pwdStatus (newValue, oldValue) {
+      //   //如果老的值是空的说明没任何改变
+      //   if (oldValue === '') {
+      //     return
+      //   }
+      //   console.log(this.oldUserForm)
+      //   if (newValue !== this.oldUserForm.pwdStatus) {
+      //     this.isButton = false
+      //     return
+      //   }
+      //   this.isButton = true
+      // },
+      //用户有效期
+      // accountStatus (newValue, oldValue) {
+      //   //如果老的值是空的说明没任何改变
+      //   if (oldValue === '') {
+      //     return
+      //   }
+      //   if (newValue !== this.oldUserForm.accountStatus) {
+      //     this.isButton = false
+      //     return
+      //   }
+      //   this.isButton = true
+      // },
+    },
+    //深度监视
+    computed: {
+      name () {
+        return this.userForm.name
+      },
+      uMobilePhone () {
+        return this.userForm.uMobilePhone
+      },
+      accountStatus () {
+        return this.userForm.accountStatus
+      },
+      pwdStatus(){
+        return this.userForm.pwdStatus
       }
     },
     async mounted () {
@@ -222,6 +328,15 @@
       //获得传来的标识 显示 隐藏form
       PubSub.subscribe('upSelection', (msg, upSelection) => {
         //每次点击初始化
+        //判断哪个是true 进行显示
+        if (this.user_Info) {
+          this.rColor = false
+          this.uColor = true
+        }
+        if (this.role_info) {
+          this.uColor = false
+          this.rColor = true
+        }
         this.isCheFlgAlways = false//密码始终有效 判断标识
         this.isCheFlgUser = false//用户始终有效 判断标识
         this.isAlwaysFlg = false//密码有效期 判断标识
@@ -240,6 +355,8 @@
         this.upFormValue = true
         //将数组转换成对象
         userSaveSelection.forEach(item => {
+          //获得老的userFrom对象 到时候比较监听的时候用
+          this.oldUserForm = item
           this.userForm['uName'] = item.userName
           this.userForm['name'] = item.name
           this.userForm['rName'] = item.rName
@@ -313,6 +430,7 @@
                 message.errorMessage('你没有权限修改数据')
               } else if (result.code === 200) {
                 message.successMessage('更新成功~')
+                this.upFormValue = false
               } else {
                 message.infoMessage('系统错误~')
               }
@@ -325,10 +443,8 @@
       },
       //from表单重置
       resetForm (formName) {
-        // this.$refs[formName].resetFields()
-        this.userForm.pwd = ''//密码
-        this.userForm.confirmPwd = ''
         this.isPwd = false
+        this.$refs[formName].resetFields()
       },
       //通过关键字搜索
       filterMethod (query, item) {
@@ -337,7 +453,7 @@
       //角色框移动信息
       async transferChange (value, direction, movedKeys) {
         const uid = this.userForm.uid
-        const rolesId =movedKeys
+        const rolesId = movedKeys
         const rid = {rolesId, uid}
         if (direction === 'left') {
           const resultDel = await repDelRole(rid)
@@ -351,12 +467,18 @@
           console.log(resultAdd)
         }
       },
-      User_info () {
+      //点击用户信息
+      userInfo () {
+        this.rColor = false
+        this.uColor = true
         this.user_Info = true
-        this.user_Info2 = false
+        this.role_info = false
       },
-      User_info2 () {
-        this.user_Info2 = true
+      //点击角色信息
+      roleInfo () {
+        this.uColor = false
+        this.rColor = true
+        this.role_info = true
         this.user_Info = false
       },
       //获得 checkedAlways flg如果=true 就禁用input 输入框
@@ -380,6 +502,11 @@
 </script>
 
 <style lang="scss">
+  .changeColor {
+    background: #409EFF;
+    color: #ffffff;
+  }
+
   .user_margin_left {
     margin-left: 45px;
     font-family: "宋体";
@@ -417,7 +544,6 @@
 
   //账号状态
   .el-form-item.state {
-    float: left;
     font-family: "宋体";
     font-size: 15px;
   }
