@@ -54,7 +54,7 @@ import {
   Upload,
   Progress,
   Steps,
-  Step, Message,Autocomplete
+  Step, Message,Autocomplete,Tabs,TabPane
 } from 'element-ui'
 import {repIndex} from './api'
 import moment from 'moment'
@@ -104,6 +104,8 @@ Vue.component(Progress.name, Progress)
 Vue.component(Steps.name, Steps)
 Vue.component(Step.name, Step)
 Vue.component(Autocomplete.name, Autocomplete)
+Vue.component(Tabs.name, Tabs)
+Vue.component(TabPane.name, TabPane)
 Vue.use(focus)
 Vue.use(VueResource)
 // 设置Cookie

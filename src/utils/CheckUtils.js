@@ -1,7 +1,12 @@
 import message from '../utils/Message'
 
 export default {
-
+  /**
+   * 校验上传文件信息
+   * @param file
+   * @param uploadFrom
+   * @returns {boolean}
+   */
   checkFileInfo (file, uploadFrom) {
     let fileShopNameDt = file.name.indexOf('电兔')
     //宏名

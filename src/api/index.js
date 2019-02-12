@@ -13,8 +13,16 @@ export const repLoginUser = ({userName, pwd, rememberMe}) => ajax(BASE_URL + `/a
 //获得所有用户信息
 export const repGetUsers = () => ajax(BASE_URL + '/user/getUsers')
 //获取用户管理信息
-export const repUsers = ({currentPage, pageSize, userName, name, createDate}) =>
-  ajax(BASE_URL + `/user/show`, {currentPage, pageSize, userName, name, createDate}, 'POST')
+export const repUsers = ({
+                           currentPage, pageSize, userName, name,
+                           createDate, pwdStatus, landingTime,
+                           effectiveDate, computerName, accountStatus,mobilePhone,rName,pwdAlways,uAlways
+                         }) =>
+  ajax(BASE_URL + `/user/show`, {
+    currentPage, pageSize, userName, name,
+    createDate, pwdStatus, landingTime,
+    effectiveDate, computerName, accountStatus,mobilePhone,rName,pwdAlways,uAlways
+  }, 'POST')
 
 //通过menu_id查询table头信息
 export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
@@ -51,12 +59,19 @@ export const repMenuRole = (rid) => ajax(BASE_URL + `/menu/role/menu`, {rid})
 export const repGetMenus = ({rid, menuIds, menuFlg}) => ajax(BASE_URL + '/rm/upMenus', {rid, menuIds, menuFlg}, 'POST')
 
 //更新用户信息
-export const repUpUserInfo = ({pwd, accountStatus, uid, pwdStatus, effectiveDate, uName, checkedUpPwd, checkedPwdAlways, checkedUserAlways,name}) => ajax(BASE_URL + `/user/upUserInfo`,
-  {pwd, accountStatus, uid, pwdStatus, effectiveDate, uName, checkedUpPwd, checkedPwdAlways, checkedUserAlways,name}, 'POST')
-
-//获取单个用户基本信息
-
-export const repSingleUser = () => ajax(BASE_URL + `/user/getUser`)
+export const repUpUserInfo = ({pwd, accountStatus, uid, pwdStatus, effectiveDate, uName, checkedUpPwd, checkedPwdAlways, checkedUserAlways, name}) => ajax(BASE_URL + `/user/upUserInfo`,
+  {
+    pwd,
+    accountStatus,
+    uid,
+    pwdStatus,
+    effectiveDate,
+    uName,
+    checkedUpPwd,
+    checkedPwdAlways,
+    checkedUserAlways,
+    name
+  }, 'POST')
 
 // 查询一个角色下的所有用户跟 菜单
 export const repGetRoles = ({currentPage, pageSize}) => ajax(BASE_URL + '/role/getRoles', {
@@ -130,7 +145,7 @@ export const repSaveUserInfo = ({
 //新增角色
 export const repAdRole = ({rolesId, uid}) => ajax(BASE_URL + '/ur/addRole', {rolesId, uid}, 'POST')
 //移除角色信息
-export const repDelRole=({rolesId,uid}) =>ajax(BASE_URL+'/ur/delRole',{rolesId,uid},'POST')
+export const repDelRole = ({rolesId, uid}) => ajax(BASE_URL + '/ur/delRole', {rolesId, uid}, 'POST')
 //新增菜单关联表头字段
 export const repAddHeadMenu = ({mId, thIds}) => ajax(BASE_URL + '/hm/saveHeadMenu', {mId, thIds}, 'POST')
 

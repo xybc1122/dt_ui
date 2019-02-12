@@ -16,7 +16,7 @@
       <el-form-item label="员工:" prop="staffValue" class="staff">
         <el-select clearable value="" v-model="addForm.staffValue" style="width: 250px">
           <el-option v-for="(item,index) in staffStatusOptions" :key="index" :label="item.employeeName"
-                     :value="item"></el-option>
+                     :value="item.sId"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="用户有效期:" prop="effectiveDate" class="date1">

@@ -1,7 +1,7 @@
 <template>
   <div id="Account">
     <!--多选输入框选择输入-->
-    <div id="printCheck">
+    <div id="printCheck" v-if="isTableTitle">
       <div class="check1">
         <el-select v-model="userValue" clearable placeholder="用户信息选择" @change="getValue" value="">
           <el-option
@@ -13,18 +13,22 @@
         </el-select>
       </div>
       <div class="check2">
-        <el-input v-show="msgInput===7" v-model="user.uName" placeholder="请输入账号"
-                  prefix-icon="el-icon-search" clearable></el-input>
+        <el-input v-show="msgInput===7" v-model="user.userName" placeholder="请输入账号"
+                  prefix-icon="el-icon-search" clearable :maxlength="i_max_length"></el-input>
         <el-input v-show="msgInput===8" v-model="user.name" placeholder="请输入姓名"
-                  prefix-icon="el-icon-search" clearable></el-input>
-        <el-input v-show="msgInput===10" v-model="user.role" placeholder="请输入角色名称"
-                  prefix-icon="el-icon-search" clearable></el-input>
-        <el-input v-show="msgInput===14" v-model="user.computer_name" placeholder="请输入计算机名"
-                  prefix-icon="el-icon-search" clearable></el-input>
-        <el-input v-show="msgInput===12" v-model="user.phone_status" placeholder="请输入账号状态"
-                  prefix-icon="el-icon-search" clearable></el-input>
-        <el-input v-show="msgInput===9" v-model="user.phone" placeholder="请输入手机号"
-                  prefix-icon="el-icon-search" clearable></el-input>
+                  prefix-icon="el-icon-search" clearable :maxlength="i_max_length"></el-input>
+        <el-input v-show="msgInput===10" v-model="user.rName" placeholder="请输入角色名称"
+                  prefix-icon="el-icon-search" clearable :maxlength="i_max_length"></el-input>
+        <el-input v-show="msgInput===14" v-model="user.computerName" placeholder="请输入计算机名"
+                  prefix-icon="el-icon-search" clearable :maxlength="i_max_length"></el-input>
+
+        <el-select v-show="msgInput===12" v-model="user.accountStatus" value="" laceholder="请输入账号状态">
+          <el-option v-for="(item,index) in accountStatusOptions" :key="index" :label="item.name"
+                     :value="item.id"></el-option>
+        </el-select>
+
+        <el-input v-show="msgInput===9" v-model="user.mobilePhone" placeholder="请输入手机号"
+                  prefix-icon="el-icon-search" clearable :maxlength="i_max_length"></el-input>
         <div class="block" v-show="msgInput===11">
           <el-date-picker
             v-model="user.createDate"
@@ -33,9 +37,11 @@
             placeholder="选择日期时间">
           </el-date-picker>
         </div>
-        <div class="block" v-show="msgInput===51">
+        <!-- `checked` 为 true 或 false -->
+        <el-checkbox v-show="msgInput===51" v-model="user.pwdAlways" @change="pwd_always_events">始终有效</el-checkbox>
+        <div class="block" v-if="user.pwdAlways===false   && msgInput===51">
           <el-date-picker
-            v-model="user.pwdDate"
+            v-model="user.pwdStatus"
             type="datetime"
             value-format="timestamp"
             placeholder="选择密码有效期">
@@ -43,15 +49,17 @@
         </div>
         <div class="block" v-show="msgInput===13">
           <el-date-picker
-            v-model="user.recent_Landing"
+            v-model="user.landingTime"
             type="datetime"
             value-format="timestamp"
             placeholder="选择最近登陆时间">
           </el-date-picker>
         </div>
-        <div class="block" v-show="msgInput===50">
+        <!-- `checked` 为 true 或 false -->
+        <el-checkbox v-show="msgInput===50" v-model="user.uAlways" @change="user_always_events">始终有效</el-checkbox>
+        <div class="block" v-show="user.uAlways===false && msgInput===50">
           <el-date-picker
-            v-model="user.validity_Period"
+            v-model="user.effectiveDate"
             type="datetime"
             value-format="timestamp"
             placeholder="选择用户有效期">
@@ -63,20 +71,31 @@
         <el-button type="primary" icon="el-icon-search" @click="searchUser">查询</el-button>
         <el-button type="primary" @click="reset">重置</el-button>
       </div>
-      <div style="padding-top: 30px">
-        <el-tag v-show="user.uName!==''" closable @close="cUserName()">账号:{{user.uName}}</el-tag>
+      <!-- 显示输入参数div-->
+      <div style="padding-top: 30px" class="box-card">
+        <el-tag v-show="user.userName!==''" closable @close="cUserName()">账号:{{user.userName}}</el-tag>
         <el-tag v-show="user.name!==''" closable @close="cName()">姓名:{{user.name}}</el-tag>
-        <el-tag v-show="user.role!==''" closable @close="cRole()">角色名称:{{user.role}}</el-tag>
-        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
-        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
-        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
-        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
-        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
-        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
-        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
-        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
-        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
-        <el-tag v-show="user.phone!==''" closable @close="cPhone()">手机号:{{user.phone}}</el-tag>
+        <el-tag v-show="user.rName!==''" closable @close="cRole()">角色名称:{{user.rName}}</el-tag>
+        <el-tag v-show="user.createDate!==''" closable @close="cCreate()">创建时间:{{user.createDate | date-format}}
+        </el-tag>
+        <el-tag v-show="user.pwdAlways" closable @close="cPwdAlways()">密码有效期:始终有效</el-tag>
+        <el-tag v-show="user.pwdStatus!=='' && !user.pwdAlways" closable @close="cPwdDate()">密码有效期:{{user.pwdStatus |
+          date-format}}
+        </el-tag>
+        <el-tag v-show="user.uAlways" closable @close="cUAlways()">用户有效期:始终有效</el-tag>
+        <el-tag v-show="user.effectiveDate!=='' && !user.uAlways" closable @close="cUDate()">用户有效期:{{user.effectiveDate
+          |
+          date-format}}
+        </el-tag>
+        <el-tag v-show="user.landingTime!==''" closable @close="cLanding()">最近登陆时间:{{user.landingTime |
+          date-format}}
+        </el-tag>
+        <el-tag v-show="user.accountStatus!==''" closable @close="cUStatus()">
+          账号状态:{{user.accountStatus === 0 ? '正常' : user.accountStatus === 1 ? '冻结' : user.accountStatus === 2 ? '禁用' :
+          '无条件'}}
+        </el-tag>
+        <el-tag v-show="user.mobilePhone!==''" closable @close="cPhone()">手机号:{{user.mobilePhone}}</el-tag>
+        <el-tag v-show="user.computerName!==''" closable @close="cComputer()">计算机名:{{user.computerName}}</el-tag>
       </div>
     </div>
     <!--table表格显示-->
@@ -126,7 +145,7 @@
             </template>
           </el-table-column>
           <el-table-column v-if="title.topType==='account_status'" :label="title.headName" width="180"
-                           :formatter="accountStatus"></el-table-column>
+                           :formatter="account"></el-table-column>
           <el-table-column v-if="title.topType==='landing_time'" :label="title.headName" width="180">
             <template slot-scope="scope">
               <i class="el-icon-time"></i>
@@ -137,27 +156,29 @@
           </el-table-column>
         </template>
       </el-table>
-      <el-button type="success" icon="el-icon-edit" size="mini" @click="upUserInfo">修改
-      </el-button>
-      <el-button type="info" icon="el-icon-delete" size="mini" @click="delUserInfo">
-        删除
-      </el-button>
-      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUserForm">
-        新增
-      </el-button>
-      <el-button type="warning" size="mini" @click="delUserForm">
-        删除记录
-      </el-button>
-      <div class="block" style="display: inline-block">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="user.currentPage"
-          :page-sizes="user.page_sizes"
-          :page-size="user.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="user.total_size">
-        </el-pagination>
+      <div v-if="isTableTitle">
+        <el-button type="success" icon="el-icon-edit" size="mini" @click="upUserInfo">修改
+        </el-button>
+        <el-button type="info" icon="el-icon-delete" size="mini" @click="delUserInfo">
+          删除
+        </el-button>
+        <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUserForm">
+          新增
+        </el-button>
+        <el-button type="warning" size="mini" @click="delUserForm">
+          删除记录
+        </el-button>
+        <div class="block" style="display: inline-block">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page.sync="user.currentPage"
+            :page-sizes="user.page_sizes"
+            :page-size="user.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="user.total_size">
+          </el-pagination>
+        </div>
       </div>
     </div>
     <!--隐藏新增用户记录from表单-->
@@ -172,7 +193,6 @@
   import {
     repHead,
     repUsers,
-    repSingleUser,
     repDelUserInfo,
   } from '../../api'
   import message from '../../utils/Message'
@@ -186,36 +206,45 @@
   export default {
     data () {
       return {
+        i_max_length: 20,//设置输入款最大长度
         msgInput: '',//当选择后获得第一个下拉框的id
         inputValue: '',//序号
+        isTableTitle: false, //如果table表头的长度是 0
         tableTitle: [],//表头信息
         tableData: [],//表信息
         userValue: '', //下拉框的model
         upSelection: [], //更新按钮数组收集
         saveFormValue: false,//新增隐藏form
         delFormValue: false,//删除历史记录 隐藏form
-        singleUser: {},//查询一个单用户信息
         user: {
-          uName: '',//账号名
+          userName: '',//账号名
           name: '',//用户名
-          role: '',//角色
-          pwd: '',//修改密码
-          i_pwd: '',//输入密码
-          e_pwd: '',//确认密码
-          computer_name: '',//计算机名
-          phone_status: '',//状态
-          phone: '',//手机
+          rName: '',//角色
+          computerName: '',//计算机名
+          mobilePhone: '',//手机
           landingTime: '',//登陆时间
           createDate: '',//创建时间
-          pwdDate: '',//密码有效期
-          recent_Landing: '',//最近登陆
-          validity_Period: '',//用户有效期
-          accountStatus: '',
+          pwdStatus: '',//密码有效期
+          effectiveDate: '',//用户有效期
+          accountStatus: '',//用户状态
           currentPage: 1,//当前页
           total_size: 0,//总的页
           pageSize: 5,//显示最大的页
           page_sizes: [5, 10, 15, 20, 25],
-        }
+          pwdAlways: false, //是否勾选始终密码始终有效
+          uAlways: false  //是否勾选密码始终有效
+        },
+        accountStatusOptions: [
+          {
+            id: 0,
+            name: '正常'
+          }, {
+            id: 1,
+            name: '冻结'
+          }, {
+            id: 2,
+            name: '禁用'
+          }],
       }
     },
     components: {
@@ -225,18 +254,19 @@
     },
     async mounted () {
       let loadingInstance = loading.loading_dom('加载中', document.getElementById('Account'))
-      //获得用户信息
-      const resultSingleUser = await repSingleUser()
-      if (resultSingleUser.code === 200) {
-        this.singleUser = resultSingleUser.data
-        //const roles = resultSingleUser.data.roles
-      }
       //查询获得table表的 头信息
       const resultHead = await
         repHead(this.$route.params.id)
       if (resultHead.code === 200) {
+        if (resultHead.data.length === 0) {
+          //如果是0 就全部不显示
+          loadingInstance.close()
+          return
+        }
+        this.isTableTitle = true
         this.tableTitle = resultHead.data
       }
+
       var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
       const resultUsers = await repUsers(userPage)
       if (resultUsers.code === 200) {
@@ -251,8 +281,8 @@
       //分页
       async handleSizeChange (val) {
         this.user.pageSize = val
-        var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-        const resultUsers = await repUsers(userPage)
+
+        const resultUsers = await repUsers(this.user)
         if (resultUsers.code === 200) {
           //赋值 然后显示
           this.pageUser(resultUsers)
@@ -260,16 +290,15 @@
       },
       //val=当前页 分页
       async handleCurrentChange (val) {
-        var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
         //分页查询 传一个当前页,显示最大的页,一个userInfo对象
-        const resultUsers = await repUsers(userPage)
+        const resultUsers = await repUsers(this.user)
         if (resultUsers.code === 200) {
           //赋值 然后显示
           this.pageUser(resultUsers)
         }
       },
       //table 账号状态 转换显示
-      accountStatus: function (row) {
+      account: function (row) {
         return row.accountStatus === 0 ? '正常' : row.accountStatus === 1 ? '冻结' : row.accountStatus === 2 ? '禁用' : ''
       },
       //点击选项 Checkbox 按钮 获得val赋值给 upSelection
@@ -305,12 +334,6 @@
           const resultDel = await repDelUserInfo(uidIds)
           if (resultDel.code === 200 && resultDel.data >= 1) {
             message.successMessage('删除成功!')
-            var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-            const resultUsers = await repUsers(userPage)
-            if (resultUsers.code === 200) {
-              //赋值 然后显示
-              this.pageUser(resultUsers)
-            }
           }
           else {
             message.errorMessage('删除失败!')
@@ -335,22 +358,76 @@
 
       //点击查询获得输入框的value
       async searchUser () {
+        // console.log(this.user)
         const resultUsers = await repUsers(this.user)
         if (resultUsers.code === 200) {
           //赋值 然后显示
           this.pageUser(resultUsers)
         }
       },
+      //触发密码始终有效
+      pwd_always_events (value) {
+        if (value) {
+          this.user.pwdStatus = ''
+        }
+      },
+      //触发用户始终有效
+      user_always_events (value) {
+        if (value) {
+          this.user.effectiveDate = ''
+        }
+      },
       //重置
       reset () {
-        this.user.uName = ''
+        this.user.userName = ''
         this.user.name = ''
-        this.user.role = ''
-        this.user.phone = ''
+        this.user.rName = ''
+        this.user.mobilePhone = ''
+        this.user.computerName = ''//计算机名
+        this.user.landingTime = ''//登陆时间
+        this.user.createDate = ''//创建时间
+        this.user.pwdStatus = ''//密码有效期
+        this.user.effectiveDate = ''//用户有效期
+        this.user.accountStatus = ''//用户状态
+        this.user.pwdAlways = false//是否勾选始终密码始终有效
+        this.user.uAlways = false  //是否勾选密码始终有效
       },
-      //关闭 属性重置
+      //关闭 某属性
       cUserName () {
-        this.user.uName = ''
+        this.user.userName = ''
+      },
+      cName () {
+        this.user.name = ''
+      },
+      cRole () {
+        this.user.rName = ''
+      },
+      cCreate () {
+        this.user.createDate = ''
+      },
+      cPwdDate () {
+        this.user.pwdStatus = ''
+      },
+      cPwdAlways () {
+        this.user.pwdAlways = false
+      },
+      cUAlways () {
+        this.user.uAlways = false
+      },
+      cUDate () {
+        this.user.effectiveDate = ''
+      },
+      cLanding () {
+        this.user.landingTime = ''
+      },
+      cUStatus () {
+        this.user.accountStatus = ''
+      },
+      cPhone () {
+        this.user.mobilePhone = ''
+      },
+      cComputer () {
+        this.user.computerName = ''
       },
       //通用分页节省代码
       pageUser (resultUsers) {
@@ -395,6 +472,12 @@
   /*表格*/
   #userTable {
     margin-top: 50px;
+  }
+
+  .box-card {
+    float: right;
+    width: 500px;
+
   }
 
   .el-tooltip__popper {

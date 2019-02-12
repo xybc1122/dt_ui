@@ -2,83 +2,9 @@
 <template>
   <!--隐藏修改from表单-->
   <el-dialog title="用户信息修改" :visible.sync="upFormValue" width="800px">
-    <div style="margin-left: 80px;margin-bottom: 20px">
-      <el-button @click="userInfo" style="margin-left: 0px;border-left: 0px" :class="{changeColor:uColor}">用户信息
-      </el-button>
-      <el-button @click="roleInfo" style=";float: left" :class="{changeColor:rColor}">角色信息</el-button>
-    </div>
-    <el-form :model="userForm" ref="userForm" :rules="rules" label-width="92px">
-      <template v-if="user_Info" v-for="(title ,index) in tableTitle">
-        <el-form-item v-if="title.topType==='uName'" :label="title.headName" style="width: 350px"
-                      class="user_margin_left" prop="p">
-          <el-tag>{{userForm.uName}}</el-tag>
-        </el-form-item>
-        <el-form-item v-if="title.topType==='phone'" :label="title.headName" style="width: 350px"
-                      class="state user_margin_left" prop="uMobilePhone">
-          <el-input clearable style="width:150px" v-model="userForm.uMobilePhone"></el-input>
-        </el-form-item>
-        <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px"
-                      class="user_margin_left" prop="name">
-          <el-input clearable style="width: 150px" v-model="userForm.name"></el-input>
-        </el-form-item>
-        <el-form-item :label="title.headName" v-if="title.topType==='u_eff_date'" prop="effectiveDate" class="date3">
-          <div class="block">
-            <el-date-picker
-              style="width: 250px"
-              type="datetime"
-              :disabled="isUserFlg"
-              @change="changeSearchForUser" v-model="userForm.effectiveDate">
-            </el-date-picker>
-            <el-checkbox @change="checkedUser" v-model="userForm.checkedUserAlways" :disabled="isCheFlgUser">用户始终有效
-            </el-checkbox>
-          </div>
-        </el-form-item>
-        <el-form-item :label="title.headName" prop="pwdStatus" v-if="title.topType==='p_eff_date'" class="date3">
-          <div class="block">
-            <el-date-picker
-              style="width: 250px"
-              type="datetime"
-              :disabled="isAlwaysFlg"
-              @change="blurSearchForAlways" v-model="userForm.pwdStatus">
-            </el-date-picker>
-            <el-checkbox @change="checkedAlways" v-model="userForm.checkedPwdAlways" :disabled="isCheFlgAlways">密码始终有效
-            </el-checkbox>
-          </div>
-        </el-form-item>
-
-        <el-form-item v-if="title.topType==='account_status'" :label="title.headName" class="state"
-                      prop="accountStatus">
-          <el-select v-model="userForm.accountStatus" clearable value="" style="width: 250px">
-            <el-option v-for="(item,index) in accountStatusOptions" :key="index" :label="item.name"
-                       :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-      </template>
-      <el-form-item v-if="user_Info" label="密码" style="width: 350px;">
-        <el-switch
-          @change="switchPwd"
-          v-model="isPwd"
-          active-color="#13ce66"
-          inactive-color="#ff4949">
-        </el-switch>
-      </el-form-item>
-      <el-form-item v-if="isPwd" label="新密码" prop="pwd" class="pwd3">
-        <el-input clearable style="width: 250px" v-model="userForm.pwd" type="password" maxlength="20"></el-input>
-        <el-checkbox v-model="userForm.checkedUpPwd">首次登陆修改密码</el-checkbox>
-
-      </el-form-item>
-      <el-form-item v-if="isPwd" label="确认密码" prop="confirmPwd"
-                    class="pwd3">
-        <el-input clearable style="width: 250px" v-model="userForm.confirmPwd" type="password"></el-input>
-        <el-checkbox v-model="userForm.checkedPwd">密码满足复杂度要求</el-checkbox>
-      </el-form-item>
-      <el-form-item v-if="user_Info">
-        <el-button @click="resetForm('userForm')">重置</el-button>
-        <el-button @click="upFormValue = false">取 消</el-button>
-        <el-button type="primary" @click="saveUserInfo('userForm')" :disabled="isButton">确 定</el-button>
-      </el-form-item>
-      <el-form-item v-if="role_info" prop="rolesId">
-        <div class="transfer2">
+    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+      <el-tab-pane label="用户信息" name="first">
+        <div class="transfer2" style="margin-left: 80px;margin-bottom: 20px">
           <el-transfer
             filterable
             :filter-method="filterMethod"
@@ -91,8 +17,84 @@
             :button-texts="['移除', '添加']">
           </el-transfer>
         </div>
-      </el-form-item>
-    </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="角色信息" name="second">
+        <el-form :model="userForm" ref="userForm" :rules="rules" label-width="92px">
+          <template v-for="(title ,index) in tableTitle">
+            <el-form-item v-if="title.topType==='uName'" :label="title.headName" style="width: 350px"
+                          class="user_margin_left" prop="uName">
+              <el-tag>{{userForm.uName}}</el-tag>
+            </el-form-item>
+
+            <el-form-item v-if="title.topType==='phone'" :label="title.headName" style="width: 350px"
+                          class="state user_margin_left" prop="uMobilePhone">
+              <el-input clearable style="width:150px" v-model="userForm.uMobilePhone"></el-input>
+            </el-form-item>
+
+            <el-form-item v-if="title.topType==='name'" :label="title.headName" style="width: 200px"
+                          class="user_margin_left" prop="name">
+              <el-input clearable style="width: 150px" v-model="userForm.name"></el-input>
+            </el-form-item>
+            <el-form-item :label="title.headName" v-if="title.topType==='u_eff_date'" prop="effectiveDate"
+                          class="date3">
+              <div class="block">
+                <el-date-picker
+                  style="width: 250px"
+                  type="datetime"
+                  :disabled="isUserFlg"
+                  @change="changeSearchForUser" v-model="userForm.effectiveDate">
+                </el-date-picker>
+                <el-checkbox @change="checkedUser" v-model="userForm.checkedUserAlways" :disabled="isCheFlgUser">用户始终有效
+                </el-checkbox>
+              </div>
+            </el-form-item>
+            <el-form-item :label="title.headName" prop="pwdStatus" v-if="title.topType==='p_eff_date'" class="date3">
+              <div class="block">
+                <el-date-picker
+                  style="width: 250px"
+                  type="datetime"
+                  :disabled="isAlwaysFlg"
+                  @change="blurSearchForAlways" v-model="userForm.pwdStatus">
+                </el-date-picker>
+                <el-checkbox @change="checkedAlways" v-model="userForm.checkedPwdAlways" :disabled="isCheFlgAlways">
+                  密码始终有效
+                </el-checkbox>
+              </div>
+            </el-form-item>
+
+            <el-form-item v-if="title.topType==='account_status'" :label="title.headName" class="state"
+                          prop="accountStatus">
+              <el-select v-model="userForm.accountStatus" clearable value="" style="width: 250px">
+                <el-option v-for="(item,index) in accountStatusOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+          </template>
+          <el-form-item label="密码" style="width: 350px;">
+            <el-switch
+              @change="switchPwd"
+              v-model="isPwd"
+              active-color="#13ce66"
+              inactive-color="#ff4949">
+            </el-switch>
+          </el-form-item>
+          <el-form-item v-if="isPwd" label="新密码" prop="pwd" class="pwd3">
+            <el-input clearable style="width: 250px" v-model="userForm.pwd" type="password" maxlength="20"></el-input>
+            <el-checkbox v-model="userForm.checkedUpPwd">首次登陆修改密码</el-checkbox>
+
+          </el-form-item>
+          <el-form-item v-if="isPwd" label="确认密码" prop="confirmPwd"
+                        class="pwd3">
+            <el-input clearable style="width: 250px" v-model="userForm.confirmPwd" type="password"></el-input>
+            <el-checkbox v-model="userForm.checkedPwd">密码满足复杂度要求</el-checkbox>
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="upFormValue = false">取 消</el-button>
+            <el-button type="primary" @click="saveUserInfo('userForm')" :disabled="isButton">确 定</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+    </el-tabs>
   </el-dialog>
 </template>
 
@@ -172,24 +174,20 @@
         }
       }
       return {
+        activeName: 'first',
         isButton: true, //数据没变化的时候 不能点确定按钮
-        rColor: false, //显示角色信息颜色
-        uColor: false, //显示用户信息颜色
-        user_Info: false,//显示用户页面
-        role_info: true,//显示角色页面
         tableTitle: [],//表头信息
-        tableData: [],//表信息
         upFormValue: false,
         upSelection: [], //更新按钮数组收集
         rolesId: [],//角色id
-        rolesData: [],
+        rolesData: [],//角色数据
         uRId: {},//点击保存的时候处理的数据
         isCheFlgAlways: false,//密码始终有效 判断标识
         isCheFlgUser: false,//用户始终有效 判断标识
         isAlwaysFlg: false,//密码有效期 判断标识
         isUserFlg: false,//用户有效期 判断标识
-        isPwd: false,
-        oldUserForm: {},
+        isPwd: false,//是否点开修改密码
+        oldUserForm: {}, //老的from表单记录
         userForm: {
           uid: '',//用户id
           uName: '',//账号
@@ -242,66 +240,25 @@
     //监视form表单里发生的变化
     watch: {
       //姓名
-      name (newValue, oldValue) {
-        //如果老的值是空的说明没任何改变
-        if (oldValue === '') {
-          return
-        }
-        if (newValue !== this.oldUserForm.name) {
-          this.isButton = false
-          return
-        }
-        this.isButton = true
+      name (newValue) {
+        this.monitoringChange(newValue, this.oldUserForm.name)
       },
       //手机
-      uMobilePhone (newValue, oldValue) {
-        //如果老的值是空的说明没任何改变
-        if (oldValue === '') {
-          return
-        }
-        if (newValue !== this.oldUserForm.mobilePhone) {
-          this.isButton = false
-          return
-        }
-        this.isButton = true
+      uMobilePhone (newValue) {
+        this.monitoringChange(newValue, this.oldUserForm.mobilePhone)
       },
-      //状态
-      accountStatus (newValue, oldValue) {
-        //如果老的值是空的说明没任何改变
-        if (oldValue === '') {
-          return
-        }
-        if (newValue !== this.oldUserForm.accountStatus) {
-          this.isButton = false
-          return
-        }
-        this.isButton = true
+      //账号状态
+      accountStatus (newValue) {
+        this.monitoringChange(newValue, this.oldUserForm.accountStatus)
       },
       //密码有效期
-      // pwdStatus (newValue, oldValue) {
-      //   //如果老的值是空的说明没任何改变
-      //   if (oldValue === '') {
-      //     return
-      //   }
-      //   console.log(this.oldUserForm)
-      //   if (newValue !== this.oldUserForm.pwdStatus) {
-      //     this.isButton = false
-      //     return
-      //   }
-      //   this.isButton = true
-      // },
+      pwdStatus (newValue) {
+        this.monitoringChange(newValue, this.oldUserForm.pwdStatus)
+      },
       //用户有效期
-      // accountStatus (newValue, oldValue) {
-      //   //如果老的值是空的说明没任何改变
-      //   if (oldValue === '') {
-      //     return
-      //   }
-      //   if (newValue !== this.oldUserForm.accountStatus) {
-      //     this.isButton = false
-      //     return
-      //   }
-      //   this.isButton = true
-      // },
+      effectiveDate (newValue, oldValue) {
+        this.monitoringChange(newValue, this.oldUserForm.effectiveDate)
+      }
     },
     //深度监视
     computed: {
@@ -314,8 +271,11 @@
       accountStatus () {
         return this.userForm.accountStatus
       },
-      pwdStatus(){
+      pwdStatus () {
         return this.userForm.pwdStatus
+      },
+      effectiveDate () {
+        return this.userForm.effectiveDate
       }
     },
     async mounted () {
@@ -328,22 +288,13 @@
       //获得传来的标识 显示 隐藏form
       PubSub.subscribe('upSelection', (msg, upSelection) => {
         //每次点击初始化
-        //判断哪个是true 进行显示
-        if (this.user_Info) {
-          this.rColor = false
-          this.uColor = true
-        }
-        if (this.role_info) {
-          this.uColor = false
-          this.rColor = true
-        }
         this.isCheFlgAlways = false//密码始终有效 判断标识
         this.isCheFlgUser = false//用户始终有效 判断标识
         this.isAlwaysFlg = false//密码有效期 判断标识
         this.isUserFlg = false//用户有效期 判断标识
         this.userForm.checkedUserAlways = false //用户始终有效  checked
         this.userForm.checkedPwdAlways = false //密码始终有效 checked
-        console.log(upSelection)
+
         const userSaveSelection = upSelection
         if (userSaveSelection.length <= 0) {
           message.errorMessage('必须选中一条修改')
@@ -412,11 +363,18 @@
       })
     },
     methods: {
+      //tabs标签页
+      handleClick (tab, event) {
+        // console.log(tab, event);
+      },
       switchPwd () {
         if (!this.isPwd) {
+          this.isButton=true
           this.userForm.pwd = ''//密码
           this.userForm.confirmPwd = ''
+          return
         }
+        this.isButton=false
       },
       //确认后更新用户信息操作
       async saveUserInfo (formName) {
@@ -436,20 +394,16 @@
               }
             })
           } else {
-            console.log('error submit!!')
+            message.errorMessage('表单验证不通过')
             return false
           }
         })
-      },
-      //from表单重置
-      resetForm (formName) {
-        this.isPwd = false
-        this.$refs[formName].resetFields()
       },
       //通过关键字搜索
       filterMethod (query, item) {
         return item.roles.rName.indexOf(query) > -1
       },
+
       //角色框移动信息
       async transferChange (value, direction, movedKeys) {
         const uid = this.userForm.uid
@@ -467,20 +421,6 @@
           console.log(resultAdd)
         }
       },
-      //点击用户信息
-      userInfo () {
-        this.rColor = false
-        this.uColor = true
-        this.user_Info = true
-        this.role_info = false
-      },
-      //点击角色信息
-      roleInfo () {
-        this.uColor = false
-        this.rColor = true
-        this.role_info = true
-        this.user_Info = false
-      },
       //获得 checkedAlways flg如果=true 就禁用input 输入框
       checkedAlways (flg) {
         this.isAlwaysFlg = flg === true
@@ -497,6 +437,14 @@
       changeSearchForUser () {
         this.isCheFlgUser = !!this.userForm.effectiveDate
       },
+      //封装 监视
+      monitoringChange (newValue, value) {
+        if (newValue !== value) {
+          this.isButton = false
+          return
+        }
+        this.isButton = true
+      }
     }
   }
 </script>
