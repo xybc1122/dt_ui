@@ -1,4 +1,3 @@
-
 export default {
   /**
    * 封装userPage对象
@@ -10,8 +9,19 @@ export default {
     const currentPage = current_page
     const pageSize = page_size
     var userPage
-    userPage={currentPage,pageSize}
+    userPage = {currentPage, pageSize}
     return userPage
+  },
+  /**
+   * 封装赋值信息
+   * @param result
+   * @param pageData
+   */
+  pageInfo (result, pageData) {
+    const data = result.data
+    pageData.tableData = data.dataList
+    pageData.currentPage = data.current_page
+    pageData.total_size = data.total_size
   }
 
 }

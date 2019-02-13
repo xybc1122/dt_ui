@@ -101,7 +101,7 @@
     <!--table表格显示-->
     <div id="userTable">
       <el-table
-        :data="tableData"
+        :data="user.tableData"
         style="width: 100%"
         height="500"
         stripe
@@ -196,7 +196,7 @@
     repDelUserInfo,
   } from '../../api'
   import message from '../../utils/Message'
-  import utils from '../../utils/PageUtils'
+  import pUtils from '../../utils/PageUtils'
   import UserItemAdd from '../../components/UserItem/UserItemAdd'
   import UserItemUp from '../../components/UserItem/UserItemUp'
   import UserItemDel from '../../components/UserItem/UserItemDel'
@@ -211,12 +211,12 @@
         inputValue: '',//序号
         isTableTitle: false, //如果table表头的长度是 0
         tableTitle: [],//表头信息
-        tableData: [],//表信息
         userValue: '', //下拉框的model
         upSelection: [], //更新按钮数组收集
         saveFormValue: false,//新增隐藏form
         delFormValue: false,//删除历史记录 隐藏form
         user: {
+          tableData: [],//表信息
           userName: '',//账号名
           name: '',//用户名
           rName: '',//角色
@@ -266,13 +266,11 @@
         this.isTableTitle = true
         this.tableTitle = resultHead.data
       }
-
-      var userPage = utils.getUserPage(this.user.currentPage, this.user.pageSize)
-      const resultUsers = await repUsers(userPage)
+      const resultUsers = await repUsers(this.user)
       if (resultUsers.code === 200) {
         console.log(resultUsers)
         //赋值 然后显示
-        this.pageUser(resultUsers)
+        pUtils.pageInfo(resultUsers,this.user)
       }
       loadingInstance.close()
     }
@@ -285,7 +283,7 @@
         const resultUsers = await repUsers(this.user)
         if (resultUsers.code === 200) {
           //赋值 然后显示
-          this.pageUser(resultUsers)
+          pUtils.pageInfo(resultUsers,this.user)
         }
       },
       //val=当前页 分页
@@ -294,7 +292,7 @@
         const resultUsers = await repUsers(this.user)
         if (resultUsers.code === 200) {
           //赋值 然后显示
-          this.pageUser(resultUsers)
+          pUtils.pageInfo(resultUsers,this.user)
         }
       },
       //table 账号状态 转换显示
@@ -361,7 +359,7 @@
         const resultUsers = await repUsers(this.user)
         if (resultUsers.code === 200) {
           //赋值 然后显示
-          this.pageUser(resultUsers)
+          pUtils.pageInfo(resultUsers,this.user)
           return
         }
         message.errorMessage(resultUsers.msg)
@@ -429,13 +427,6 @@
       },
       cComputer () {
         this.user.computerName = ''
-      },
-      //通用分页节省代码
-      pageUser (resultUsers) {
-        const dataUser = resultUsers.data
-        this.tableData = dataUser.dataList
-        this.user.currentPage = dataUser.current_page
-        this.user.total_size = dataUser.total_size
       }
     }
   }

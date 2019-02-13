@@ -30,8 +30,6 @@ export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
 //通过menuIds查询table头List集合
 export const repGetHead = ({menuIds}) => ajax(BASE_URL + '/getByHead', {menuIds}, 'POST')
 
-//通过一个mid查询 获取这个菜单拥有的头信息
-export const repShowByHead = (mId) => ajax(BASE_URL + `/showByHead`, {mId})
 
 //查询所有表头信息 然后service 层通过mid来区别对应的表头信息
 export const repFindByHeads = (mId) => ajax(BASE_URL + '/findHeads', {mId})
@@ -52,8 +50,7 @@ export const repUpMenuInfo = ({newMenu, idsMenu}) => ajax(BASE_URL + '/menu/up/m
 }, 'POST')
 //校验菜单是否已更新接口
 export const repCheckMenuToken = () => ajax(BASE_URL + `/menu/token/menu`)
-//通过角色查询菜单列表
-export const repMenuRole = (rid) => ajax(BASE_URL + `/menu/role/menu`, {rid})
+
 
 //通过角色id来获取菜单id
 export const repGetMenus = ({rid, menuIds, menuFlg}) => ajax(BASE_URL + '/rm/upMenus', {rid, menuIds, menuFlg}, 'POST')
@@ -167,9 +164,6 @@ export const repDelUploadInfo = (id) => ajax(BASE_URL + `/upload/delInfo`, {id})
 
 //上传成功后 发送数据给后台读数据
 export const repAddUploadInfoMysql = ({uploadSuccessList}) => ajax(BASE_URL + '/upload/addInfo', {uploadSuccessList}, 'POST')
-
-//实时请求上传数据 信息
-export const repGetUpInfoTime = (redIds) => ajax(BASE_URL + '/upload/timing', {redIds})
 
 //物流状态查询
 export const repGetLogisticsInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/logistics/info', {
