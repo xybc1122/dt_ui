@@ -4,7 +4,7 @@
   <el-dialog title="用户信息修改" :visible.sync="upFormValue" width="800px">
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
       <el-tab-pane label="用户信息" name="first">
-        <div class="transfer2" style="margin-left: 80px;margin-bottom: 20px">
+        <div class="transfer" style="margin-left: 80px;margin-bottom: 20px">
           <el-transfer
             filterable
             :filter-method="filterMethod"
@@ -41,6 +41,7 @@
                 <el-date-picker
                   style="width: 250px"
                   type="datetime"
+                  value-format="timestamp"
                   :disabled="isUserFlg"
                   @change="changeSearchForUser" v-model="userForm.effectiveDate">
                 </el-date-picker>
@@ -48,13 +49,14 @@
                 </el-checkbox>
               </div>
             </el-form-item>
-            <el-form-item :label="title.headName" prop="pwdStatus" v-if="title.topType==='p_eff_date'" class="date3">
+            <el-form-item :label="title.headName" prop="pwdAlwaysInput" v-if="title.topType==='p_eff_date'" class="date3">
               <div class="block">
                 <el-date-picker
                   style="width: 250px"
                   type="datetime"
+                  value-format="timestamp"
                   :disabled="isAlwaysFlg"
-                  @change="blurSearchForAlways" v-model="userForm.pwdStatus">
+                  @change="blurSearchForAlways" v-model="userForm.pwdAlwaysInput">
                 </el-date-picker>
                 <el-checkbox @change="checkedAlways" v-model="userForm.checkedPwdAlways" :disabled="isCheFlgAlways">
                   密码始终有效
@@ -155,7 +157,7 @@
           callback()
         }
       }
-      var pwdStatus = (rule, value, callback) => {
+      var pwdAlwaysInput = (rule, value, callback) => {
         if (this.userForm.checkedPwdAlways !== true) {
           if (value === '' || value === null) {
             callback(new Error('必须选择一个时间~'))
@@ -202,7 +204,7 @@
           checkedUpPwd: false, //首次登陆修改密码修改  checked
           checkedUserAlways: false, //用户始终有效  checked
           checkedPwdAlways: false, //密码始终有效 checked
-          pwdStatus: '', //密码有效期
+          pwdAlwaysInput: '', //密码有效期
           effectiveDate: '' //用户有效期
         },
         accountStatusOptions: [{
@@ -228,8 +230,8 @@
           effectiveDate: [
             {validator: effectiveDate, trigger: 'blur'}
           ],
-          pwdStatus: [
-            {validator: pwdStatus, trigger: 'blur'}
+          pwdAlwaysInput: [
+            {validator: pwdAlwaysInput, trigger: 'blur'}
           ],
           uMobilePhone: [
             {validator: uMobilePhone, trigger: 'blur'}
@@ -252,8 +254,8 @@
         this.monitoringChange(newValue, this.oldUserForm.accountStatus)
       },
       //密码有效期
-      pwdStatus (newValue) {
-        this.monitoringChange(newValue, this.oldUserForm.pwdStatus)
+      pwdAlwaysInput (newValue) {
+        this.monitoringChange(newValue, this.oldUserForm.pwdAlwaysInput)
       },
       //用户有效期
       effectiveDate (newValue, oldValue) {
@@ -271,8 +273,8 @@
       accountStatus () {
         return this.userForm.accountStatus
       },
-      pwdStatus () {
-        return this.userForm.pwdStatus
+      pwdAlwaysInput () {
+        return this.userForm.pwdAlwaysInput
       },
       effectiveDate () {
         return this.userForm.effectiveDate
@@ -315,14 +317,14 @@
           this.userForm['uMobilePhone'] = item.mobilePhone
           this.userForm['uid'] = item.uid
           this.userForm['rid'] = item.rId
-          this.userForm['pwdStatus'] = item.pwdStatus
+          this.userForm['pwdAlwaysInput'] = item.pwdStatus
           this.userForm['effectiveDate'] = item.effectiveDate
         })
         //密码有效期
-        if (this.userForm.pwdStatus === 0) {
+        if (this.userForm.pwdAlwaysInput === 0) {
           this.userForm.checkedPwdAlways = true
           this.isAlwaysFlg = true
-          this.userForm.pwdStatus = ''
+          this.userForm.pwdAlwaysInput = ''
         } else {
           this.userForm.checkedPwdAlways = false
           this.isCheFlgAlways = true
@@ -380,7 +382,7 @@
       async saveUserInfo (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log('submit')
+            console.log(this.userForm)
             const resultUserInfo = repUpUserInfo(this.userForm)
             resultUserInfo.then((result) => {
               console.log(resultUserInfo)
@@ -431,7 +433,7 @@
       },
       //blurSearchForAlways 失去焦点时 判断值是否为空 如果不为空 锁定按钮
       blurSearchForAlways () {
-        this.isCheFlgAlways = !!this.userForm.pwdStatus
+        this.isCheFlgAlways = !!this.userForm.pwdAlwaysInput
       },
       //blurSearchForUser 失去焦点时 判断值是否为空 如果不为空 锁定按钮
       changeSearchForUser () {
@@ -497,7 +499,7 @@
   }
 
   //自定义添加转移
-  .transfer2 {
+  .transfer {
     .el-transfer {
       .el-transfer__buttons {
         width: 150px;

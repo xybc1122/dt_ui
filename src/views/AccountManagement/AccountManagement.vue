@@ -358,12 +358,13 @@
 
       //点击查询获得输入框的value
       async searchUser () {
-        // console.log(this.user)
         const resultUsers = await repUsers(this.user)
         if (resultUsers.code === 200) {
           //赋值 然后显示
           this.pageUser(resultUsers)
+          return
         }
+        message.errorMessage(resultUsers.msg)
       },
       //触发密码始终有效
       pwd_always_events (value) {

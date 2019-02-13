@@ -102,6 +102,20 @@
   }
 </script>
 
-<style>
-
+<style lang="scss">
+  .el-transfer {
+    .el-transfer__buttons {
+      width: 150px;
+      .el-button.el-button--primary.is-disabled.el-transfer__button.is-with-texts {
+        margin-left: 0;
+        width: 89px;
+        font-family: "宋体";
+      }
+      .el-button.el-button--primary.el-transfer__button.is-with-texts {
+        margin-left: 0;
+        width: 89px;
+        font-family: "宋体";
+      }
+    }
+  }
 </style>

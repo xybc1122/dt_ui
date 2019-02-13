@@ -60,28 +60,28 @@
                            prop="userName"
                            sortable ></el-table-column>
         </template>
-        <el-table-column
-          fixed="right"
-          label="操作"
-          width="100">
-          <template slot-scope="scope">
-            <el-button v-if="tableTitle.length>0" @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-          </template>
-        </el-table-column>
       </el-table>
-      <div class="check3">
-        <span>{{rName}}</span>
-        <el-tree
-          :data="menuList"
-          :props="defaultProps"
-          accordion
-          @node-click="handleNodeClick" style="width: 500px">
-        </el-tree>
-      </div>
-      <div class="check4" style="width: 500px">
-        <p>拥有头信息</p>
-        <span>{{menuTableTitle.headName}}</span>
-      </div>
+      <!--<el-table-column-->
+        <!--fixed="right"-->
+        <!--:label="title.headName"-->
+        <!--width="100" v-if="title.topType==='operating'">-->
+        <!--<template slot-scope="scope">-->
+          <!--<el-button v-if="tableTitle.length>0" @click="handleClick(scope.row)" type="text" size="small">查看</el-button>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+      <!--<div class="check3">-->
+        <!--<span>{{rName}}</span>-->
+        <!--<el-tree-->
+          <!--:data="menuList"-->
+          <!--:props="defaultProps"-->
+          <!--accordion-->
+          <!--@node-click="handleNodeClick" style="width: 500px">-->
+        <!--</el-tree>-->
+      <!--</div>-->
+      <!--<div class="check4" style="width: 500px">-->
+        <!--<p>拥有头信息</p>-->
+        <!--<span>{{menuTableTitle.headName}}</span>-->
+      <!--</div>-->
       <div class="check5">
         <el-button type="success" icon="el-icon-edit" size="mini" @click="roleUp">修改
         </el-button>
@@ -171,7 +171,6 @@
       },
       //val=当前页 分页
       async handleCurrentChange (val) {
-        var userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
         //分页查询 传一个当前页,显示最大的页,一个userInfo对象
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection

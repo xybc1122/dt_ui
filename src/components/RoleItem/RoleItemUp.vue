@@ -3,16 +3,10 @@
     <el-dialog
       title="提示"
       :visible.sync="roleUpVisible"
-      @close='closeDialog'
       width="850px">
-      <div style="margin-left: 80px;margin-bottom: 20px">
-        <el-button @click="Role_info" style=";float: left">角色信息</el-button>
-        <el-button @click="Role_menu" style="margin-left: 0px;border-left: 0px">菜单信息</el-button>
-        <el-input v-model="roleFrom.rName" :disabled="true" class="role_input"></el-input>
-      </div>
-      <el-form v-if="role_Info" :model="roleFrom" ref="roleFrom" label-width="80px">
-        <el-form-item prop="usersId">
-          <div>
+      <el-tabs v-model="activeName" type="card">
+        <el-tab-pane label="配置角色信息" name="first">
+          <div class="transfer" style="margin-left: 80px;margin-bottom: 20px">
             <el-transfer
               filterable
               :filter-method="filterMethod"
@@ -25,43 +19,52 @@
               :button-texts="['移除', '添加']">
             </el-transfer>
           </div>
-        </el-form-item>
-      </el-form>
-      <div  v-if="role_Menu" id="role_up_from" style="float: right">
-        <el-tree
-          show-checkbox
-          :data="menuDateList"
-          node-key="menuId"
-          :default-expanded-keys="noUrlCheckedKeys"
-          :default-checked-keys="noUrlCheckedKeys"
-          @check="checkChange"
-          ref="tree"
-          :props="defaultProps">
-        </el-tree>
-        <el-switch
-          v-model="menuFlg"
-          active-text="添加菜单"
-          inactive-text="删除菜单">
-        </el-switch>
-        <el-button type="primary" @click="lookMenuHead" :disabled="isViewMenu">查看菜单下的表头信息</el-button>
-        <el-table
-          :data="menuTableTitleData"
-          border
-          style="width: 50%" v-if="menuHedaFlg">
-          <el-table-column prop="name" label="菜单名称" width="120"></el-table-column>
-          <el-table-column prop="headName" label="拥有的头信息" width="120" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="100">
-            <template slot-scope="scope">
-              <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <div v-if="role_Menu" slot="footer" class="dialog-footer">
-        <el-button @click="roleUpVisible = false">取 消</el-button>
-        <el-button  type="primary" @click="upMenuRole">确 定</el-button>
-      </div>
-
+        </el-tab-pane>
+        <el-tab-pane label="查看角色拥有的菜单信息" name="second">
+          <el-form :model="roleFrom" ref="roleFrom" label-width="80px">
+            <div id="role_up_from" style="float: right">
+              <el-tree
+                show-checkbox
+                :data="menuDateList"
+                node-key="menuId"
+                :default-expanded-keys="noUrlCheckedKeys"
+                :default-checked-keys="noUrlCheckedKeys"
+                @check="checkChange"
+                ref="tree"
+                :props="defaultProps">
+              </el-tree>
+              <el-tooltip content="查看信息" placement="top">
+                <el-button icon="el-icon-search" circle @click="lookMenuHead" :disabled="isViewMenu"></el-button>
+              </el-tooltip>
+              <el-tooltip content="关闭信息" placement="top">
+                <el-button icon="el-icon-close" circle @click="cMenuHead" :disabled="isCViewMenu"></el-button>
+              </el-tooltip>
+              <span style="padding-left: 25px">
+                <el-switch
+                  v-model="menuFlg"
+                  active-text="添加菜单"
+                  inactive-text="删除菜单">
+                </el-switch>
+                <el-button @click="roleUpVisible = false" circle>取 消</el-button>
+                <el-button type="primary" @click="upMenuRole" circle>确 定</el-button>
+              </span>
+              <el-table
+                :data="menuTableTitleData"
+                border
+                style="width: 50%" v-if="menuHedaFlg">
+                <el-table-column prop="name" label="菜单名称" width="120"></el-table-column>
+                <el-table-column prop="headName" label="拥有的头信息" width="120"
+                                 :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column fixed="right" label="操作" width="100">
+                  <template slot-scope="scope">
+                    <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
     </el-dialog>
     <MenuHeadItem/>
   </div>
@@ -76,8 +79,9 @@
   export default {
     data () {
       return {
-        role_Info:true,
-        role_Menu:false,
+        isEdit:false,
+        activeName: 'first',
+        isCViewMenu: true,//关闭菜单
         isViewMenu: true,//查看菜单
         menuHedaFlg: false,//table框的隐藏跟显示
         menuFlg: true,//选择删除 还是添加
@@ -106,6 +110,7 @@
         this.noUrlCheckedKeys = []
         this.menuTableTitleData = []
         this.menuHedaFlg = false
+        this.isCViewMenu = true
         const roleUpSelection = roleSelection
         if (roleUpSelection.length <= 0) {
           message.errorMessage('必须选中一条修改')
@@ -166,21 +171,6 @@
       MenuHeadItem
     },
     methods: {
-      //清空数据
-      closeDialog () {
-        this.isViewMenu = true
-        this.menuHedaFlg = false
-        this.menuFlg = true
-        this.urlMenList = []
-        this.newMenuList = []
-        this.checkedMenuList = []
-        this.menuDateList = []
-        this.menuTableTitleData = []
-        this.roleUpVisible = false
-        this.usersId = []
-        this.userData = []
-        this.noUrlCheckedKeys = []
-      },
       //通过关键字搜索
       filterMethod (query, item) {
         return item.users.userName.indexOf(query) > -1
@@ -203,6 +193,7 @@
       },
       //查看所有菜单头信息
       async lookMenuHead () {
+        this.isCViewMenu = false
         this.menuHedaFlg = true
         //获得当前选中的menuIds
         let keys = this.$refs.tree.getCheckedKeys()
@@ -217,6 +208,10 @@
           this.menuTableTitleData = resultHead.data
         }
       },
+      //关闭查看信息
+      cMenuHead () {
+        this.menuTableTitleData = []
+      },
       //indeterminate节点的子数有没有被选中
       async checkChange (data, daraArr) {
         console.log(data, daraArr)
@@ -230,20 +225,22 @@
       },
       //点击确认获得数据
       async upMenuRole () {
-        //获得当前选中的menuIds
-        let keys = this.$refs.tree.getCheckedKeys()
-        //获得当前半选中的menuIds
-        let half = this.$refs.tree.getHalfCheckedKeys()
-        keys.forEach((i) => {
-          half.push(i)
-        })
-        var menuIds = half.map(item => item).join()
-        const rid = this.roleFrom.rId
-        const menuFlg = this.menuFlg
-        const menuRole = {rid, menuIds, menuFlg}
-        const result = await repGetMenus(menuRole)
-        if (result.code === 200) {
-          this.roleUpVisible = false
+        if (confirm('请确认？')) {
+          //获得当前选中的menuIds
+          let keys = this.$refs.tree.getCheckedKeys()
+          //获得当前半选中的menuIds
+          let half = this.$refs.tree.getHalfCheckedKeys()
+          keys.forEach((i) => {
+            half.push(i)
+          })
+          var menuIds = half.map(item => item).join()
+          const rid = this.roleFrom.rId
+          const menuFlg = this.menuFlg
+          const menuRole = {rid, menuIds, menuFlg}
+          const result = await repGetMenus(menuRole)
+          if (result.code === 200) {
+            this.roleUpVisible = false
+          }
         }
       },
       //编辑
@@ -267,28 +264,21 @@
           }
         })
         this.noUrlCheckedKeys = noUrlMenuList
-      },
-      async Role_info(){
-        this.role_Info=true
-        this.role_Menu=false
-      },
-      async Role_menu(){
-        this.role_Menu=true
-        this.role_Info=false
       }
     }
   }
 </script>
 
 <style lang="scss">
-  .role_input{
+  .role_input {
     padding-left: 50px;
     width: 200px;
-    .el-input__inner{
-      color: #409EFF!important;
+    .el-input__inner {
+      color: #409EFF !important;
       text-align: center;
     }
   }
+
   .el-tooltip__popper {
     max-width: 500px;
     line-height: 180%;
@@ -306,18 +296,20 @@
   }
 
   //自定义添加转移
-  .el-transfer {
-    .el-transfer__buttons {
-      width: 150px;
-      .el-button.el-button--primary.is-disabled.el-transfer__button.is-with-texts {
-        margin-left: 0;
-        width: 89px;
-        font-family: "宋体";
-      }
-      .el-button.el-button--primary.el-transfer__button.is-with-texts {
-        margin-left: 0;
-        width: 89px;
-        font-family: "宋体";
+  .transfer {
+    .el-transfer {
+      .el-transfer__buttons {
+        width: 150px;
+        .el-button.el-button--primary.is-disabled.el-transfer__button.is-with-texts {
+          margin-left: 0;
+          width: 89px;
+          font-family: "宋体";
+        }
+        .el-button.el-button--primary.el-transfer__button.is-with-texts {
+          margin-left: 0;
+          width: 89px;
+          font-family: "宋体";
+        }
       }
     }
   }

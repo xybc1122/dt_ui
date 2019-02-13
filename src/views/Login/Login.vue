@@ -7,12 +7,13 @@
             <img src="./img/logo.png">
           </div>
           <p class="login_name">用户名</p>
-          <el-input  v-model="userName" class="login_input" placeholder="请输入账号" prefix-icon="iconfont icon_dt-icon_zhanghao" ></el-input>
-          <p class="login_pwd" >密码</p>
+          <el-input v-model="userName" class="login_input" placeholder="请输入账号"
+                    prefix-icon="iconfont icon_dt-icon_zhanghao"></el-input>
+          <p class="login_pwd">密码</p>
           <el-input class="input login_input" v-model="passWord" placeholder="请输入密码" v-focus
                     prefix-icon="iconfont icon_dt-suo" @keyup.enter.native="Login"></el-input>
           <div style="margin-top: 60px">
-            <el-button type="primary" class="loading" @click="Login">登陆</el-button>
+            <el-button type="primary" class="loading" @click="Login" :disabled="isLanding">登陆</el-button>
             <div style="text-align: center;padding-top: 20px">
               <el-checkbox v-model="rememberMe" style="padding-left: 20px">自动登陆 <span>(一周内)</span></el-checkbox>
             </div>
@@ -34,14 +35,38 @@
     data () {
       return {
         body_height: {height: ''},
-        userName: 'tt',
-        passWord: 't',
+        userName: '',
+        passWord: '',
+        isLanding: false,//控制 账号跟密码输入款要有value 才能登陆
         isLogin: true, // <!--登录-->
         rememberMe: false
       }
     },
+    mounted () {
+      if (this.userName === '' || this.passWord === '') {
+        this.isLanding = true
+        return
+      }
+      this.isLanding = false
+    },
     created () {
       this.hh()
+    },
+    watch: {
+      'userName': function () {
+        if (this.userName === '' || this.passWord === '') {
+          this.isLanding = true
+          return
+        }
+        this.isLanding = false
+      },
+      'passWord': function () {
+        if (this.userName === '' || this.passWord === '') {
+          this.isLanding = true
+          return
+        }
+        this.isLanding = false
+      }
     },
     methods: {
       //获取屏幕尺寸
@@ -55,7 +80,7 @@
         const pwd = this.passWord
         const rememberMe = this.rememberMe
         const users = {userName, pwd, rememberMe}
-        login_intercept.intercept(loadingInstance)
+        //login_intercept.intercept(loadingInstance)
         //成功执行后续
         if (userName && pwd) {
           const result = await repLoginUser(users)

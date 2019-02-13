@@ -59,18 +59,19 @@ export const repMenuRole = (rid) => ajax(BASE_URL + `/menu/role/menu`, {rid})
 export const repGetMenus = ({rid, menuIds, menuFlg}) => ajax(BASE_URL + '/rm/upMenus', {rid, menuIds, menuFlg}, 'POST')
 
 //更新用户信息
-export const repUpUserInfo = ({pwd, accountStatus, uid, pwdStatus, effectiveDate, uName, checkedUpPwd, checkedPwdAlways, checkedUserAlways, name}) => ajax(BASE_URL + `/user/upUserInfo`,
+export const repUpUserInfo = ({pwd, accountStatus, uid, pwdAlwaysInput, effectiveDate, uName, checkedUpPwd, checkedPwdAlways, checkedUserAlways, name,uMobilePhone}) => ajax(BASE_URL + `/user/upUserInfo`,
   {
     pwd,
     accountStatus,
     uid,
-    pwdStatus,
+    pwdAlwaysInput,
     effectiveDate,
     uName,
     checkedUpPwd,
     checkedPwdAlways,
     checkedUserAlways,
-    name
+    name,
+    uMobilePhone
   }, 'POST')
 
 // 查询一个角色下的所有用户跟 菜单
