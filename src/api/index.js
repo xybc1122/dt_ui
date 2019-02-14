@@ -16,12 +16,12 @@ export const repGetUsers = () => ajax(BASE_URL + '/user/getUsers')
 export const repUsers = ({
                            currentPage, pageSize, userName, name,
                            createDate, pwdStatus, landingTime,
-                           effectiveDate, computerName, accountStatus,mobilePhone,rName,pwdAlways,uAlways
+                           effectiveDate, computerName, accountStatus, mobilePhone, rName, pwdAlways, uAlways
                          }) =>
   ajax(BASE_URL + `/user/show`, {
     currentPage, pageSize, userName, name,
     createDate, pwdStatus, landingTime,
-    effectiveDate, computerName, accountStatus,mobilePhone,rName,pwdAlways,uAlways
+    effectiveDate, computerName, accountStatus, mobilePhone, rName, pwdAlways, uAlways
   }, 'POST')
 
 //通过menu_id查询table头信息
@@ -29,7 +29,6 @@ export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
 
 //通过menuIds查询table头List集合
 export const repGetHead = ({menuIds}) => ajax(BASE_URL + '/getByHead', {menuIds}, 'POST')
-
 
 //查询所有表头信息 然后service 层通过mid来区别对应的表头信息
 export const repFindByHeads = (mId) => ajax(BASE_URL + '/findHeads', {mId})
@@ -51,12 +50,11 @@ export const repUpMenuInfo = ({newMenu, idsMenu}) => ajax(BASE_URL + '/menu/up/m
 //校验菜单是否已更新接口
 export const repCheckMenuToken = () => ajax(BASE_URL + `/menu/token/menu`)
 
-
 //通过角色id来获取菜单id
 export const repGetMenus = ({rid, menuIds, menuFlg}) => ajax(BASE_URL + '/rm/upMenus', {rid, menuIds, menuFlg}, 'POST')
 
 //更新用户信息
-export const repUpUserInfo = ({pwd, accountStatus, uid, pwdAlwaysInput, effectiveDate, uName, checkedUpPwd, checkedPwdAlways, checkedUserAlways, name,uMobilePhone}) => ajax(BASE_URL + `/user/upUserInfo`,
+export const repUpUserInfo = ({pwd, accountStatus, uid, pwdAlwaysInput, effectiveDate, uName, checkedUpPwd, checkedPwdAlways, checkedUserAlways, name, uMobilePhone}) => ajax(BASE_URL + `/user/upUserInfo`,
   {
     pwd,
     accountStatus,
@@ -72,9 +70,10 @@ export const repUpUserInfo = ({pwd, accountStatus, uid, pwdAlwaysInput, effectiv
   }, 'POST')
 
 // 查询一个角色下的所有用户跟 菜单
-export const repGetRoles = ({currentPage, pageSize}) => ajax(BASE_URL + '/role/getRoles', {
+export const repGetRoles = ({currentPage, pageSize, rName, userName}) => ajax(BASE_URL + '/role/getRoles', {
   currentPage,
-  pageSize
+  pageSize,
+  rName, userName
 }, 'POST')
 
 //删除一个用户或者多个用户

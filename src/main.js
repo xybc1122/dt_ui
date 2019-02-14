@@ -1,5 +1,5 @@
 /* eslint-disable no-new */
-
+import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
 import router from './router'
@@ -135,10 +135,12 @@ Vue.prototype.getCookie = function (c_name) {
 router.beforeEach((to, from, next) => {
   let rep =repIndex()
   rep.then((res)=>{
+    console.log(to.fullPath==='/login')
     console.log(res)
     if(to.fullPath === '/login'){
       if (res.code === 200 && res.msg === 'ok') {
         next({path: '/index'})
+        return
       }
     }
     if (to.matched.some(m => m.meta.showLogin)) {

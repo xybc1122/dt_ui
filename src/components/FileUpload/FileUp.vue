@@ -194,7 +194,7 @@
       },
       //webSocket处理
       getTimeCount () {
-        this.webSock = new WebSocket('ws://127.0.0.1:9001/websocket')
+        this.webSock = new WebSocket('ws://192.168.1.191:9001/websocket')
         //打开webSock
         this.webSock.onopen = () => {
           console.log('Socket 已打开')

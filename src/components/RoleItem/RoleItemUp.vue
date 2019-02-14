@@ -153,16 +153,6 @@
                 this.menuDateList = result.data
               }
             })
-            const rid = this.roleFrom.rId
-            const resultRoleMenu = repMenuRole(rid)
-            resultRoleMenu.then((result) => {
-              //递归获取菜单的id
-              this.getMenuId(result.data, [])
-              //判断是否为0 如果是0 则不禁止点击-----查看菜单下的表头数据
-              if (this.noUrlCheckedKeys.length !== 0) {
-                this.isViewMenu = false
-              }
-            })
           }
         })
       })

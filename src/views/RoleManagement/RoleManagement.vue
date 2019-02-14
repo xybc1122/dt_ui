@@ -13,7 +13,7 @@
         </el-select>
       </div>
       <div class="check2">
-        <el-input v-show="msgInput===16" v-model="role.uName" placeholder="请输入角色拥有者"
+        <el-input v-show="msgInput===16" v-model="role.userName" placeholder="请输入角色拥有者"
                   prefix-icon="el-icon-search"></el-input>
         <el-input v-show="msgInput===10" v-model="role.rName" placeholder="请输入角色名称"
                   prefix-icon="el-icon-search"></el-input>
@@ -24,7 +24,7 @@
       </div>
       <div style="padding-top: 30px">
         <el-tag v-show="role.rName!==''" closable @close="cRName()">角色名称:{{role.rName}}</el-tag>
-        <el-tag v-show="role.uName!==''" closable @close="cUName()">角色拥有者:{{role.uName}}</el-tag>
+        <el-tag v-show="role.userName!==''" closable @close="cUName()">角色拥有者:{{role.userName}}</el-tag>
       </div>
     </div>
     <!--table表格显示-->
@@ -61,16 +61,8 @@
         <el-button type="danger" icon="el-icon-delete" size="mini">
           删除
         </el-button>
-        <div class="block">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="role.currentPage"
-            :page-size="role.pageSize"
-            layout="total, prev, pager, next"
-            :total="role.total_size">
-          </el-pagination>
-        </div>
+        <!--分页-->
+        <Pagination :data="role" v-on:pageData="pageData"/>
       </div>
     </div>
     <!--修改隐藏页面-->
@@ -78,10 +70,11 @@
   </div>
 </template>
 <script>
-  import {repHead, repGetRoles, repUsers} from '../../api'
+  import {repHead, repGetRoles} from '../../api'
   import pUtils from '../../utils/PageUtils'
   import PubSub from 'pubsub-js'
   import RoleItemUp from '../../components/RoleItem/RoleItemUp'
+  import Pagination from '../../components/Pagination/Pagination'
   import loading from '../../utils/loading'
   //角色管理
   export default {
@@ -93,8 +86,9 @@
         roleValue: '', //下拉框的model
         roleSelection: [],
         role: {
+          page_sizes: [5, 10, 15, 20, 25],
           tableData: [],//表信息
-          uName: '',//角色拥有者
+          userName: '',//角色拥有者
           rName: '',//角色名称
           currentPage: 1,//当前页
           total_size: 0,//总的页
@@ -115,32 +109,26 @@
       if (resultHead.code === 200) {
         this.tableTitle = resultHead.data
       }
-      //获得用户信息
-      const resultGetRoles = await repGetRoles(this.role)
-      console.log(resultGetRoles)
-      if (resultGetRoles.code === 200) {
-        //赋值 然后显示
-        pUtils.pageInfo(resultGetRoles, this.role)
-      }
+      //获得用户跟角色信息
+      this.pagination(this.role)
       loadingInstance.close()
     },
     components: {
-      RoleItemUp
+      RoleItemUp,
+      Pagination
     },
     methods: {
-      //分页
-      handleSizeChange (val) {
-        console.log(`每页 ${val} 条`)
-      },
-      //val=当前页 分页
-      async handleCurrentChange (val) {
-        //分页查询 传一个当前页,显示最大的页,一个userInfo对象
+      //分页参数传递
+      pageData: function (data) {
+        this.pagination(data)
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
       handleSelectionChange (val) {
         this.roleSelection = val
-        console.log(val)
       },
+
+
+
       //table表头上下箭头 排序
       arraySpanMethod ({row, column, rowIndex, columnIndex}) {
         if (rowIndex % 2 === 0) {
@@ -157,10 +145,16 @@
       },
       //点击查询获得输入框的value
       async searchUser () {
-        const resultUsers = await repUsers(this.user)
-        if (resultUsers.code === 200) {
+        this.pagination(this.role);
+      },
+
+
+      //封装分页请求
+      async pagination (data) {
+        const resultRoles = await repGetRoles(data)
+        if (resultRoles.code === 200) {
           //赋值 然后显示
-          this.pageUser(resultUsers)
+          pUtils.pageInfo(resultRoles, data)
         }
       },
       //重置
@@ -174,7 +168,7 @@
         this.role.rName = ''
       },
       cUName () {
-        this.role.uName = ''
+        this.role.userName = ''
       },
       //下拉款选项时 获取
       getValue (selVal) {

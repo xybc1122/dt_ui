@@ -153,13 +153,13 @@
         if (resultUploadInfo.code === 200) {
           for (let i = 0; i < resultUploadInfo.data.length; i++) {
             let uploadInfo = resultUploadInfo.data[i]
-            //2代表 有些sku没有的 可以重新下载
+            //2代表 有些sku没有的 可以重新下载  有问题
             if (uploadInfo.status === 2) {
               console.log(uploadInfo)
               this.$set(this.fileUp.icon_list, this.fileUp.icon_list.length, {
                 'isIcon': true,
                 'id': uploadInfo.id,
-                'filePath': uploadInfo.filePath + uploadInfo.name,
+                'filePath': uploadInfo.filePath + uploadInfo.uuidName,
                 'name': uploadInfo.name
               })
               this.fileUp.fileListInfo.push(uploadInfo)

@@ -168,17 +168,8 @@
         <el-button type="warning" size="mini" @click="delUserForm">
           删除记录
         </el-button>
-        <div class="block" style="display: inline-block">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="user.currentPage"
-            :page-sizes="user.page_sizes"
-            :page-size="user.pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="user.total_size">
-          </el-pagination>
-        </div>
+        <!--分页-->
+        <Pagination :data="user" v-on:pageData="pageData"/>
       </div>
     </div>
     <!--隐藏新增用户记录from表单-->
@@ -200,6 +191,7 @@
   import UserItemAdd from '../../components/UserItem/UserItemAdd'
   import UserItemUp from '../../components/UserItem/UserItemUp'
   import UserItemDel from '../../components/UserItem/UserItemDel'
+  import Pagination from '../../components/Pagination/Pagination'
   import PubSub from 'pubsub-js'
   import loading from '../../utils/loading'
 
@@ -250,7 +242,8 @@
     components: {
       UserItemAdd,
       UserItemUp,
-      UserItemDel
+      UserItemDel,
+      Pagination
     },
     async mounted () {
       let loadingInstance = loading.loading_dom('加载中', document.getElementById('Account'))
@@ -266,34 +259,14 @@
         this.isTableTitle = true
         this.tableTitle = resultHead.data
       }
-      const resultUsers = await repUsers(this.user)
-      if (resultUsers.code === 200) {
-        console.log(resultUsers)
-        //赋值 然后显示
-        pUtils.pageInfo(resultUsers,this.user)
-      }
+      this.pagination(this.user)
       loadingInstance.close()
     }
     ,
     methods: {
-      //分页
-      async handleSizeChange (val) {
-        this.user.pageSize = val
-
-        const resultUsers = await repUsers(this.user)
-        if (resultUsers.code === 200) {
-          //赋值 然后显示
-          pUtils.pageInfo(resultUsers,this.user)
-        }
-      },
-      //val=当前页 分页
-      async handleCurrentChange (val) {
-        //分页查询 传一个当前页,显示最大的页,一个userInfo对象
-        const resultUsers = await repUsers(this.user)
-        if (resultUsers.code === 200) {
-          //赋值 然后显示
-          pUtils.pageInfo(resultUsers,this.user)
-        }
+      //分页参数传递
+      pageData: function (data) {
+        this.pagination(data)
       },
       //table 账号状态 转换显示
       account: function (row) {
@@ -354,15 +327,9 @@
         this.msgInput = selVal
       },
 
-      //点击查询获得输入框的value
+      //点击查询获得table的值
       async searchUser () {
-        const resultUsers = await repUsers(this.user)
-        if (resultUsers.code === 200) {
-          //赋值 然后显示
-          pUtils.pageInfo(resultUsers,this.user)
-          return
-        }
-        message.errorMessage(resultUsers.msg)
+        this.pagination(this.user)
       },
       //触发密码始终有效
       pwd_always_events (value) {
@@ -374,6 +341,14 @@
       user_always_events (value) {
         if (value) {
           this.user.effectiveDate = ''
+        }
+      },
+      //封装分页请求
+      async pagination (data) {
+        const resultUsers = await repUsers(data)
+        if (resultUsers.code === 200) {
+          //赋值 然后显示
+          pUtils.pageInfo(resultUsers, data)
         }
       },
       //重置

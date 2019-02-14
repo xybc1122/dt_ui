@@ -52,7 +52,7 @@
 
 <script>
   import storage from '../../utils/storageUtils'
-  import {repUpMenuInfo,repMenu} from '../../api'
+  import {repUpMenuInfo, repMenu} from '../../api'
   import message from '../../utils/Message'
 
   let id = 1000 //假菜单ID
@@ -83,6 +83,7 @@
     methods: {
       //添加 菜单
       append (data) {
+        this.inputMenu = ''
         console.log(data)
         if (data.url !== null) {
           message.errorMessage('这目录下有url----->不能添加子目录')
