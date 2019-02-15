@@ -299,7 +299,7 @@
 </script>
 
 
-<style lang="scss">
+<style scope lang="scss">
   .transfer-footer {
     margin-left: 20px;
     padding: 6px 5px;

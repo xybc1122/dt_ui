@@ -6,13 +6,12 @@ const path = require('path')
 
 module.exports = {
   dev: {
-
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
       '/api': { // 匹配所有以 '/api'开头的请求路径
-        target: 'http://192.168.1.191:9001', // 代理目标的基础路径
+        target: 'http://192.168.208.109:9001', // 代理目标的基础路径
         changeOrigin: true, // 支持跨域
         pathRewrite: {// 重写路径: 去掉路径中开头的'/api'
           '^/api': ''
@@ -53,7 +52,6 @@ module.exports = {
   build: {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
-
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
@@ -62,8 +60,7 @@ module.exports = {
     /**
      * Source Maps
      */
-
-    productionSourceMap: true,
+    productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 

@@ -172,7 +172,7 @@
 </script>
 
 
-<style>
+<style scoped>
   /*表格*/
   #roleTable {
     padding-top: 50px;

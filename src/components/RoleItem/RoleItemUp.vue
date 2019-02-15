@@ -259,7 +259,7 @@
   }
 </script>
 
-<style lang="scss">
+<style scope lang="scss">
   .role_input {
     padding-left: 50px;
     width: 200px;

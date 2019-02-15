@@ -40,7 +40,7 @@
   }
 </script>
 
-<style lang="scss">
+<style scope lang="scss">
   .el-footer {
     background-color: #B3C0D1;
     color: #333;

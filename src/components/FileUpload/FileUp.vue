@@ -162,7 +162,8 @@
                           //触发记录
                           this.fileUp.fileListInfo.push(messagesResult.data)
                           this.fileUp.icon_list.push({
-                            'isIcon': true, 'id': messagesResult.data.id,
+                            'isIcon': true,
+                            'id': messagesResult.data.id,
                             'filePath': messagesResult.data.filePath + messagesResult.data.uuidName,
                             'name': messagesResult.data.name
                           })
@@ -171,12 +172,20 @@
                         message.messageNotSuccess(messagesResult.msg, messagesResult.data.name)
                         this.fileUp.newListFile.splice(this.fileUp.newListFile.indexOf(i), 1)
                         this.fileUp.fileListInfo.push(messagesResult.data)
-                        this.fileUp.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
+                        this.fileUp.icon_list.push({
+                          'isIcon': false,
+                          'id': messagesResult.data.id,
+                          'name': messagesResult.data.name
+                        })
                       } else {
                         message.messageNotError(messagesResult.msg, messagesResult.data.name)
                         this.fileUp.newListFile.splice(this.fileUp.newListFile.indexOf(i), 1)
                         this.fileUp.fileListInfo.push(messagesResult.data)
-                        this.fileUp.icon_list.push({'isIcon': false, 'id': messagesResult.data.id})
+                        this.fileUp.icon_list.push({
+                          'isIcon': false,
+                          'id': messagesResult.data.id,
+                          'name': messagesResult.data.name
+                        })
                       }
                     }
                     //全部处理完成 清空页面进度数据

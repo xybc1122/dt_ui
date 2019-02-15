@@ -2,13 +2,13 @@
 import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
-import router from './router'
 import store from './store'
 import focus from './utils/focus'
 import VueResource from 'vue-resource'
 import login_intercept from './utils/login_intercept'
 import loading from './utils/loading'
 import './assets/icon/iconfont.css'//
+import router from './router'
 import {
   Badge,
   Button,
@@ -180,11 +180,11 @@ Vue.prototype.getViewportSize = function(){
 };
 new Vue({
   el: '#app',
-  router,
   store,
   login_intercept,
   loading,
   render: h => h(App),
-  template: '<App/>'
+  template: '<App/>',
+  router
 })
 

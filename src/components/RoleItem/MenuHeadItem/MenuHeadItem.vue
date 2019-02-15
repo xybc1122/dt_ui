@@ -102,7 +102,7 @@
   }
 </script>
 
-<style lang="scss">
+<style scope lang="scss">
   .el-transfer {
     .el-transfer__buttons {
       width: 150px;
