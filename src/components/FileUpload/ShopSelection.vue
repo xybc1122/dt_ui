@@ -174,7 +174,7 @@
   }
 </script>
 
-<style lang="scss">
+<style scope lang="scss">
   .icons {
     margin-top: 5px;
     height: 26px;

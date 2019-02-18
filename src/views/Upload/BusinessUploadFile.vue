@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span>{{this.$route.params.name}}</span>
+    <el-tag><span>{{this.$route.params.name}}</span></el-tag>
     <!-- 店铺选择 站点选择 -->
     <BusinessTime :ptFrom="ptFrom"/>
   </div>

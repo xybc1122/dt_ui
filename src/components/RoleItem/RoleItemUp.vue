@@ -39,7 +39,9 @@
               <el-tooltip content="关闭信息" placement="top">
                 <el-button icon="el-icon-close" circle @click="cMenuHead" :disabled="isCViewMenu"></el-button>
               </el-tooltip>
-              <span style="padding-left: 25px">
+              <!-- `checked` 为 true 或 false -->
+              <el-checkbox v-model="isMenu">菜单编辑</el-checkbox>
+              <span style="padding-left: 25px" v-if="isMenu">
                 <el-switch
                   v-model="menuFlg"
                   active-text="添加菜单"
@@ -64,6 +66,11 @@
             </div>
           </el-form>
         </el-tab-pane>
+        <el-tab-pane label="新增角色" name="third" class="roleAdd">
+          <el-input v-model="rNameAdd" placeholder="请输入内容"></el-input>
+          <p></p>
+          <el-button type="primary" @click="addRoleInfo" circle>新增</el-button>
+        </el-tab-pane>
       </el-tabs>
     </el-dialog>
     <MenuHeadItem/>
@@ -79,7 +86,8 @@
   export default {
     data () {
       return {
-        isEdit:false,
+        isMenu: false,
+        isEdit: false,
         activeName: 'first',
         isCViewMenu: true,//关闭菜单
         isViewMenu: true,//查看菜单
@@ -94,6 +102,7 @@
         usersId: [],//用户ID
         userData: [],//用户数据
         noUrlCheckedKeys: [],//进去选中的keys没有URL的
+        rNameAdd: '',
         roleFrom: {
           rName: '',
           uIds: '',
@@ -254,18 +263,19 @@
           }
         })
         this.noUrlCheckedKeys = noUrlMenuList
+      },
+      //新增角色信息
+      addRoleInfo () {
+        console.log(this.rNameAdd)
       }
     }
   }
 </script>
 
 <style scope lang="scss">
-  .role_input {
-    padding-left: 50px;
-    width: 200px;
+  .roleAdd {
     .el-input__inner {
-      color: #409EFF !important;
-      text-align: center;
+      width: 200px;
     }
   }
 

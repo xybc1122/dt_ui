@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span>{{this.$route.params.name}}</span>
+    <el-tag><span>{{this.$route.params.name}}</span></el-tag>
     <!--订单类型选择 -->
     <PaymentType/>
   </div>

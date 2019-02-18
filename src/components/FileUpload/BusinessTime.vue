@@ -52,6 +52,6 @@
   }
 </script>
 
-<style lang="scss">
+<style scope lang="scss">
 
 </style>
