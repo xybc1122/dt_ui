@@ -108,11 +108,12 @@
       }
     },
     mounted () {
+      //避免上传记录操作留在页面
+      this.upArr = []
     },
     methods: {
       //批量上传
       async uploadFiles () {
-        this.upArr = []
         this.uploadStatus.wait = '已确认'
         this.uploadStatus.count++
 
@@ -203,6 +204,7 @@
       },
       //webSocket处理
       getTimeCount () {
+        //本机 127.0.0.1:9001 //192.168.1.191服务器
         this.webSock = new WebSocket('ws://192.168.1.191:9001/websocket')
         //打开webSock
         this.webSock.onopen = () => {

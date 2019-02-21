@@ -29,34 +29,12 @@
     </div>
     <!--table表格显示-->
     <div id="roleTable">
-      <el-table
-        :data="role.tableData"
-        style="width: 100%"
-        height="500"
-        :span-method="arraySpanMethod"
-        @selection-change="handleSelectionChange"
-        stripe>
-        <el-table-column
-          type="selection"
-          width="55"
-          v-if="tableTitle.length>0">
-        </el-table-column>
-        <el-table-column
-          type="index"
-          width="50"
-          v-if="tableTitle.length>0"
-          fixed>
-        </el-table-column>
-        <template v-for="(title ,index) in tableTitle">
-          <el-table-column v-if="title.topType==='rName'" :label="title.headName" prop="rName"
-                           sortable></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='role_holder'" :label="title.headName"
-                           prop="userName"
-                           sortable></el-table-column>
-        </template>
-      </el-table>
+      <Table :tableData="role.tableData" :tableTitle="tableTitle" v-on:checkboxValue="checkboxValue"/>
       <div class="check5">
         <el-button type="primary" icon="el-icon-edit" size="mini" @click="roleUp">编辑
+        </el-button>
+        <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveRoleForm">
+          新增
         </el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini">
           删除
@@ -70,12 +48,13 @@
   </div>
 </template>
 <script>
-  import {repHead, repGetRoles} from '../../api'
+  import {repGetRoles} from '../../api'
   import pUtils from '../../utils/PageUtils'
   import PubSub from 'pubsub-js'
   import RoleItemUp from '../../components/RoleItem/RoleItemUp'
-  import Pagination from '../../components/Pagination/Pagination'
-  import loading from '../../utils/loading'
+  import Pagination from '../../components/ElementUi/Pagination'
+  import requestAjax from '../../api/requestAjax'
+  import Table from '../../components/ElementUi/Table'
   //角色管理
   export default {
     data () {
@@ -86,7 +65,7 @@
         roleValue: '', //下拉框的model
         roleSelection: [],
         role: {
-          page_sizes: [5, 10, 15, 20, 25],
+          page_sizes: [2, 10, 15, 20, 25],
           tableData: [],//表信息
           userName: '',//角色拥有者
           rName: '',//角色名称
@@ -102,20 +81,18 @@
       }
     },
     async mounted () {
-      //查询获得table表的 头信息
-      let loadingInstance = loading.loading_dom('加载中', document.getElementById('role'))
-      const resultHead = await
-        repHead(this.$route.params.id)
-      if (resultHead.code === 200) {
-        this.tableTitle = resultHead.data
+      this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id)
+      //如果为空 =false 直接返回不走下面
+      if (!this.tableTitle) {
+        return
       }
       //获得用户跟角色信息
       this.pagination(this.role)
-      loadingInstance.close()
     },
     components: {
       RoleItemUp,
-      Pagination
+      Pagination,
+      Table
     },
     methods: {
       //分页参数传递
@@ -123,25 +100,15 @@
         this.pagination(data)
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
-      handleSelectionChange (val) {
+      checkboxValue (val) {
         this.roleSelection = val
-      },
-
-
-
-      //table表头上下箭头 排序
-      arraySpanMethod ({row, column, rowIndex, columnIndex}) {
-        if (rowIndex % 2 === 0) {
-          if (columnIndex === 0) {
-            return [1, 2]
-          } else if (columnIndex === 1) {
-            return [0, 0]
-          }
-        }
       },
       //修改隐藏框
       roleUp () {
         PubSub.publish('roleUp', this.roleSelection)
+      },
+      saveRoleForm(){
+        console.log('新增角色')
       },
       //点击查询获得输入框的value
       async searchUser () {

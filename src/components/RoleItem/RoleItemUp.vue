@@ -66,11 +66,6 @@
             </div>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="新增角色" name="third" class="roleAdd">
-          <el-input v-model="rNameAdd" placeholder="请输入内容"></el-input>
-          <p></p>
-          <el-button type="primary" @click="addRoleInfo" circle>新增</el-button>
-        </el-tab-pane>
       </el-tabs>
     </el-dialog>
     <MenuHeadItem/>
@@ -85,7 +80,29 @@
 
   export default {
     data () {
+      var rNameAdd = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('内容不能为空'))
+        } else if (value.length > 10) {
+          return callback(new Error('内容长度不能大于10位'))
+        }else{
+          callback()
+        }
+      }
+      var rSign = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('内容不能为空'))
+        }else if (value.length > 10) {
+          return callback(new Error('内容长度不能大于10位'))
+        }else {
+          callback()
+        }
+      }
       return {
+        roleAddFrom: {
+          rNameAdd: '',//新增角色名称
+          rSign: '',//角色标识
+        },
         isMenu: false,
         isEdit: false,
         activeName: 'first',
@@ -102,7 +119,6 @@
         usersId: [],//用户ID
         userData: [],//用户数据
         noUrlCheckedKeys: [],//进去选中的keys没有URL的
-        rNameAdd: '',
         roleFrom: {
           rName: '',
           uIds: '',
@@ -111,6 +127,14 @@
         defaultProps: {
           children: 'childMenus',
           label: 'name'
+        },
+        rules: {
+          rNameAdd: [
+            {validator: rNameAdd, trigger: 'blur'}
+          ],
+          rSign: [
+            { validator: rSign, trigger: 'blur' }
+          ]
         }
       }
     },
@@ -265,9 +289,16 @@
         this.noUrlCheckedKeys = noUrlMenuList
       },
       //新增角色信息
-      addRoleInfo () {
-        console.log(this.rNameAdd)
-      }
+      addRoleInfo (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log('submit!!')
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
     }
   }
 </script>

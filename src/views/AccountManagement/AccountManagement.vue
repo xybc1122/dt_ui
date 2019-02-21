@@ -100,62 +100,8 @@
     </div>
     <!--table表格显示-->
     <div id="userTable">
-      <el-table
-        :data="user.tableData"
-        style="width: 100%"
-        height="500"
-        stripe
-        :span-method="arraySpanMethod"
-        @selection-change="upSelectionChange">
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
-        <el-table-column
-          type="index"
-          width="50"
-          fixed>
-        </el-table-column>
-        <template v-for="title  in tableTitle">
-          <el-table-column v-if="title.topType==='uName'" sortable fixed :label="title.headName"
-                           prop="userName"></el-table-column>
-          <el-table-column v-if="title.topType==='name'" sortable fixed :label="title.headName"
-                           prop="name"></el-table-column>
-          <el-table-column v-if="title.topType==='phone'" :label="title.headName"
-                           prop="mobilePhone"></el-table-column>
-          <el-table-column v-if="title.topType==='rName'" :label="title.headName" fixed prop="rName"
-                           :show-overflow-tooltip="true">
-          </el-table-column>
-          <el-table-column v-if="title.topType==='create_date'" :label="title.headName" width="180">
-            <template slot-scope="scope">
-              <i class="el-icon-time"></i>
-              <span>{{ scope.row.createDate | date-format}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column width="150" v-if="title.topType==='u_eff_date'" sortable :label="title.headName">
-            <template slot-scope="scope">
-              <span v-if="scope.row.effectiveDate!==0">{{ scope.row.effectiveDate | date-format}}</span>
-              <span v-if="scope.row.effectiveDate===0">始终有效</span>
-            </template>
-          </el-table-column>
-          <el-table-column width="150" v-if="title.topType==='p_eff_date'" sortable :label="title.headName">
-            <template slot-scope="scope">
-              <span v-if="scope.row.pwdStatus!==0">{{ scope.row.pwdStatus | date-format}}</span>
-              <span v-if="scope.row.pwdStatus===0">始终有效</span>
-            </template>
-          </el-table-column>
-          <el-table-column v-if="title.topType==='account_status'" :label="title.headName" width="180"
-                           :formatter="account"></el-table-column>
-          <el-table-column v-if="title.topType==='landing_time'" :label="title.headName" width="180">
-            <template slot-scope="scope">
-              <i class="el-icon-time"></i>
-              <span>{{ scope.row.landingTime | date-format}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column v-if="title.topType==='pc'" :label="title.headName" width="120">
-          </el-table-column>
-        </template>
-      </el-table>
+      <Table :tableData="user.tableData" :tableTitle="tableTitle" v-on:checkboxValue="checkboxValue"
+             v-if="isTableTitle"/>
       <div v-if="isTableTitle">
         <el-button type="success" icon="el-icon-edit" size="mini" @click="upUserInfo">修改
         </el-button>
@@ -182,18 +128,18 @@
 </template>
 <script>
   import {
-    repHead,
     repUsers,
     repDelUserInfo,
   } from '../../api'
-  import message from '../../utils/Message'
-  import pUtils from '../../utils/PageUtils'
   import UserItemAdd from '../../components/UserItem/UserItemAdd'
   import UserItemUp from '../../components/UserItem/UserItemUp'
   import UserItemDel from '../../components/UserItem/UserItemDel'
-  import Pagination from '../../components/Pagination/Pagination'
+  import message from '../../utils/Message'
+  import pUtils from '../../utils/PageUtils'
+  import Pagination from '../../components/ElementUi/Pagination'
+  import Table from '../../components/ElementUi/Table'
   import PubSub from 'pubsub-js'
-  import loading from '../../utils/loading'
+  import requestAjax from '../../api/requestAjax'
 
   export default {
     data () {
@@ -243,38 +189,27 @@
       UserItemAdd,
       UserItemUp,
       UserItemDel,
-      Pagination
+      Pagination,
+      Table
     },
     async mounted () {
-      let loadingInstance = loading.loading_dom('加载中', document.getElementById('Account'))
-      //查询获得table表的 头信息
-      const resultHead = await
-        repHead(this.$route.params.id)
-      if (resultHead.code === 200) {
-        if (resultHead.data.length === 0) {
-          //如果是0 就全部不显示
-          loadingInstance.close()
-          return
-        }
-        this.isTableTitle = true
-        this.tableTitle = resultHead.data
+      this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id)
+      //如果为空 =false 直接返回不走下面
+      if (!this.tableTitle) {
+        return
       }
+      this.isTableTitle = true
       this.pagination(this.user)
-      loadingInstance.close()
     }
     ,
     methods: {
+      //table按钮选择 传参
+      checkboxValue: function (value) {
+        this.upSelection = value
+      },
       //分页参数传递
       pageData: function (data) {
         this.pagination(data)
-      },
-      //table 账号状态 转换显示
-      account: function (row) {
-        return row.accountStatus === 0 ? '正常' : row.accountStatus === 1 ? '冻结' : row.accountStatus === 2 ? '禁用' : ''
-      },
-      //点击选项 Checkbox 按钮 获得val赋值给 upSelection
-      upSelectionChange (val) {
-        this.upSelection = val
       },
       //点击修改的时候 获得 Checkbox中 的属性
       upUserInfo () {
@@ -308,16 +243,6 @@
           }
           else {
             message.errorMessage('删除失败!')
-          }
-        }
-      },
-      //tabale表头上下箭头 排序
-      arraySpanMethod ({row, column, rowIndex, columnIndex}) {
-        if (rowIndex % 2 === 0) {
-          if (columnIndex === 0) {
-            return [1, 2]
-          } else if (columnIndex === 1) {
-            return [0, 0]
           }
         }
       },
@@ -445,10 +370,5 @@
     float: right;
     width: 500px;
 
-  }
-
-  .el-tooltip__popper {
-    max-width: 500px;
-    line-height: 180%;
   }
 </style>
