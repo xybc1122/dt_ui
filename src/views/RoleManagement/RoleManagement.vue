@@ -1,17 +1,8 @@
 <template>
   <div id="role">
     <!--多选输入框选择输入-->
-    <div id="printCheck">
-      <div class="check1">
-        <el-select v-model="roleValue" clearable placeholder="角色查看" value="" @change="getValue">
-          <el-option
-            v-for="(item,index) in tableTitle"
-            :key="index"
-            :label="item.headName"
-            :value="item.id">
-          </el-option>
-        </el-select>
-      </div>
+    <div id="printCheck" v-if="isTableTitle">
+      <Query :tableTitle="tableTitle" v-on:getValue="getValue"/>
       <div class="check2">
         <el-input v-show="msgInput===16" v-model="role.userName" placeholder="请输入角色拥有者"
                   prefix-icon="el-icon-search"></el-input>
@@ -29,16 +20,9 @@
     </div>
     <!--table表格显示-->
     <div id="roleTable">
-      <Table :tableData="role.tableData" :tableTitle="tableTitle" v-on:checkboxValue="checkboxValue"/>
-      <div class="check5">
-        <el-button type="primary" icon="el-icon-edit" size="mini" @click="roleUp">编辑
-        </el-button>
-        <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveRoleForm">
-          新增
-        </el-button>
-        <el-button type="danger" icon="el-icon-delete" size="mini">
-          删除
-        </el-button>
+      <Table :tableData="role.tableData" :tableTitle="tableTitle" v-on:checkboxValue="checkboxValue" v-if="isTableTitle"/>
+      <div v-if="isTableTitle">
+        <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/>
         <!--分页-->
         <Pagination :data="role" v-on:pageData="pageData"/>
       </div>
@@ -55,6 +39,8 @@
   import Pagination from '../../components/ElementUi/Pagination'
   import requestAjax from '../../api/requestAjax'
   import Table from '../../components/ElementUi/Table'
+  import AddDelUpButton from '../../components/ElementUi/AddDelUpButton'
+  import Query from '../../components/ElementUi/Query'
   //角色管理
   export default {
     data () {
@@ -62,8 +48,8 @@
         msgInput: '',//下拉id
         tableTitle: [],//表头信息
         menuTableTitle: {},//菜单查询到的表头信息
-        roleValue: '', //下拉框的model
-        roleSelection: [],
+        multipleSelection: [],
+        isTableTitle: false, //如果table表头的长度是 0
         role: {
           page_sizes: [2, 10, 15, 20, 25],
           tableData: [],//表信息
@@ -73,7 +59,6 @@
           total_size: 0,//总的页
           pageSize: 2//显示最大的页
         },
-        menuList: [],
         defaultProps: {
           children: 'childMenus',
           label: 'name'
@@ -87,12 +72,15 @@
         return
       }
       //获得用户跟角色信息
+      this.isTableTitle = true
       this.pagination(this.role)
     },
     components: {
       RoleItemUp,
       Pagination,
-      Table
+      Table,
+      AddDelUpButton,
+      Query
     },
     methods: {
       //分页参数传递
@@ -101,21 +89,29 @@
       },
       //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
       checkboxValue (val) {
-        this.roleSelection = val
+        this.multipleSelection = val
+      },
+      //分页参数传递
+      getValue: function (val) {
+        this.msgInput = val
       },
       //修改隐藏框
-      roleUp () {
+      up () {
         PubSub.publish('roleUp', this.roleSelection)
       },
-      saveRoleForm(){
+      save () {
         console.log('新增角色')
+      },
+      del () {
+        console.log('删除')
+      },
+      recording () {
+        console.log('删除记录')
       },
       //点击查询获得输入框的value
       async searchUser () {
-        this.pagination(this.role);
+        this.pagination(this.role)
       },
-
-
       //封装分页请求
       async pagination (data) {
         const resultRoles = await repGetRoles(data)
@@ -136,10 +132,6 @@
       },
       cUName () {
         this.role.userName = ''
-      },
-      //下拉款选项时 获取
-      getValue (selVal) {
-        this.msgInput = selVal
       }
     }
   }

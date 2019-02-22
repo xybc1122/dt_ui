@@ -1,227 +1,105 @@
 <template>
   <div id="Shop">
+    <div id="printCheck" v-if="isTableTitle">
+      <Query :tableTitle="tableTitle" v-on:getValue="getValue"/>
+    </div>
     <!--table表格显示-->
     <div id="roleTable">
-      <el-table
-        :data="tableData"
-        height="500"
-        :span-method="arraySpanMethod"
-        @selection-change="handleSelectionChange"
-        stripe>
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
-        <el-table-column
-          type="index"
-          width="50"
-          fixed>
-        </el-table-column>
-        <template v-for="title in tableTitle">
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='shop_name'" :label="title.headName" prop="shopName" width="100"
-                           sortable :fixed="fixed"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='shop_number'" :label="title.headName"
-                           prop="shopNumber" width="100"
-                           sortable :fixed="fixed2"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='shop_eng'" :label="title.headName"
-                           prop="shopEng"
-                           width="100"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='c_full_name'" :label="title.headName"
-                           prop="companyFullName"
-                           width="100"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='principal'" :label="title.headName"
-                           prop="principal"
-                           width="100"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='remark'" :label="title.headName"
-                           prop="remark"
-                           width="100"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='status_bit'" :label="title.headName"
-                           prop="status"
-                           width="100"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='create_user'" :label="title.headName"
-                           prop="createIdUser"
-                           width="100"></el-table-column>
-          <el-table-column v-if="title.topType==='modify_date'" :label="title.headName" width="180">
-            <template slot-scope="scope">
-              <i class="el-icon-time"></i>
-              <span>{{ scope.row.modifyDate | date-format}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='modify_user'" :label="title.headName"
-                           prop="modifyIdUser"
-                           width="100"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='audit_date'" :label="title.headName"
-                           prop="auditDate"
-                           width="100"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='audit_id'" :label="title.headName"
-                           prop="auditIdUser"
-                           width="100"></el-table-column>
-          <el-table-column v-if="title.topType==='create_date'" :label="title.headName" width="180">
-            <template slot-scope="scope">
-              <i class="el-icon-time"></i>
-              <span>{{ scope.row.createDate | date-format}}</span>
-            </template>
-          </el-table-column>
-        </template>
-      </el-table>
-      <el-button type="success" icon="el-icon-edit" size="mini" @click="Shop_Up">修改
-      </el-button>
-      <el-button type="danger" icon="el-icon-delete" size="mini">
-        删除
-      </el-button>
-      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="Shop_Add">
-        新增
-      </el-button>
-      <div class="block" style="display: inline-block">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="role.currentPage"
-          :page-sizes="role.page_size"
-          :page-size="role.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="role.total_size">
-        </el-pagination>
+      <!--table表格显示-->
+      <Table :tableData="shop.tableData" :tableTitle="tableTitle" v-on:checkboxValue="checkboxValue"
+             v-if="isTableTitle"/>
+      <div class="block" style="display: inline-block" v-if="isTableTitle">
+        <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/>
+        <!--分页-->
+        <Pagination :data="shop" v-on:pageData="pageData"/>
       </div>
-      <el-input v-model="input_num" placeholder="请输入冻结列数"></el-input>
     </div>
     <ShopAdd></ShopAdd>
     <ShopUp></ShopUp>
   </div>
 </template>
 <script>
-  import {repHead, repGetShopInfo} from '../../../api/index'
+  import {repGetShopInfo} from '../../../api/index'
   //店铺
   import ShopAdd from '../../../components/Basic_Data_modify/ShopItem/ShopAdd'
   import ShopUp from '../../../components/Basic_Data_modify/ShopItem/ShopUp'
   import PubSub_Shop from 'pubsub-js'
-  import utils from '../../../utils/PageUtils'
-  import loading from '../../../utils/loading'
+  import pUtils from '../../../utils/PageUtils'
+  import Table from '../../../components/ElementUi/Table'
+  import AddDelUpButton from '../../../components/ElementUi/AddDelUpButton'
+  import Query from '../../../components/ElementUi/Query'
+  import requestAjax from '../../../api/requestAjax'
+  import Pagination from '../../../components/ElementUi/Pagination'
 
   export default {
     data () {
       return {
-        fixed:true,
-        fixed2:false,
-        input_num:'',//冻结列数
-        msgInput: '',//当选择后获得第一个下拉框的id
-        inputValue: '',//序号
         tableTitle: [],//表头信息
-        tableData: [],//表信息
-        multipleSelectionUp: [],
-        shopPage:'',//当前页
-        saveShopValue:true,//新增显示
-        role: {
+        multipleSelection: [],
+        saveShopValue: true,//新增显示
+        isTableTitle: false, //如果table表头的长度是 0
+        shop: {
+          tableData: [],//表信息
           currentPage: 1,//当前页
           total_size: 0,//总数
-          pageSize: 5,//显示最大的页
-          page_size:[5,10,15,20,25],//显示页数
+          pageSize: 1,//显示最大的页
+          page_sizes: [1, 10, 15, 20, 25],//显示页数
         }
       }
     },
-    components:{
+    components: {
       ShopAdd,
-      ShopUp
-    },
-    //手动冻结列......
-    watch:{
-      input_num(val){
-        if(val>0){
-          this.fixed2=true
-          this.input_num=''
-        }
-      }
+      ShopUp,
+      Table,
+      Pagination,
+      AddDelUpButton,
+      Query
     },
     async mounted () {
-      let loadingInstance = loading.loading_dom('加载中',document.getElementById("Shop"))
-      //查询获得table表的 头信息
-      const resultHead = await
-        repHead(this.$route.params.id)
-      if (resultHead.code === 200) {
-        // console.log(resultHead.data)
-        this.tableTitle = resultHead.data
+      this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id)
+      //如果为空 =false 直接返回不走下面
+      if (!this.tableTitle) {
+        return
       }
-      //获得店铺信息
-      var regionPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
-      const resultGetShop = await repGetShopInfo(regionPage)
-      console.log(resultGetShop)
-      if (resultGetShop.code === 200) {
-        this.tableData = resultGetShop.data.dataList
-        this.role.total_size=resultGetShop.data.length
-        // const data = resultGetShop.data
-        //
-        // this.role.currentPage = data.current_page
-        // this.role.total_size = data.total_size
-      }
-      loadingInstance.close()
+      this.isTableTitle = true
+      this.pagination(this.shop)
     },
     methods: {
-      //条目数变化
-      async handleSizeChange(val){
-        // console.log("条目数发生变化")
-        // this.role.pageSize = val
-        // var userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
-        // const resultUsers = await repGetShopInfo(userPage)
-        //
-        // if (resultUsers.code === 200) {
-        //   //赋值 然后显示
-        //   this.pageUser(resultUsers)
-        // }
+      //table按钮选择 传参
+      checkboxValue: function (value) {
+        this.multipleSelection = value
       },
-      //页数发生变化
-      async handleCurrentChange(val){
-        // console.log("页数发生变化")
-        // var userPage = utils.getUserPage(this.role.currentPage, this.role.pageSize)
-        // const resultUsers = await repGetShopInfo(userPage)
-        //
-        // if (resultUsers.code === 200) {
-        //   //赋值 然后显示
-        //   this.pageUser(resultUsers)
-        // }
-
+      //分页参数传递
+      pageData: function (data) {
+        this.pagination(data)
       },
-      //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
-      handleSelectionChange (val) {
-        this.multipleSelectionUp = val
+      //分页参数传递
+      getValue: function (val) {
+        this.msgInput = val
       },
-      //tabale表头上下箭头 排序
-      arraySpanMethod ({row, column, rowIndex, columnIndex}) {
-        if (rowIndex % 2 === 0) {
-          if (columnIndex === 0) {
-            return [1, 2]
-          } else if (columnIndex === 1) {
-            return [0, 0]
-          }
-        }
-      },
-      Shop_Add(){
+      save () {
         PubSub_Shop.publish('saveShopValue', this.saveShopValue)
       },
-      Shop_Up(){
+      up () {
         PubSub_Shop.publish('multipleSelectionUp', this.multipleSelectionUp)
       },
-      pageUser (resultUsers) {
-        const dataUser = resultUsers.data
-        this.tableData = dataUser.dataLists
-        this.role.currentPage = dataUser.current_page
-        this.role.total_size = dataUser.total_size
+      del () {
+        console.log('删除')
       },
+      recording () {
+        console.log('删除记录')
+      },
+      //封装分页请求
+      async pagination (data) {
+        //获得店铺信息
+        const resultGetShop = await repGetShopInfo(data)
+        pUtils.pageInfo(resultGetShop, data)
+      }
     }
   }
 </script>
 
 
 <style lang="scss">
-  /*表格*/
-  #roleTable {
-    padding-top: 50px;
-  }
 
-  .el-tooltip__popper {
-    max-width: 500px;
-    line-height: 180%;
-  }
-  .el-table__row.warning-row {
-    background: oldlace;
-  }
 </style>

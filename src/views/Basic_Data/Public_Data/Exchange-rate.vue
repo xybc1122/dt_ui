@@ -1,18 +1,18 @@
 <template>
   <!--汇率-->
   <div>
-    <table/>
+    <div id="printCheck" v-if="isTableTitle">
+      <Query :tableTitle="tableTitle" v-on:getValue="getValue"/>
+    </div>
     <!--table表格显示-->
-    <Table :tableData="eRate.tableData" :tableTitle="tableTitle" v-on:checkboxValue="checkboxValue"/>
+    <Table :tableData="eRate.tableData" :tableTitle="tableTitle" v-on:checkboxValue="checkboxValue"
+           v-if="isTableTitle"/>
     <div id="roleTable">
-      <el-button type="primary" icon="el-icon-edit" size="mini" @click="upUserForm">修改
-      </el-button>
-      <el-button type="primary" icon="el-icon-delete" size="mini">
-        删除
-      </el-button>
-      <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUserForm">
-        新增
-      </el-button>
+      <div class="block" style="display: inline-block" v-if="isTableTitle">
+        <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/>
+        <!--分页-->
+        <Pagination :data="eRate" v-on:pageData="pageData"/>
+      </div>
     </div>
 
   </div>
@@ -23,29 +23,35 @@
   import PubSub_Exc from 'pubsub-js'
   import Table from '../../../components/ElementUi/Table'
   import Pagination from '../../../components/ElementUi/Pagination'
-  import message from '../../../utils/Message'
   import pUtils from '../../../utils/PageUtils'
   import requestAjax from '../../../api/requestAjax'
+  import AddDelUpButton from '../../../components/ElementUi/AddDelUpButton'
+  import Query from '../../../components/ElementUi/Query'
+  import {repGetRate} from '../../../api/index'
   //公司
   export default {
     data () {
       return {
-        msgInput: '',//当选择后获得第一个下拉框的id
-        inputValue: '',//序号
+        msgInput: '',
+        isTableTitle: false, //如果table表头的长度是 0
         multipleSelection: [],//更新按钮数组收集
         FormValue_Dec: false,//新增隐藏form
         tableTitle: [],
         eRate: { //汇率对象
-          tableData: [],
+          tableData: [],//表信息
           currentPage: 1,//当前页
           total_size: 0,//总的页
-          pageSize: 10//显示最大的页
+          pageSize: 2,//显示最大的页
+          page_sizes: [2, 10, 15, 20, 25]
         }
       }
     },
     components: {
       DeclarationAdd,
-      Table
+      Table,
+      Pagination,
+      AddDelUpButton,
+      Query
     },
     async mounted () {
       this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id)
@@ -53,7 +59,8 @@
       if (!this.tableTitle) {
         return
       }
-      this.pagination(this.user)
+      this.isTableTitle = true
+      this.pagination(this.eRate)
     },
     methods: {
       //table按钮选择 传参
@@ -64,23 +71,34 @@
       pageData: function (data) {
         this.pagination(data)
       },
-      saveUserForm () {
+      save () {
         this.FormValue_Dec = true
         //发布搜索消息
         PubSub_Exc.publish('saveFormValue_Dec', this.FormValue_Dec)
       },
+      //分页参数传递
+      getValue: function (val) {
+        this.msgInput = val
+      },
       //点击修改的时候 获得 Checkbox中 的属性
-      upUserForm () {
+      up () {
         //发布订阅消息 修改
         PubSub_Exc.publish('multipleSelection', this.multipleSelection)
       },
+      del () {
+        console.log('删除')
+      },
+      recording () {
+        console.log('删除记录')
+      },
       //封装分页请求
       async pagination (data) {
-        // const resultUsers = await repUsers(data)
-        // if (resultUsers.code === 200) {
-        //   //赋值 然后显示
-        //   pUtils.pageInfo(resultUsers, data)
-        // }
+        const resultRate = await repGetRate(data)
+        console.log(resultRate.data)
+        if (resultRate.code === 200) {
+          //赋值 然后显示
+          pUtils.pageInfo(resultRate, data)
+        }
       },
     }
   }

@@ -2,16 +2,7 @@
   <div id="Account">
     <!--多选输入框选择输入-->
     <div id="printCheck" v-if="isTableTitle">
-      <div class="check1">
-        <el-select v-model="userValue" clearable placeholder="用户信息选择" @change="getValue" value="">
-          <el-option
-            v-for="(item,index) in tableTitle"
-            :key="index"
-            :label="item.headName"
-            :value="item.id">
-          </el-option>
-        </el-select>
-      </div>
+      <Query :tableTitle="tableTitle" v-on:getValue="getValue"/>
       <div class="check2">
         <el-input v-show="msgInput===7" v-model="user.userName" placeholder="请输入账号"
                   prefix-icon="el-icon-search" clearable :maxlength="i_max_length"></el-input>
@@ -103,17 +94,7 @@
       <Table :tableData="user.tableData" :tableTitle="tableTitle" v-on:checkboxValue="checkboxValue"
              v-if="isTableTitle"/>
       <div v-if="isTableTitle">
-        <el-button type="success" icon="el-icon-edit" size="mini" @click="upUserInfo">修改
-        </el-button>
-        <el-button type="info" icon="el-icon-delete" size="mini" @click="delUserInfo">
-          删除
-        </el-button>
-        <el-button type="primary" icon=" el-icon-circle-plus-outline" size="mini" @click="saveUserForm">
-          新增
-        </el-button>
-        <el-button type="warning" size="mini" @click="delUserForm">
-          删除记录
-        </el-button>
+        <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/>
         <!--分页-->
         <Pagination :data="user" v-on:pageData="pageData"/>
       </div>
@@ -138,6 +119,8 @@
   import pUtils from '../../utils/PageUtils'
   import Pagination from '../../components/ElementUi/Pagination'
   import Table from '../../components/ElementUi/Table'
+  import AddDelUpButton from '../../components/ElementUi/AddDelUpButton'
+  import Query from '../../components/ElementUi/Query'
   import PubSub from 'pubsub-js'
   import requestAjax from '../../api/requestAjax'
 
@@ -150,7 +133,7 @@
         isTableTitle: false, //如果table表头的长度是 0
         tableTitle: [],//表头信息
         userValue: '', //下拉框的model
-        upSelection: [], //更新按钮数组收集
+        multipleSelection: [], //更新按钮数组收集
         saveFormValue: false,//新增隐藏form
         delFormValue: false,//删除历史记录 隐藏form
         user: {
@@ -190,7 +173,9 @@
       UserItemUp,
       UserItemDel,
       Pagination,
-      Table
+      Table,
+      AddDelUpButton,
+      Query
     },
     async mounted () {
       this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id)
@@ -205,30 +190,34 @@
     methods: {
       //table按钮选择 传参
       checkboxValue: function (value) {
-        this.upSelection = value
+        this.multipleSelection = value
       },
       //分页参数传递
       pageData: function (data) {
         this.pagination(data)
       },
+      //获得第一个input框里的id 通过id去判断显示哪个输入框
+      getValue (val) {
+        this.msgInput = val
+      },
       //点击修改的时候 获得 Checkbox中 的属性
-      upUserInfo () {
+      up () {
         //发布订阅消息 修改
         PubSub.publish('upSelection', this.upSelection)
       },
       //新增用户信息
-      saveUserForm () {
+      save() {
         this.saveFormValue = true
         //发布搜索消息
         PubSub.publish('saveFormValue', this.saveFormValue)
       },
       //删除历史记录查看
-      async delUserForm () {
+      async recording () {
         this.delFormValue = true
         PubSub.publish('delFormValue', this.delFormValue)
       },
       //删除or 批量删除
-      async delUserInfo () {
+      async del () {
         const userDelSelection = this.upSelection
         if (userDelSelection.length === 0) {
           message.errorMessage('必须选择一个或多个!')
@@ -246,12 +235,6 @@
           }
         }
       },
-      //获得第一个input框里的id 通过id去判断显示哪个输入框
-      getValue (selVal) {
-        console.log(selVal)
-        this.msgInput = selVal
-      },
-
       //点击查询获得table的值
       async searchUser () {
         this.pagination(this.user)
@@ -357,13 +340,6 @@
     float: left;
     margin-top: 25px;
     margin-left: 25px;
-  }
-
-  /* 输入 下拉款*/
-
-  /*表格*/
-  #userTable {
-    margin-top: 50px;
   }
 
   .box-card {

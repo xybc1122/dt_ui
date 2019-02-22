@@ -120,7 +120,11 @@ export const repGetCurrencyInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '
   currentPage,
   pageSize
 }, 'POST')
-
+//获取汇率的所有信息
+export const repGetRate = ({currentPage, pageSize}) => ajax(BASE_URL + '/rate/findByListRate', {
+  currentPage,
+  pageSize
+}, 'POST')
 //获取所有角色信息
 export const repFindRoles = () => ajax(BASE_URL + `/role/findByListRoles`)
 
