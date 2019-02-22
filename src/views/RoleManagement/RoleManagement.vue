@@ -97,7 +97,7 @@
       },
       //修改隐藏框
       up () {
-        PubSub.publish('roleUp', this.roleSelection)
+        PubSub.publish('roleUp', this.multipleSelection)
       },
       save () {
         console.log('新增角色')

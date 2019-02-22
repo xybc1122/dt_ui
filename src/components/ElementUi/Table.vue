@@ -70,6 +70,8 @@
           <span>{{ scope.row.effectiveDate | date-format}}</span>
         </template>
       </el-table-column>
+      <el-table-column v-if="title.topType==='curr_name'" :label="title.headName" width="120" prop="currencyName">
+      </el-table-column>
       <!-- 店铺-->
       <el-table-column :show-overflow-tooltip="true" v-if="title.topType==='shop_name'" :label="title.headName" prop="shopName" width="100"
                        sortable ></el-table-column>
