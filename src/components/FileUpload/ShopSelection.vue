@@ -32,7 +32,6 @@
 
 <script>
   import {
-    repGetShopInfo,
     repGetShopIdSiteInfo,
     repGetUserUploadInfo,
     repGetRegionInfo, repGetShopName
@@ -98,6 +97,7 @@
         //获得洲信息
         if (tbId === '109' || tbId === '110' || tbId === '113' || tbId === '114') {
           const resultArea = await repGetRegionInfo({})
+          console.log(resultArea)
           if (resultArea.code === 200) {
             this.areaOptions = resultArea.data
           }

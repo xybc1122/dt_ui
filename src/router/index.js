@@ -98,9 +98,7 @@ import Education from '../views/Storage/Education'//学历
 import Staff_type from '../views/Storage/Staff_type'//职员类型
 import Employment_type from '../views/Storage/Employment_type'//雇佣类型
 import Turnover_type from '../views/Storage/Turnover_type'//离职类型
-import Province from '../views/Storage/Province'//省州
-import Regional_city from '../views/Storage/Regional_city'//地区市
-import County_Area from '../views/Storage/County_Area'//县区
+import Regional from '../views/Storage/Regional'//地区市
 import Province_table from '../views/Storage/Province_table'//省州关联表
 import Menu_header from '../views/Storage/Menu_header'//菜单头部
 import Tariff_rate from '../views/Storage/Tariff_rate'//关税税率
@@ -504,16 +502,8 @@ export default new Router({
           component:Turnover_type
         },
         {
-          path:'/index/Province/:id/:name',//省州
-          component:Province
-        },
-        {
-          path:'/index/Regional_city/:id/:name',//地区市
-          component:Regional_city
-        },
-        {
-          path:'/index/County_Area/:id/:name',//县区
-          component:County_Area
+          path:'/index/Regional/:id/:name',//地区市
+          component:Regional
         },
         {
           path:'/index/Province_table/:id/:name',//省州关联表
