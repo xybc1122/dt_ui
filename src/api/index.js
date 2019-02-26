@@ -4,6 +4,11 @@
 import ajax from './ajax'
 
 const BASE_URL = '/api'
+
+// 查询国家
+export const getRegional = ({currentPage,pageSize}) => ajax(BASE_URL + `/country/findCountryInfo`, {currentPage,pageSize}, 'POST')
+
+
 // 获取用户登陆信息
 export const repLoginUser = ({userName, pwd, rememberMe}) => ajax(BASE_URL + `/ajaxLogin`, {
   userName,

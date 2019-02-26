@@ -1,8 +1,5 @@
 <template>
   <div id="Com">
-    <div id="printCheck" v-if="isTableTitle">
-      <Query :tableTitle="tableTitle" v-on:getValue="getValue"/>
-    </div>
     <!--table表格显示-->
     <div id="roleTable" style="width: 1650px">
       <Table :tableData="company.tableData" :tableTitle="tableTitle" v-on:checkboxValue="checkboxValue" v-if="isTableTitle"/>
@@ -72,9 +69,6 @@
         this.pagination(data)
       },
       //分页参数传递
-      getValue: function (val) {
-        this.msgInput = val
-      },
       save () {
         this.saveFormValue_com = true
         //发布搜索消息

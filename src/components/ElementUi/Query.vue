@@ -32,29 +32,5 @@
 </script>
 
 <style scoped lang="scss">
-  /* 输入 下拉款*/
-  #printCheck {
-    width: 100%;
-    height: 30px;
-    position: relative;
-  }
-
-  #printCheck .check1 {
-    float: left;
-    margin-top: 25px;
-    margin-left: 25px;
-  }
-
-  #printCheck .check2 {
-    float: left;
-    margin-top: 25px;
-    margin-left: 25px;
-  }
-
-  #printCheck .check7 {
-    float: left;
-    margin-top: 25px;
-    margin-left: 25px;
-  }
-
+ 
 </style>

@@ -1,8 +1,5 @@
 <template>
   <div id="Cur">
-    <div id="printCheck" v-if="isTableTitle">
-      <Query :tableTitle="tableTitle" v-on:getValue="getValue"/>
-    </div>
     <!--table表格显示-->
     <div id="roleTable">
       <Table :tableData="currency.tableData" :tableTitle="tableTitle" v-on:checkboxValue="checkboxValue"  v-if="isTableTitle" />
@@ -71,10 +68,6 @@
       //分页参数传递
       pageData: function (data) {
         this.pagination(data)
-      },
-      //分页参数传递
-      getValue: function (val) {
-        this.msgInput = val
       },
       save(){
         PubSubAdd.publish('CurrencyAdd', this.saveCurrencyAdd)

@@ -1,8 +1,6 @@
 <template>
   <div id="Shop">
-    <div id="printCheck" v-if="isTableTitle">
-      <Query :tableTitle="tableTitle" v-on:getValue="getValue"/>
-    </div>
+    
     <!--table表格显示-->
     <div id="roleTable">
       <!--table表格显示-->
@@ -72,10 +70,6 @@
       //分页参数传递
       pageData: function (data) {
         this.pagination(data)
-      },
-      //分页参数传递
-      getValue: function (val) {
-        this.msgInput = val
       },
       save () {
         PubSub_Shop.publish('saveShopValue', this.saveShopValue)
