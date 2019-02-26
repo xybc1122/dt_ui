@@ -19,6 +19,14 @@ export default {
    */
   pageInfo (result, pageData) {
     const data = result.data
+    if(data.dataList && data.dataList.systemLogStatus){
+      for(let key in data.dataList.systemLogStatus){
+        data.dataList[key] = data.dataList.systemLogStatus[key]
+      }
+      // delete data.dataList.systemLogStatus;
+    }
+    console.log(data.dataList);
+    
     pageData.tableData = data.dataList
     pageData.currentPage = data.current_page
     pageData.total_size = data.total_size

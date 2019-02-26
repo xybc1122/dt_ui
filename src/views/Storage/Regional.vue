@@ -4,7 +4,17 @@
     <div id="printCheck" v-if="isTableTitle">
       <Query :tableTitle="tableTitle" v-on:getValue="getValue"/>
     </div>
-    
+    <div class="check2">
+      
+      <el-input v-for=""
+          v-show="msgInput===7"
+          v-model="user.userName"
+          placeholder="请输入账号"
+          prefix-icon="el-icon-search"
+          clearable
+          :maxlength="i_max_length"
+        ></el-input>
+    </div>
     <!--table表格显示-->
     <div id="roleTable">
       <!--table表格显示-->

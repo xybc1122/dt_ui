@@ -367,16 +367,7 @@ export default {
 
 <style>
 /* 输入 下拉款*/
-#printCheck {
-  width: 100%;
-  height: 30px;
-  position: relative;
-  margin-bottom: 25px;
-}
-#printCheck > div {
-  float: left;
-  margin-left: 25px;
-}
+
 .box-card {
   /* float: right; */
   width: 500px;

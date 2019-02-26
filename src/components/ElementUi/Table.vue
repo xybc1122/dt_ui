@@ -10,11 +10,13 @@
     @header-dragend="handleHeaderDragend"
   >
     <el-table-column type="selection" width="55"></el-table-column>
-    <!-- <el-table-column
+    <el-table-column
+      :aa = 
+      v-if="isHideNumber"
       type="index"
       width="50"
       fixed>
-    </el-table-column>-->
+    </el-table-column>
     <template v-for="title  in tableTitle">
       <!--特殊字段 -->
       <el-table-column v-if="title.topType==='create_date'" :label="title.headName" width="180">
@@ -121,6 +123,16 @@ export default {
     tableTitle: Array
   },
   methods: {
+    //是否隐藏编号
+    isHideNumber(){
+      let flag = false;
+      this.tableTitle.forEach((item) => {
+        if(item.headName == "编号"){
+          flag = true;
+        }
+      });
+      return flag ;
+    },
     //tabale表头上下箭头 排序
     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
       // if (rowIndex % 2 === 0) {
@@ -164,9 +176,5 @@ export default {
 .el-tooltip__popper {
   max-width: 500px;
   line-height: 180%;
-}
-//隔行变色的背景颜色
-body .el-table--striped .el-table__body tr.el-table__row--striped td{
-  background: #b8dff1
 }
 </style>
